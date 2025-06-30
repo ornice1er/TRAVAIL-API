@@ -1,0 +1,33 @@
+<?php
+
+namespace App\Models;
+
+use eloquentFilter\QueryFilter\ModelFilters\Filterable;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Str;
+
+class UA extends Model
+{
+    use Filterable,HasFactory,SoftDeletes;
+
+    protected $table = 'uas';
+
+    private static $whiteListFilter = ['*'];
+
+    protected $fillable = ['code', 'libelle', 'ua'];
+
+    protected $dates = ['deleted_at'];
+
+    protected $casts = ['data' => 'array'];
+
+    public static function boot()
+    {
+        parent::boot();
+        self::creating(function ($model) {
+            // $model->id = Str::uuid();
+        });
+    }
+}
