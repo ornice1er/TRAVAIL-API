@@ -11,6 +11,7 @@
         "darkaonline/l5-swagger": "^8.6",
         "guzzlehttp/guzzle": "^7.9",
         "jenssegers/agent": "^2.6",
+        "jorenvanhocht/laravel-share": "^4.2",
         "laravel-notification-channels/fcm": "^4.5",
         "laravel/framework": "^10.10",
         "laravel/horizon": "^5.31",
