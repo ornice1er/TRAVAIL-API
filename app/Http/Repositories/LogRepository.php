@@ -2,6 +2,7 @@
 
 namespace App\Http\Repositories;
 
+
 use App\Models\Log;
 use App\Traits\Repository;
 
