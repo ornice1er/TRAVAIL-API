@@ -11,7 +11,7 @@ use Str;
 
 class LiensUtile extends Model
 {
-    use HasFactory, Filterable, SoftDeletes, HasUuids;
+    use HasFactory, Filterable, HasUuids;
     protected $fillable = [
         'title',
         'link'

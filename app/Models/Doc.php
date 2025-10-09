@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Str;
 
-class Docs extends Model
+class Doc extends Model
 {
-    use Filterable, HasFactory, SoftDeletes, HasUuids;
+    use Filterable, HasFactory, HasUuids;
     protected $fillable = [
         'name',
         'slug',

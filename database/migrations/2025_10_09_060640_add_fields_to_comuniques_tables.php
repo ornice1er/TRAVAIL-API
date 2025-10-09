@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('education_level');
-            $table->integer('nb_children');
-            $table->boolean('computer_skills')->default(true);
-            $table->string('reference_person');
-            $table->string('comment');
-
+        Schema::table('communiques', function (Blueprint $table) {
+            $table->enum('category',['Concours','Activité']);
         });
     }
 
@@ -26,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('communiques', function (Blueprint $table) {
             //
         });
     }
