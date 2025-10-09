@@ -138,4 +138,46 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('users-rh', 'UserController@indexRH');
         Route::get('users-rh/{id}', 'UserController@showRH');
     });
+
+
+
+
+
+    Route::get('accueil', 'PublicController@index')->name('accueil');
+Route::get('accueil-dgt', 'PublicController@index')->name('dgt');
+Route::get('accueil-dgrce', 'PublicController@index')->name('dgrce');
+Route::get('accueil-dgfp', 'PublicController@index')->name('dgfp');
+Route::get('cookie-checker', 'PublicController@setCookie')->name('cookie');
+
+
+Route::get('anciens-ministres', 'PublicController@index')->name('anciens');
+Route::get('suivi-des-reformes', 'PublicController@index')->name('reformes');
+Route::get('igsep', 'PublicController@index')->name('igsep');
+Route::get('structures-sous-tutelles', 'PublicController@index')->name('st');
+Route::get('directions', 'PublicController@index')->name('directions');
+Route::get('organigramme', 'PublicController@index')->name('organigramme');
+Route::get('vision', 'PublicController@index')->name('vision');
+Route::get('sgm', 'PublicController@index')->name('sgm');
+Route::get('dd', 'PublicController@index')->name('dd');
+Route::get('aof-igsep', 'PublicController@index')->name('aof.igsep');
+Route::get('aof/{id?}', 'PublicController@index')->name('aof');
+Route::get('eservices', 'PublicController@index')->name('eservices');
+Route::get('ministre/{category?}', 'PublicController@index')->name('ministre');
+Route::get('document/{category?}', 'PublicController@index')->name('document');
+Route::get('communiques', 'PublicController@index')->name('communiques');
+Route::get('recrutements', 'PublicController@index')->name('recrutements');
+Route::get('opp-stages', 'PublicController@index')->name('stages');
+Route::get('formations', 'PublicController@index')->name('formations');
+Route::get('appel-d-offres', 'PublicController@index')->name('offres');
+Route::get('actualites/{category?}', 'PublicController@index')->name('actualites');
+Route::get('sanctions', 'PublicController@index')->name('sanctions');
+
+
+Route::get('/page/communiques/{slug}', 'PageController@index')->name('page.communique');
+Route::get('/page/actualites/{slug}', 'PageController@index')->name('page.actualite');
+Route::get('/page/galleries/{slug}', 'PageController@index')->name('page.galleries');
+
+
+Route::get('structure/presentation/{st}', 'PublicController@index')->name('structure');
+
 });
