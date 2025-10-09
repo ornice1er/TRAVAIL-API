@@ -4,9 +4,13 @@ namespace App\Http\Repositories;
 
 use App\Models\AppelsOffre;
 use App\Models\Invite;
+use App\Models\Media;
+use App\Models\User;
+use App\Models\Transmission;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
+use Illuminate\Support\Facades\Auth;
 use QrCode;
 use Illuminate\Support\Str;
  
@@ -84,7 +88,7 @@ class AppelsOffreRepository
             $offres = $req->get();
         }
 
-        return view('admin.appels_offre.index', compact('offres'));
+        return $offres;
         }
 
     /**

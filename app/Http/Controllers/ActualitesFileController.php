@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\ActualitesFilesRepository;
-use App\Http\Requests\ActualitesFiles\StoreActualitesFilesRequest;
-use App\Http\Requests\ActualitesFiles\UpdateActualitesFilesRequest;
+
+use App\Http\Repositories\ActualitesFileRepository;
+use App\Http\Requests\ActualitesFile\StoreActualitesFileRequest;
+use App\Http\Requests\ActualitesFile\UpdateActualitesFileRequest;
 use App\Http\Requests\ActualitesFiles\GenerateLinkRequest;
-use App\Http\Requests\ActualitesFiles\VerifyLinkRequest;
 use App\Http\Requests\ActualitesFiles\ParticipateRequest;
+use App\Http\Requests\ActualitesFiles\VerifyLinkRequest;
 use App\Services\LogService;
 use App\Utilities\Common;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
-class ActualitesFilesController extends Controller
+class ActualitesFileController extends Controller
 {
     /**
      * The ActualitesFiles repository being queried.
      *
      * @var ActualitesFilesRepository
      */
-    protected $ActualitesFilesRepository;
+    protected $actualitesFilesRepository;
 
     protected $ls;
 
-    public function __construct(ActualitesFilesRepository $ActualitesFilesRepository, LogService $ls)
+    public function __construct(ActualitesFileRepository $actualitesFilesRepository, LogService $ls)
     {
-        $this->ActualitesFilesRepository = $ActualitesFilesRepository;
+        $this->actualitesFilesRepository = $actualitesFilesRepository;
         $this->ls = $ls;
 
         //$this->middleware('auth:api')->except(['getNotified', 'show']);
@@ -85,7 +86,7 @@ class ActualitesFilesController extends Controller
         $message = 'Récupération de la liste des fonctions';
 
         try {
-            $result = $this->ActualitesFilesRepository->getAll($request);
+            $result = $this->actualitesFilesRepository->getAll($request);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
@@ -157,7 +158,7 @@ class ActualitesFilesController extends Controller
         $message = 'Récupération d\'une fonction';
 
         try {
-            $result = $this->ActualitesFilesRepository->get($id);
+            $result = $this->actualitesFilesRepository->get($id);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($result)]);
 
             return Common::success('ActualitesFiles trouvé', $result);
@@ -210,12 +211,12 @@ class ActualitesFilesController extends Controller
      *      )
      * )
      */
-    public function store(StoreActualitesFilesRequest $request)
+    public function store(StoreActualitesFileRequest $request)
     {
         $message = 'Enregistrement d\'une fonction';
 
         try {
-            $result = $this->ActualitesFilesRepository->makeStore($request->validated());
+            $result = $this->actualitesFilesRepository->makeStore($request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->validated())]);
 
             return Common::successCreate('ActualitesFiles créé avec succès', $result);
@@ -279,12 +280,12 @@ class ActualitesFilesController extends Controller
      *      )
      * )
      */
-    public function update(UpdateActualitesFilesRequest $request, $id)
+    public function update(UpdateActualitesFileRequest $request, $id)
     {
         $message = 'Mise à jour d\'une fonction';
 
         try {
-            $result = $this->ActualitesFilesRepository->makeUpdate($id, $request->validated());
+            $result = $this->actualitesFilesRepository->makeUpdate($id, $request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->validated())]);
 
             return Common::success('Mise à jour de ActualitesFiles effectuée avec succès', $result);
@@ -346,9 +347,9 @@ class ActualitesFilesController extends Controller
         $message = 'Suppression de fonction';
 
         try {
-            $recup = $this->ActualitesFilesRepository->get($id);
+            $recup = $this->actualitesFilesRepository->get($id);
 
-            $result = $this->ActualitesFilesRepository->makeDestroy($id);
+            $result = $this->actualitesFilesRepository->makeDestroy($id);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($recup)]);
 
             return Common::successDelete('ActualitesFiles supprimé avec succès', $result);
@@ -421,7 +422,7 @@ class ActualitesFilesController extends Controller
         $message = 'Changement de l\'état d\'une fonction';
 
         try {
-            $result = $this->ActualitesFilesRepository->setStatus($id, $state);
+            $result = $this->actualitesFilesRepository->setStatus($id, $state);
             $statusMessage = $state == 1 ? 'activé' : 'désactivé';
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($result)]);
 
@@ -482,7 +483,7 @@ class ActualitesFilesController extends Controller
 
         try {
             $term = $request->term;
-            $result = $this->ActualitesFilesRepository->search($term);
+            $result = $this->actualitesFilesRepository->search($term);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success('Filtrage effectué avec succès', $result);
@@ -497,7 +498,7 @@ class ActualitesFilesController extends Controller
         $message = 'Génération de lien de ActualitesFiles';
 
         try {
-            $result = $this->ActualitesFilesRepository->generateLink($id,$request->validated());
+            $result = $this->actualitesFilesRepository->generateLink($id,$request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success('Filtrage effectué avec succès', $result);
@@ -511,7 +512,7 @@ class ActualitesFilesController extends Controller
         $message = 'Récupération de fêtes';
 
         try {
-            $result = $this->ActualitesFilesRepository->verifyLink ($request->validated());
+            $result = $this->actualitesFilesRepository->verifyLink ($request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success('Filtrage effectué avec succès', $result);
@@ -525,8 +526,8 @@ class ActualitesFilesController extends Controller
         $message = 'Participation de fêtes';
 
         try {
-            
-            $result = $this->ActualitesFilesRepository->participate ($request->validated());
+
+            $result = $this->actualitesFilesRepository->participate ($request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success('Filtrage effectué avec succès', $result);
@@ -541,12 +542,12 @@ class ActualitesFilesController extends Controller
 
         try {
 
-            if (!$this->ActualitesFilesRepository->get($id)) {
+            if (!$this->actualitesFilesRepository->get($id)) {
                 return Common::error('Aucun ActualitesFiles n\'existe à cette référence.', []);
 
             }
-            
-            $result = $this->ActualitesFilesRepository->generateMediaLink($id);
+
+            $result = $this->actualitesFilesRepository->generateMediaLink($id);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($id)]);
 
             return Common::success('Filtrage effectué avec succès', $result);
