@@ -43,14 +43,15 @@ class CommuniqueRepository
     {
         $per_page = 10;
 
-        $req = Communique::ignoreRequest(['per_page'])
+        $req = Communique::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
+             ->with('media')
             ->orderByDesc('created_at');
 
-        if ($request->has('per_page')) {
-            $per_page = $request->get('per_page');
+        if ($request->has('pageSize')) {
+            $per_page = $request->get('pageSize');
             return $req->paginate($per_page);
         } else {
             return $req->get();

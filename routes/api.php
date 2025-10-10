@@ -51,21 +51,22 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('/delete-file', 'UserAuthController@deleteFile');
 
         Route::apiResources([
-            'corps' => 'CorpsController',
-            'agents' => 'AgentController',
-            'statuts' => 'StatutController',
-            'primes' => 'PrimeController',
-            'fonctions' => 'FonctionController',
-            'hsups' => 'HsupController',
-            'grades' => 'GradeController',
-            'periodes' => 'PeriodeController',
-            'retenues' => 'RetenueController',
-            'typeactes' => 'TypeacteController',
-            'typeprimes' => 'TypeprimeController',
-            'primestatuts' => 'PrimestatutController',
-            'joursferies' => 'JoursferieController',
-            'notationagents' => 'NotationagentController',
-            'uas' => 'UAController',
+            'structures'=>'StructuresController',
+    'users'=>'UserController',
+    'communiques'=>'CommuniqueController',
+    'actualites'=>'ActualiteController',
+    'prestations'=>'PrestationController',
+    'documents'=>'DocController',
+    'organigrammes'=>'OrganigrammeController',
+    'aofs'=>'AofController',
+    'links'=>'LinkController',
+    'maps'=>'MapsController',
+  //  'docs'=>'DocsController',
+    'citations'=>'CitationController',
+    'mots'=>'MotController',
+    'sts'=>'StructureSousTutuelleController',
+    'posters'=>'PosterController',
+    'teams'=>'TeamController',
             'roles' => 'RoleController',
             'permissions' => 'PermissionController',
             'user-projects' => 'UserProjectController',
@@ -78,59 +79,12 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('notifications/{id}/state/{state}', 'NotificationController@changeState');
         Route::post('notifications-search', 'NotificationController@search');
 
-        Route::get('corps/{id}/state/{state}', 'CorpsController@changeState');
-        Route::post('corps-search', 'CorpsController@search');
-
-        Route::get('statuts/{id}/state/{state}', 'StatutController@changeState');
-        Route::post('statuts-search', 'StatutController@search');
-        
-        Route::get('primes/{id}/state/{state}', 'PrimeController@changeState');
-        Route::post('primes-search', 'PrimeController@search');
-
-        Route::get('fonctions/{id}/state/{state}', 'FonctionController@changeState');
-        Route::post('fonctions-search', 'FonctionController@search');
-
-        Route::get('grades/{id}/state/{state}', 'GradeController@changeState');
-        Route::post('grades-search', 'GradeController@search');
-
-        Route::get('periodes/{id}/state/{state}', 'PeriodeController@changeState');
-        Route::post('periodes-search', 'PeriodeController@search');
-
-        Route::get('uas/{id}/state/{state}', 'UAController@changeState');
-        Route::post('uas-search', 'UAController@search');
-
-        Route::get('typeactes/{id}/state/{state}', 'TypeacteController@changeState');
-        Route::post('typeactes-search', 'TypeacteController@search');
-
-        Route::get('typeprimes/{id}/state/{state}', 'TypeprimeController@changeState');
-        Route::post('typeprimes-search', 'TypeprimeController@search');
-
-        Route::get('primestatuts/{id}/state/{state}', 'PrimestatutController@changeState');
-        Route::post('primestatuts-search', 'PrimestatutController@search');
-
-        Route::get('retenues/{id}/state/{state}', 'RetenueController@changeState');
-        Route::post('retenues-search', 'RetenueController@search');
-
-        Route::get('agents/{id}/state/{state}', 'AgentController@changeState');
-        Route::post('agents-search', 'AgentController@search');
-
-        Route::get('joursferies/{id}/state/{state}', 'JoursferieController@changeState');
-        Route::post('joursferies-search', 'JoursferieController@search');
-
-        Route::get('notationagents/{id}/state/{state}', 'NotationagentController@changeState');
-        Route::post('notationagents-search', 'NotationagentController@search');
-
-        Route::get('hsups/{id}/state/{state}', 'HsupController@changeState');
-        Route::post('hsups-search', 'HsupController@search');
 
         Route::post('roles-search', 'RoleController@search');
         Route::post('permissions-search', 'PermissionController@search');
 
         Route::get('user-settings', 'UserSettingController@index');
         Route::put('user-settings', 'UserSettingController@update');
-
-        Route::post('projects-search', 'ProjectController@search');
-        Route::get('projects/{id}/state/{state}', 'ProjectController@changeState');
 
         Route::get('users/{id}/state/{state}', 'UserController@changeState');
         Route::post('users-search', 'UserController@search');
@@ -183,5 +137,16 @@ Route::get('structure/presentation/{st}', 'PublicController@index')->name('struc
 
 Route::post('send-contact-form', 'PublicController@sendContactForm');
 
+
+
+
+
+ Route::get('/communiques/transmission/up/{id}','CommuniqueController@up')->name('communiques.up');
+ Route::post('/communiques/transmission/down/{id}','CommuniqueController@down')->name('communiques.down');
+ Route::get('/communiques/publication/up/{id}','CommuniqueController@publish')->name('communiques.publish');
+ Route::get('/communiques/publication/down/{id}','CommuniqueController@unpublish')->name('communiques.unpublish');
+ Route::get('/communiques/archivied/{id}','CommuniqueController@archive')->name('communiques.archived');
+ Route::get('/communiques/restored/{id}','CommuniqueController@restore')->name('communiques.restored');
+ 
 
 });

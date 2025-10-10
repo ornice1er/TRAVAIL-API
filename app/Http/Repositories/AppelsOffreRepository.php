@@ -54,7 +54,7 @@ class AppelsOffreRepository
         $per_page = 10;
 
         // Construction de la requête sur AppelsOffre avec filtres dynamiques
-        $req = AppelsOffre::ignoreRequest(['per_page'])
+        $req = AppelsOffre::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
@@ -81,8 +81,8 @@ class AppelsOffreRepository
         }
 
         // Pagination dynamique
-        if ($request->has('per_page')) {
-            $per_page = (int) $request->input('per_page');
+        if ($request->has('pageSize')) {
+            $per_page = (int) $request->input('pageSize');
             $offres = $req->paginate($per_page);
         } else {
             $offres = $req->get();

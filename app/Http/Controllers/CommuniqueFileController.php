@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\communiquesFileRepository;
+use App\Http\Repositories\CommuniquesFileRepository;
 use App\Utilities\Common;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
@@ -16,7 +16,7 @@ class CommuniquesFileController
      */
     protected $communiquesFileRepository;
 
-    public function __construct(communiquesFileRepository $communiquesFileRepository)
+    public function __construct(CommuniquesFileRepository $communiquesFileRepository)
     {
         $this->communiquesFileRepository = $communiquesFileRepository;
     }

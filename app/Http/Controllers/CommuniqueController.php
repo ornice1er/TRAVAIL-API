@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\communiqueRepository;
+use App\Http\Repositories\CommuniqueRepository;
 use App\Http\Requests\Communique\StoreCommuniqueRequest;
 use App\Http\Requests\Communique\UpdateCommuniqueRequest;
 use App\Services\LogService;
@@ -26,7 +26,7 @@ class CommuniqueController
      */
     protected $ls;
 
-    public function __construct(communiqueRepository $communiqueRepository, LogService $ls)
+    public function __construct(CommuniqueRepository $communiqueRepository, LogService $ls)
     {
         $this->communiqueRepository = $communiqueRepository;
         $this->ls = $ls;
