@@ -13,6 +13,7 @@ use App\Models\Media;
 use App\Models\Parcours;
 use App\Models\Transmission;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
  
 
@@ -183,12 +184,12 @@ class FormationRepository
     }
 
     /**
-     * Recherche dans les fêtes (par nom, lieu...).
+     * Recherche dans les formations (par titre, description...).
      */
     public function search($term)
     {
         $query = Formation::query();
-        $attrs = ['nom', 'lieu', 'type_Formation'];
+        $attrs = ['title', 'label', 'libellé', 'description'];
         
         foreach ($attrs as $value) {
             $query->orWhere($value, 'like', '%'.$term.'%');
@@ -231,7 +232,7 @@ class FormationRepository
 
     function verifyLink($data) {
         if (isset($data['link_token'])) {
-            return Formation::where('link_token', )->first();
+            return Formation::where('link_token', $data['link_token'])->first();
         }else{
             return Formation::where('media_token', $data['media_token'])->first();
 

@@ -7,9 +7,11 @@ use App\Models\Invite;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
+use App\Utilities\FileStorage;
 use QrCode;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
  
 
@@ -167,15 +169,19 @@ public function download()
     }
 
     /**
-     * Recherche dans les fêtes (par nom, lieu...).
+     * Recherche dans les medias (par code, type, motif...).
      */
-    public function search($term)
+    public function search($request)
     {
+        $term = $request->input('q', '');
         $query = Media::query();
-        $attrs = ['nom', 'lieu', 'type_Media'];
         
-        foreach ($attrs as $value) {
-            $query->orWhere($value, 'like', '%'.$term.'%');
+        if ($term) {
+            $attrs = ['code', 'type', 'motif'];
+            
+            foreach ($attrs as $value) {
+                $query->orWhere($value, 'like', '%'.$term.'%');
+            }
         }
 
         return $query->get();
@@ -239,21 +245,42 @@ public function download()
 
     }
 
-
-     public function up($id)
-    {
-            return true;
-    }
-
-         public function down($request, $id)
-    {  
-            return true;
-    }
-          
-          public function publish($id)
+    public function up($id)
     {
         return true;
+    }
 
+    public function down($id)
+    {  
+        return true;
+    }
+      
+    public function publish($id)
+    {
+        return true;
+    }
+        return true;
+
+    }
+
+    public function unpublish($id)
+    {
+        return true;
+    }
+
+    public function up($id)
+    {
+        return true;
+    }
+
+    public function down($id)
+    {  
+        return true;
+    }
+      
+    public function publish($id)
+    {
+        return true;
     }
 
     public function unpublish($id)
@@ -270,6 +297,12 @@ public function download()
     {
         return true;
     }
- */
 
+    public function changeState($id, $state)
+    {
+        $model = $this->find($id);
+        $model->is_published = $state;
+        $model->save();
+        return $model;
+    }
 }

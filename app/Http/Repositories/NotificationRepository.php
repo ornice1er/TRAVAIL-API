@@ -21,12 +21,87 @@ class NotificationRepository
      */
     public function __construct()
     {
-        // Don't forget to update the model's name
         $this->model = app(Notification::class);
     }
 
     /**
-     * Check if exists
+     * Récupère toutes les notifications.
+     */
+    public function all()
+    {
+        return Notification::with(['notifiable', 'destinataire'])
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    /**
+     * Récupère une notification par ID.
+     */
+    public function findById($id)
+    {
+        return Notification::with(['notifiable', 'destinataire'])->find($id);
+    }
+
+    /**
+     * Crée une nouvelle notification.
+     */
+    public function create($data)
+    {
+        return Notification::create($data);
+    }
+
+    /**
+     * Met à jour une notification.
+     */
+    public function update($id, $data)
+    {
+        $notification = Notification::findOrFail($id);
+        $notification->update($data);
+        return $notification->fresh();
+    }
+
+    /**
+     * Supprime une notification.
+     */
+    public function delete($id)
+    {
+        $notification = Notification::findOrFail($id);
+        return $notification->delete();
+    }
+
+    /**
+     * Recherche dans les notifications.
+     */
+    public function search($query)
+    {
+        return Notification::with(['notifiable', 'destinataire'])
+            ->where('description', 'like', "%{$query}%")
+            ->orWhere('type', 'like', "%{$query}%")
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    /**
+     * Récupère les notifications non lues.
+     */
+    public function getUnread()
+    {
+        return Notification::with(['notifiable', 'destinataire'])
+            ->whereNull('lu_à')
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    /**
+     * Marque toutes les notifications comme lues.
+     */
+    public function markAllAsRead()
+    {
+        return Notification::whereNull('lu_à')->update(['lu_à' => now()]);
+    }
+
+    /**
+     * Vérifie si existe
      */
     public function ifExist($id)
     {
@@ -34,17 +109,17 @@ class NotificationRepository
     }
 
     /**
-     * Get all elements
+     * Récupère toutes les notifications avec pagination et filtres.
      */
     public function getAll($request)
     {
-
-       $per_page = 10;
+        $per_page = 10;
 
         $req = Notification::ignoreRequest(['per_page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
+            ->with(['notifiable', 'destinataire'])
             ->orderByDesc('created_at');
 
         if (array_key_exists('per_page', $request->all())) {
@@ -56,7 +131,32 @@ class NotificationRepository
     }
 
     /**
-     * Get an element
+     * Récupère une notification spécifique.
+     */
+    public function getById($id)
+    {
+        return Notification::with(['notifiable', 'destinataire'])->findOrFail($id);
+    }
+
+    /**
+     * Crée une nouvelle notification (alias pour store).
+     */
+    public function store($data)
+    {
+        return Notification::create($data);
+    }
+
+    /**
+     * Supprime une notification (alias pour destroy).
+     */
+    public function destroy($id)
+    {
+        $notification = Notification::findOrFail($id);
+        return $notification->delete();
+    }
+
+    /**
+     * Récupère une notification.
      */
     public function get($id)
     {
@@ -64,29 +164,27 @@ class NotificationRepository
     }
 
     /**
-     * To store model
+     * Crée une nouvelle notification.
      */
     public function makeStore($data): Notification
     {
         $model = new Notification($data);
         $model->save();
-
         return $model;
     }
 
     /**
-     * To update model
+     * Met à jour une notification.
      */
     public function makeUpdate($id, $data): Notification
     {
         $model = Notification::findOrFail($id);
         $model->update($data);
-
         return $model;
     }
 
     /**
-     * To delete model
+     * Supprime une notification.
      */
     public function makeDestroy($id)
     {
@@ -94,7 +192,7 @@ class NotificationRepository
     }
 
     /**
-     * To get all latest
+     * Récupère les plus récentes.
      */
     public function getlatest()
     {
@@ -102,21 +200,10 @@ class NotificationRepository
     }
 
     /**
-     * Get an element
+     * Modifie le statut d'une notification.
      */
     public function setStatus($id, $status)
     {
         return $this->findOrFail($id)->update(['is_active' => $status]);
-    }
-
-    public function search($term)
-    {
-        $query = Notification::query(); // Commencer avec une requête vide
-        $attrs = ['content', 'title'];
-        foreach ($attrs as $value) {
-            $query->orWhere($value, 'like', '%'.$term.'%');
-        }
-
-        return $query->get(); // Retourner les résultats
     }
 }

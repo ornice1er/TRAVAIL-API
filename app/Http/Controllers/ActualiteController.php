@@ -23,7 +23,7 @@ class ActualiteController extends Controller
 
     public function __construct(ActualiteRepository $actualiteRepository, LogService $ls)
     {
-        $this->ActualiteRepository = $actualiteRepository;
+        $this->actualiteRepository = $actualiteRepository;
         $this->ls = $ls;
 
         //$this->middleware('auth:api')->except(['getNotified', 'show']);
@@ -82,7 +82,7 @@ class ActualiteController extends Controller
         $message = 'Récupération de la liste des Actualite';
 
         try {
-            $result = $this->ActualiteRepository->getAll($request);
+            $result = $this->actualiteRepository->getAll($request);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
@@ -154,7 +154,7 @@ class ActualiteController extends Controller
         $message = 'Récupération d\'un Actualite';
 
         try {
-            $result = $this->ActualiteRepository->get($id);
+            $result = $this->actualiteRepository->get($id);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($result)]);
 
             return Common::success('Actualite trouvé', $result);
@@ -212,7 +212,7 @@ class ActualiteController extends Controller
         $message = 'Enregistrement d\'un Actualite';
 
         try {
-            $result = $this->ActualiteRepository->makeStore($request->validated());
+            $result = $this->actualiteRepository->makeStore($request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->validated())]);
 
             return Common::successCreate('Actualite créé avec succès', $result);
@@ -281,7 +281,7 @@ class ActualiteController extends Controller
         $message = 'Mise à jour d\'un Actualite';
 
         try {
-            $result = $this->ActualiteRepository->makeUpdate($id, $request->validated());
+            $result = $this->actualiteRepository->makeUpdate($id, $request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->validated())]);
 
             return Common::success('Mise à jour de Actualite effectuée avec succès', $result);
@@ -343,9 +343,9 @@ class ActualiteController extends Controller
         $message = 'Suppression de Actualite';
 
         try {
-            $recup = $this->ActualiteRepository->get($id);
+            $recup = $this->actualiteRepository->get($id);
 
-            $result = $this->ActualiteRepository->makeDestroy($id);
+            $result = $this->actualiteRepository->makeDestroy($id);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($recup)]);
 
             return Common::successDelete('Actualite supprimé avec succès', $result);
@@ -418,7 +418,7 @@ class ActualiteController extends Controller
         $message = 'Changement de l\'état d\'un Actualite';
 
         try {
-            $result = $this->ActualiteRepository->setStatus($id, $state);
+            $result = $this->actualiteRepository->setStatus($id, $state);
             $statusMessage = $state == 1 ? 'activé' : 'désactivé';
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($result)]);
 
@@ -479,7 +479,7 @@ class ActualiteController extends Controller
 
         try {
             $term = $request->term;
-            $result = $this->ActualiteRepository->search($term);
+            $result = $this->actualiteRepository->search($term);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success('Filtrage effectué avec succès', $result);
@@ -496,7 +496,7 @@ class ActualiteController extends Controller
         $message = 'transmission de l\'actualité';
 
         try {
-            $result = $this->ActualiteRepository->up($id);
+            $result = $this->actualiteRepository->up($id);
 
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($result)]);
 

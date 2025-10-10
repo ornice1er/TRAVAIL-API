@@ -2,19 +2,20 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\Actualite;
-use App\Traits\Repository;
-use App\Utilities\Core;
-use Illuminate\Http\Request;
-use App\Models\Actualites;
-use Auth,Str;
-use App\Models\Media;
-use App\Models\Parcours;
-use App\Models\Transmission;
 use App\Models\User;
+use App\Models\Media;
+use App\Models\Parcour;
+use App\Utilities\Core;
 use App\Models\Category;
+use App\Models\Actualite;
 use App\Models\Structures;
+
+use App\Traits\Repository;
+use Illuminate\Support\Str;
+use App\Models\Transmission;
+use Illuminate\Http\Request;
 use App\Utilities\FileStorage;
+use Illuminate\Support\Facades\Auth;
 
  
 
@@ -117,7 +118,7 @@ class ActualiteRepository
 
             // Génération du slug unique
             $slug = Str::slug($data['title']);
-            $count = Actualites::where('slug', $slug)->count();
+            $count = Actualite::where('slug', $slug)->count();
 
             if ($count > 0) {
                 $slug .= '-' . date('ymdis') . '-' . rand(0, 999);
@@ -137,10 +138,10 @@ class ActualiteRepository
             }
 
             // Création de l’actualité
-            $actualite = Actualites::create($data);
+            $actualite = Actualite::create($data);
 
             // Historique dans Parcours
-            Parcours::create([
+            Parcour::create([
                 'media_id' => $media->id,
                 'libelle' => "Création de l’actualité : " . $data['title']
             ]);
@@ -236,7 +237,7 @@ class ActualiteRepository
             return true;
     }
 
-        public function down($request, $id)
+    public function down($request, $id)
     {     
         Media::find($id)->update(['motif'=>$request->motif]);
         Media::find($id)->transmissions->last()->update(['is_last'=>false]);

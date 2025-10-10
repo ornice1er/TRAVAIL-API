@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Map;
+namespace App\Http\Requests\CommuniquesFile;
 
 use App\Utilities\Common;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateMapRequest extends FormRequest
+class UpdateCommuniquesFileRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -17,10 +17,9 @@ class UpdateMapRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'site_name' => 'sometimes|required|string|max:191',
-            'longitude' => 'nullable|numeric',
-            'latitude' => 'nullable|numeric',
-            'description' => 'nullable|string|max:255',
+            'title' => 'sometimes|required|string',
+            'description' => 'nullable|string',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240', // 10MB max
         ];
     }
 
@@ -32,9 +31,9 @@ class UpdateMapRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'site_name.required' => 'Le nom du site est requis.',
-            'longitude.numeric' => 'La longitude doit être un nombre.',
-            'latitude.numeric' => 'La latitude doit être un nombre.',
+            'title.required' => 'Le titre est requis.',
+            'file.mimes' => 'Le fichier doit être de type : pdf, doc, docx, jpg, jpeg, png.',
+            'file.max' => 'Le fichier ne doit pas dépasser 10MB.',
         ];
     }
 

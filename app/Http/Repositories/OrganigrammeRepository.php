@@ -3,13 +3,15 @@
 namespace App\Http\Repositories;
 
 use App\Models\Organigramme;
-use App\Models\Invite;
+use App\Models\Media;
+use App\Models\User;
+use App\Models\Transmission;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
 use QrCode;
 use Illuminate\Support\Str;
- 
+use Illuminate\Support\Facades\Auth;
 
 class OrganigrammeRepository
 {
@@ -31,7 +33,79 @@ class OrganigrammeRepository
     }
 
     /**
-     * Vérifie si la fête existe.
+     * Récupère tous les organigrammes.
+     */
+    public function all()
+    {
+        return Organigramme::with(['media', 'legendes'])
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    /**
+     * Récupère un organigramme par ID.
+     */
+    public function findById($id)
+    {
+        return Organigramme::with(['media', 'legendes'])->find($id);
+    }
+
+    /**
+     * Crée un nouvel organigramme.
+     */
+    public function create($data)
+    {
+        // Gestion de l'upload de fichier si présent
+        if (request()->hasFile('photo')) {
+            // TODO: Implémenter l'upload de fichier
+            // $aws = new AwsService();
+            // $data['photo'] = $aws->upload(request()->file('photo'), "Organigrammes")['full_url'];
+        }
+        
+        return Organigramme::create($data);
+    }
+
+    /**
+     * Met à jour un organigramme.
+     */
+    public function update($id, $data)
+    {
+        $organigramme = Organigramme::findOrFail($id);
+        
+        // Gestion de l'upload de fichier si présent
+        if (request()->hasFile('photo')) {
+            // TODO: Implémenter l'upload de fichier
+            // $aws = new AwsService();
+            // $data['photo'] = $aws->upload(request()->file('photo'), "Organigrammes")['full_url'];
+        }
+        
+        $organigramme->update($data);
+        return $organigramme->fresh();
+    }
+
+    /**
+     * Supprime un organigramme.
+     */
+    public function delete($id)
+    {
+        $organigramme = Organigramme::findOrFail($id);
+        return $organigramme->delete();
+    }
+
+    /**
+     * Recherche dans les organigrammes.
+     */
+    public function search($query)
+    {
+        return Organigramme::with(['media', 'legendes'])
+            ->where('name', 'like', "%{$query}%")
+            ->orWhere('legend', 'like', "%{$query}%")
+            ->orderByDesc('created_at')
+            ->get();
+    }
+
+    /**
+     * Vérifie si l'organigramme existe.
      */
     public function ifExist($id)
     {
@@ -39,7 +113,7 @@ class OrganigrammeRepository
     }
 
     /**
-     * Récupère toutes les fêtes avec pagination et filtres.
+     * Récupère tous les organigrammes avec pagination et filtres.
      */
     public function getAll($request)
     {
@@ -49,7 +123,7 @@ class OrganigrammeRepository
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
-            // ->with('invites') // à décommenter si besoin
+            ->with(['media', 'legendes'])
             ->orderByDesc('created_at');
 
         if (array_key_exists('per_page', $request->all())) {
@@ -61,7 +135,31 @@ class OrganigrammeRepository
     }
 
     /**
-     * Récupère une fête spécifique.
+     * Récupère un organigramme spécifique.
+     */
+    public function getById($id)
+    {
+        return Organigramme::with(['media', 'legendes'])->findOrFail($id);
+    }
+
+    /**
+     * Crée un nouvel organigramme (alias pour store).
+     */
+    public function store($data)
+    {
+        return $this->create($data);
+    }
+
+    /**
+     * Supprime un organigramme (alias pour destroy).
+     */
+    public function destroy($id)
+    {
+        return $this->delete($id);
+    }
+
+    /**
+     * Récupère un organigramme.
      */
     public function get($id)
     {
@@ -69,34 +167,32 @@ class OrganigrammeRepository
     }
 
     /**
-     * Crée une nouvelle fête.
+     * Crée un nouvel organigramme.
      */
     public function makeStore($data): Organigramme
     {
-        $model = new Organigramme($data);
-        /*$aws= new AwsService();
-        if(request()->file('file'))  $model->file = $aws->upload(request()->file('file'),"Organigrammes")['full_url'];*/
-        $model->save();
-
-        return $model;
+        return $this->create($data);
     }
 
     /**
-     * Met à jour une fête.
+     * Met à jour un organigramme.
      */
     public function makeUpdate($id, $data): Organigramme
     {
-        $model = Organigramme::findOrFail($id);
-        /*$aws= new AwsService();
-        if(request()->file('file'))  $data['file'] = $aws->upload(request()->file('file'),"Organigrammes")['full_url'];*/
-        $model->update($data);
-
-        return $model;
-
+        $organigramme = Organigramme::findOrFail($id);
+        
+        if (request()->hasFile('photo')) {
+            // TODO: Implémenter l'upload de fichier
+            // $aws = new AwsService();
+            // $data['photo'] = $aws->upload(request()->file('photo'), "Organigrammes")['full_url'];
+        }
+        
+        $organigramme->update($data);
+        return $organigramme;
     }
 
     /**
-     * Supprime une fête.
+     * Supprime un organigramme.
      */
     public function makeDestroy($id)
     {
@@ -104,7 +200,7 @@ class OrganigrammeRepository
     }
 
     /**
-     * Récupère les fêtes les plus récentes.
+     * Récupère les plus récents.
      */
     public function getlatest()
     {
@@ -112,168 +208,10 @@ class OrganigrammeRepository
     }
 
     /**
-     * Modifie le statut d'une fête.
+     * Modifie le statut d'un organigramme.
      */
     public function setStatus($id, $status)
     {
         return $this->findOrFail($id)->update(['status' => $status]);
     }
-
-    /**
-     * Recherche dans les fêtes (par nom, lieu...).
-     */
-    public function search($term)
-    {
-        $query = Organigramme::query();
-        $attrs = ['nom', 'lieu', 'type_Organigramme'];
-        
-        foreach ($attrs as $value) {
-            $query->orWhere($value, 'like', '%'.$term.'%');
-        }
-
-        return $query->get();
-    }
-
-    /*
-    function generateLink($id,$data) {
-        $code = Core::generateUniqueCode(Organigramme::class, 10, 'FET');
-        $link_token = Str::random(40); // Génère un token de 40 caractères
-        $url = env('APP_FRONT_URL').'/Organigramme/'.$code.'/'.$link_token;
-        $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
-        $qrCode = QrCode::format('png')->size(300)->generate($url);
-        $data['link_token']=$link_token;
-        $data['code']=$code;
-        $data['lien_unique']=$url ;
-        $data['qr_code'] = base64_encode($qrCode);
-        $data['status'] = 1;
-        $model = Organigramme::findOrFail($id);
-        $model->update($data);
-        return $model;
-    }
-
-    function generateMediaLink($id) {
-        $model = Organigramme::findOrFail($id);
-        $code = $model->code;
-        $media_token = Str::random(40); // Génère un token de 40 caractères
-        $url = env('APP_FRONT_URL').'/Organigramme-gallery/'.$code.'/'.$media_token;
-        $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
-        $qrCodeMedia = QrCode::format('png')->size(300)->generate($url);
-        $data['media_token']=$media_token;
-        $data['lien_unique_media']=$url ;
-        $data['qr_code_media'] = base64_encode($qrCodeMedia);
-        $data['status'] = 2;
-        $model->update($data);
-        return $model;
-    }
-
-    function verifyLink($data) {
-        if (isset($data['link_token'])) {
-            return Organigramme::where('link_token', )->first();
-        }else{
-            return Organigramme::where('media_token', $data['media_token'])->first();
-
-        }
-
-    }
-
-    function participate($data){
-        $check=Invite::where('Organigramme_id', $data['Organigramme_id'])
-            ->where('phone', $data['phone'])
-            ->first();
-            if ($check) {
-                $check->update($data);
-            }else{
-                $model = new Invite($data);
-                $model->save();
-            }
-   
-
-        return $model;
-
-    }
-*/
-
-     public function up($id)
-    {
-             // Récupérer le média
-        $media = Media::findOrFail($id);
-
-        // Mettre à jour la dernière transmission pour mettre is_last à false
-        $lastTransmission = $media->transmissions->last();
-        if ($lastTransmission) {
-            $lastTransmission->update(['is_last' => false]);
-        }
-
-        // Trouver le user avec le rôle 'validation' dans la même structure que l'utilisateur connecté
-        $toUser = User::where('structure_id', Auth::user()->structure_id)
-                    ->role('validation')
-                    ->first();
-
-        if (!$toUser) {
-            // Gérer l'erreur si aucun utilisateur validation n'est trouvé (optionnel)
-            return false;
-        }
-
-        // Créer une nouvelle transmission
-        Transmission::create([
-            'from' => Auth::id(),
-            'to' => $toUser->id,
-            'media_id' => $id,
-            'is_last' => true,
-        ]);
-
-        // Retourner true pour indiquer que l'opération a réussi
-        return true;
-    }
-
-         public function down($request, $id)
-    {  
-             $media = Media::findOrFail($id);
-
-            $media->update(['motif' => $request->motif]);
-
-            $lastTransmission = $media->transmissions->last();
-            if ($lastTransmission) {
-                $lastTransmission->update(['is_last' => false]);
-            }
-
-            $toUser = User::where('structure_id', $media->structure_id)
-                        ->role('saisie')
-                        ->first();
-
-            Transmission::create([
-                'from' => Auth::id(),
-                'to' => $toUser->id,
-                'media_id' => $id,
-                'is_last' => true,
-            ]);
-
-            return true;
-    }
-          
-          public function publish($id)
-    {
-         Media::findOrFail($id)->update(['is_published' => true]);
-         return true;
-
-    }
-
-    public function unpublish($id)
-    {
-        Media::findOrFail($id)->update(['is_published' => false]);
-         return true;
-    }
-
-    public function archive($id)
-    {
-         Media::findOrFail($id)->update(['is_archived' => true]);
-          return true;
-    }
-
-    public function restore($id)
-    {
-        Media::findOrFail($id)->update(['is_archived' => false]);
-         return true;
-    }
-
 }
