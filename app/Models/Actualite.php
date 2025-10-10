@@ -46,6 +46,11 @@ class Actualite extends Model
     {
         return $this->belongsTo(Category::class,'category_id');
     }
+
+     public function media()
+    {
+        return $this->belongsTo(Media::class,'media_id');
+    }
     
     public static function boot()
     {

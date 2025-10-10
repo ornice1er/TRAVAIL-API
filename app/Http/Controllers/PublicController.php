@@ -7,17 +7,22 @@ use Route,Response,Storage,Mail;
 use App\Models\Maps;
 use App\Models\Media;
 use App\Models\Poster;
-use App\Models\Prestations;
+use App\Models\Prestation;
 use App\Models\LiensUtile;
 use App\Models\Galeries;
-use App\Models\StructuresSousTutelles;
+use App\Models\StructureSousTutelles;
 use App\Models\TypesStructure;
-use App\Models\Structures;
+use App\Models\Structure;
 use App\Models\Organigrammes;
-use App\Models\Mots;
+use App\Models\Mot;
 use App\Models\Category;
 use App\Models\Doc;
 use App\Utilities\Common;
+use App\Models\Communique;
+use App\Models\Actualite;
+use Jorenvh\Share\ShareFacade as Share;
+use App\Mail\ContactFormMail;
+
 use Redirect,Http;
 
 
@@ -129,7 +134,7 @@ class PublicController extends Controller
 
         }else {
             $type=TypesStructure::where('is_parent',true)->first();
-            $structure=Structures::where('type_structure_id',$type->id)->first();
+            $structure=Structure::where('type_structure_id',$type->id)->first();
             $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->where('structure_id',$structure->id)->orderBy('id','desc')->get()->last();
      
              $title="Attributions, Organisations et Fonctionnement";
@@ -157,7 +162,7 @@ class PublicController extends Controller
         $share_path="prestations";
         $share_title="Nos prestations";
         $type=TypesStructure::where('is_parent',true)->first();
-        $structures=Structures::with('mediaPrestations.prestation')->where('type_structure_id',"!=",$type->id)
+        $structures=Structure::with('mediaPrestations.prestation')->where('type_structure_id',"!=",$type->id)
                                 ->whereHas('mediaPrestations',function($query){
                                      $query->where('type','prestation')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true);
                                 })
@@ -189,7 +194,7 @@ class PublicController extends Controller
         
         $type=TypesStructure::where('is_parent',true)->first();
 
-        $structures=Structures::with('medias')->where('type_structure_id',"!=",$type->id)->get();
+        $structures=Structure::with('medias')->where('type_structure_id',"!=",$type->id)->get();
                                 $i=0;
                                 foreach ($structures as $st) {
                                     $datas[$i]['st']=$st;
@@ -211,7 +216,8 @@ class PublicController extends Controller
       //  $prestations=Media::with('prestation')->where('type','prestation')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->take(4)->get();
     }       
         $sub_title=$typ;
-                         return Common::success("Données de site récupérées", compact(['share_path','title','share_title','datas','sub_title','doc_ccom']));
+    
+        return Common::success("Données de site récupérées", compact(['share_path','title','share_title','datas','sub_title','doc_ccom']));
 
     }
 
@@ -229,7 +235,7 @@ class PublicController extends Controller
        // $org=Organigrammes::all()->last();
        
        $type=TypesStructure::where('is_parent',true)->first();
-       $structure=Structures::where('type_structure_id',$type->id)->first();
+       $structure=Structure::where('type_structure_id',$type->id)->first();
        $org=Media::with('org')->where('type','organigramme')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->where('structure_id',$structure->id)->orderBy('id','desc')->get()->last();
 
         $title="ORGANIGRAMME";
@@ -240,7 +246,7 @@ class PublicController extends Controller
     }
     public function getStPage()
     {
-        $sts=StructuresSousTutelles::all();
+        $sts=StructureSousTutelles::all();
         $title="STRUCTURES SOUS TUTELLE";
         $share_path="directions";
         $share_title="Découvrez ici nos directions ";
@@ -307,7 +313,7 @@ class PublicController extends Controller
     }
     public function getHomeDGTPage()
     {
-        $structure=Structures::where('acronym',"DGT")->first();
+        $structure=Structure::where('acronym',"DGT")->first();
 
         $actualites=Media::with('actualite')->where('type','actualite')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->where('structure_id',$structure->id)->orderBy('id','desc')->take(4)->get();
         $communiques=Media::with('communique')->where('type','communique')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->take(4)->get();
@@ -321,7 +327,7 @@ class PublicController extends Controller
     }
     public function getHomeDGRCEPage()
     {
-        $structure=Structures::where('acronym',"DGRCE")->first();
+        $structure=Structure::where('acronym',"DGRCE")->first();
 
         $actualites=Media::with('actualite')->where('type','actualite')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->where('structure_id',$structure->id)->take(4)->get();
         $communiques=Media::with('communique')->where('type','communique')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->take(4)->get();
@@ -334,7 +340,7 @@ class PublicController extends Controller
     }
     public function getHomeDGFPPage()
     {
-        $structure=Structures::where('acronym',"DGFP")->first();
+        $structure=Structure::where('acronym',"DGFP")->first();
         $actualites=Media::with('actualite')->where('type','actualite')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->where('structure_id',$structure->id)->orderBy('id','desc')->take(4)->get();
         $communiques=Media::with('communique')->where('type','communique')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->take(4)->get();
         $prestations=Media::with('prestation')->where('type','prestation')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->take(4)->get();
@@ -428,7 +434,7 @@ class PublicController extends Controller
     {
         $type=TypesStructure::where('is_parent',true)->first();
 
-        $structure=Structures::where('type_structure_id',$type->id)->first();
+        $structure=Structure::where('type_structure_id',$type->id)->first();
 
        // ->where('structure_id',$structure->id)
         // $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get()->last();
@@ -444,7 +450,7 @@ class PublicController extends Controller
     public function getSGMPage()
     {
 
-        $structure=Structures::where('acronym',"SGM")->first();
+        $structure=Structure::where('acronym',"SGM")->first();
 
        // ->where('structure_id',$structure->id)
         // $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get()->last();
@@ -473,7 +479,7 @@ class PublicController extends Controller
                                                                  return Common::success("Données de site récupérées",compact(['direction','title','share_path','share_title']));
 
         } else {
-            $structure=Structures::where('acronym',$category)->first();
+            $structure=Structure::where('acronym',$category)->first();
             // ->where('structure_id',$structure->id)
              // $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get()->last();
              $aof=Media::with('aof')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
@@ -493,7 +499,7 @@ class PublicController extends Controller
     {
 
         $type=TypesStructure::where('title','Directions Départementales')->first();
-        $structures=Structures::where('type_structure_id',$type->id)->get();
+        $structures=Structure::where('type_structure_id',$type->id)->get();
        // ->where('structure_id',$structure->id)
         // $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get()->last();
         if ($structures->count()!=0) {
@@ -510,7 +516,7 @@ class PublicController extends Controller
     public function getAofIgsepPage()
     {
 
-        $structure=Structures::where('acronym',"IGSEP")->first();
+        $structure=Structure::where('acronym',"IGSEP")->first();
 
        // ->where('structure_id',$structure->id)
         // $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get()->last();
@@ -527,12 +533,12 @@ class PublicController extends Controller
     public function getMinistrePage($id)
     {
         $type=TypesStructure::where('is_parent',true)->first();
-        $structure=Structures::where('type_structure_id',$type->id)->first();
+        $structure=Structure::with('teams')->where('type_structure_id',$type->id)->first();
         $title="LE MINISTRE";
         $share_path="ministre";
         $share_title="Découvre la biographie de notre Ministre";
-        $mots=Mots::where('structure_id',$structure->id)->get();
-        $id==null?$mot=$structure->mots->last():$mot=Mots::find($id);
+        $mots=Mot::where('structure_id',$structure->id)->get();
+        $id==null?$mot=$structure->mots->last():$mot=Mot::find($id);
                 return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','mots','mot']));
 
     }
@@ -577,7 +583,7 @@ class PublicController extends Controller
         $igsep="";
         $share_path="";
         $share_title="";
-        $structure=Structures::where('acronym',"IGSEP")->first();
+        $structure=Structure::where('acronym',"IGSEP")->first();
         $org=Media::with('org')->where('type','organigramme')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->where('structure_id',$structure->id)->orderBy('id','desc')->get()->last();
 
                     return Common::success("Données de site récupérées",compact(['igsep','share_path',"share_title",'structure','org']));
@@ -675,4 +681,130 @@ class PublicController extends Controller
             return $faqs;
         }
     }
+
+
+      public function getCommuniquePage($slug)
+    {
+
+        $communique=Communique::whereSlug($slug)->first();
+
+        $title="COMMUNIQUES";
+        $share_path="page/communique/".$slug;
+        $share_title=$communique->title;
+
+        return Common::success("Données de site récupérées",compact(['communique','title','share_path',"share_title"]));
+
+    }
+
+    public function getActualitePage($slug)
+    {
+
+        $actualite=Actualite::whereSlug($slug)->first();
+
+        $title=$actualite->title;
+        $share_path="page/actualites/".$slug;
+        $share_title=$actualite->title;
+
+         $shareLinks = Share::page($share_path, $share_title)
+        ->facebook()
+        ->twitter()
+        ->linkedin()
+        ->whatsapp()
+        ->telegram()
+        ->getRawLinks();
+        return Common::success("Données de site récupérées",compact(['actualite','title','shareLinks']));
+
+    }
+
+    function getActualites(Request $request) {
+
+        $categories=Category::all();
+        $actualites=Actualite::with('media')->orderBy('id','desc')->paginate($request->pageSize);
+        $actualiteUne=Actualite::with('media')->orderBy('id','desc')->first();
+        $structures=Structure::all();
+        return Common::success("Données de site récupérées",compact(['actualites','actualiteUne','categories','structures']));
+
+    }
+
+
+    function getDocuments(Request $request){
+
+        $categorie = $request->categorie; // ex: lois, decrets, etc.
+    $pageSize = $request->pageSize ?? 10;
+
+    // === 1. Construction de la requête de base ===
+    $query = Doc::orderBy('id', 'desc');
+
+    // === 2. Filtrage si catégorie fournie ===
+    if (!empty($categorie) && $categorie!="tous") {
+        $query->where('type', $categorie);
+    }
+
+    // === 3. Pagination ===
+    $documents = $query->paginate($pageSize);
+
+    // === 4. Ajout des liens de partage à chaque document ===
+    $documents->getCollection()->transform(function ($doc) use ($categorie) {
+        $share_path = url("docs/{$doc->filename}");
+        $share_title = "Découvrez ici notre document de type {$categorie} : {$doc->name}";
+
+        $doc->share_links = Share::page($share_path, $share_title)
+            ->facebook()
+            ->twitter()
+            ->linkedin()
+            ->whatsapp()
+            ->telegram()
+            ->getRawLinks();
+
+        return $doc;
+    });
+    $documents=[
+        'data' => $documents->items(),
+        'current_page' => $documents->currentPage(),
+            'last_page' => $documents->lastPage(),
+            'total' => $documents->total(),
+            'per_page' => $documents->perPage()
+    ];
+
+        return Common::success("Données de site récupérées",compact(['documents']));
+    }
+
+
+    function getServices(Request $request) {
+        $services=Prestation::orderBy('id','desc')->paginate($request->pageSize);
+
+        return Common::success("Données de site récupérées",compact(['services']));
+
+    }
+
+
+    function sendContactForm(Request $request)  {
+               $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'email' => 'required|email',
+            'telephone' => 'required|string|max:20',
+            'sujet' => 'required|string|max:255',
+            'message' => 'required|string',
+            'accepteTraitement' => 'required|boolean',
+        ]);
+
+        // Construction du contenu
+        $content = [
+            'nom' => $validated['nom'],
+            'email' => $validated['email'],
+            'telephone' => $validated['telephone'],
+            'sujet' => $validated['sujet'],
+            'message' => $validated['message'],
+        ];
+
+        $to = "mtfp.usager@gouv.bj";
+
+        // Envoi du mail
+        Mail::to($to)->send(new ContactFormMail($content));
+
+
+        return Common::success("Données de site récupérées",[]);
+
+    }
+
 }
