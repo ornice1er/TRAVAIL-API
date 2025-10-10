@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Str;
 
-class CommuniquesFiles extends Model
+class CommuniqueFile extends Model
 {
-    use HasFactory, Filterable, SoftDeletes, HasUuids;
+    use HasFactory, Filterable, HasUuids;
     protected $fillable = ['type', 'nom', 'reference', 'filename', 'communiques_id'];
 
     // Normalement, un fichier lié à un communiqué est une relation "belongsTo" vers Communiques,
@@ -19,6 +19,6 @@ class CommuniquesFiles extends Model
 
     public function communique()
     {
-        return $this->belongsTo(Communiques::class, 'communiques_id');
+        return $this->belongsTo(Communique::class, 'communiques_id');
     }
 }
