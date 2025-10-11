@@ -19,7 +19,7 @@ class NewsletterController
      *
      * @var NewsletterRepository
      */
-    protected $newsletterRepository;
+    protected $repository;
 
     /**
      * Log service
@@ -30,7 +30,7 @@ class NewsletterController
 
     public function __construct(NewsletterRepository $newsletterRepository, LogService $ls)
     {
-        $this->newsletterRepository = $newsletterRepository;
+        $this->repository = $newsletterRepository;
         $this->ls = $ls;
     }
 
@@ -84,7 +84,7 @@ class NewsletterController
         $message = 'Récupération de toutes les inscriptions newsletter';
         
         try {
-            $newsletters = $this->newsletterRepository->all();
+            $newsletters = $this->repository->all();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Inscriptions newsletter récupérées avec succès']);
             return Common::success($newsletters, 'Inscriptions newsletter récupérées avec succès');
@@ -126,7 +126,7 @@ class NewsletterController
         $message = "Récupération de l'inscription newsletter avec ID: $id";
         
         try {
-            $newsletter = $this->newsletterRepository->findById($id);
+            $newsletter = $this->repository->findById($id);
             
             if (!$newsletter) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Inscription newsletter non trouvée avec ID: $id"]);
@@ -178,7 +178,7 @@ class NewsletterController
             $data['ajouté_par'] = Auth::id();
             $data['status'] = 'actif';
             
-            $newsletter = $this->newsletterRepository->create($data);
+            $newsletter = $this->repository->create($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Inscription newsletter créée avec succès avec ID: ' . $newsletter->id]);
             return Common::success($newsletter, 'Inscription newsletter créée avec succès');
@@ -229,7 +229,7 @@ class NewsletterController
         $message = "Mise à jour de l'inscription newsletter avec ID: $id";
         
         try {
-            $newsletter = $this->newsletterRepository->findById($id);
+            $newsletter = $this->repository->findById($id);
             
             if (!$newsletter) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Inscription newsletter non trouvée pour mise à jour avec ID: $id"]);
@@ -237,7 +237,7 @@ class NewsletterController
             }
             
             $data = $request->validated();
-            $updatedNewsletter = $this->newsletterRepository->update($id, $data);
+            $updatedNewsletter = $this->repository->update($id, $data);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Inscription newsletter mise à jour avec succès pour ID: $id"]);
             return Common::success($updatedNewsletter, 'Inscription newsletter mise à jour avec succès');
@@ -278,14 +278,14 @@ class NewsletterController
         $message = "Suppression de l'inscription newsletter avec ID: $id";
         
         try {
-            $newsletter = $this->newsletterRepository->findById($id);
+            $newsletter = $this->repository->findById($id);
             
             if (!$newsletter) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Inscription newsletter non trouvée pour suppression avec ID: $id"]);
                 return Common::error('Inscription newsletter non trouvée', []);
             }
             
-            $this->newsletterRepository->delete($id);
+            $this->repository->delete($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Inscription newsletter supprimée avec succès pour ID: $id"]);
             return Common::success(null, 'Inscription newsletter supprimée avec succès');
@@ -334,7 +334,7 @@ class NewsletterController
         $message = "Changement d'état de l'inscription newsletter avec ID: $id";
         
         try {
-            $newsletter = $this->newsletterRepository->findById($id);
+            $newsletter = $this->repository->findById($id);
             
             if (!$newsletter) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Inscription newsletter non trouvée avec ID: $id"]);
@@ -342,7 +342,7 @@ class NewsletterController
             }
             
             $status = $request->input('status');
-            $updatedNewsletter = $this->newsletterRepository->update($id, ['status' => $status]);
+            $updatedNewsletter = $this->repository->update($id, ['status' => $status]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "État changé vers '$status' pour ID: $id"]);
             return Common::success($updatedNewsletter, 'État de l\'inscription newsletter modifié avec succès');
@@ -384,7 +384,7 @@ class NewsletterController
         
         try {
             $query = $request->input('query');
-            $results = $this->newsletterRepository->search($query);
+            $results = $this->repository->search($query);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Recherche effectuée avec le terme: $query"]);
             return Common::success($results, 'Résultats de recherche obtenus avec succès');
@@ -554,7 +554,7 @@ class NewsletterController
         $message = "Remontée de position pour l'inscription newsletter avec ID: $id";
         
         try {
-            $newsletter = $this->newsletterRepository->findById($id);
+            $newsletter = $this->repository->findById($id);
             
             if (!$newsletter) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Inscription newsletter non trouvée avec ID: $id"]);
@@ -602,7 +602,7 @@ class NewsletterController
         $message = "Descente de position pour l'inscription newsletter avec ID: $id";
         
         try {
-            $newsletter = $this->newsletterRepository->findById($id);
+            $newsletter = $this->repository->findById($id);
             
             if (!$newsletter) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Inscription newsletter non trouvée avec ID: $id"]);
@@ -615,6 +615,53 @@ class NewsletterController
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la descente de position', []);
+        }
+    }
+
+    /** @OA\Post(
+     *      path="/newsletters/subscribe",
+     *      operationId="Newsletter subscribe",
+     *      tags={"Newsletter"},
+     *      summary="Subscribe to newsletter",
+     *      description="Subscribe an email to the newsletter",
+     *
+     *      @OA\RequestBody(
+     *          required=true,
+     *
+     *          @OA\JsonContent(
+     *
+     *              @OA\Property(property="email", type="string", example="user@example.com")
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *
+     *          @OA\JsonContent(
+     *
+     *              @OA\Property(property="success", type="boolean"),
+     *              @OA\Property(property="message", type="string")
+     *          )
+     *      ),
+     *
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=500,
+     *          description="Server Error"
+     *      )
+     * )
+     */
+    public function subscribe(Request $request)
+    {
+        try {
+            $result = $this->repository->subscribe();
+            return $result;
+        } catch (\Throwable $th) {
+            return Common::error($th->getMessage(), []);
         }
     }
 }

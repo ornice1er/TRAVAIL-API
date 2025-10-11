@@ -2,11 +2,15 @@
 
 namespace App\Http\Repositories;
 
+use App\Models\User;
+use App\Models\Media;
 use App\Models\Communique;
+use App\Models\Transmission;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
  
 
 class CommuniqueRepository
@@ -154,31 +158,59 @@ class CommuniqueRepository
 
     public function up($id)
     {
+        Media::find($id)->transmissions->last()->update(['is_last'=>false]);
+        $to=User::role('ccom')->first()->id;
+        Transmission::create([
+            'from'=>Auth::id(),
+            'to'=>$to,
+            'media_id'=>$id,
+            'is_last'=>true,
+        ]);
+
         return true;
     }
 
     public function down($request, $id)
-    {
+    {     
+        Media::find($id)->update(['motif'=>$request['motif']]);
+        Media::find($id)->transmissions->last()->update(['is_last'=>false]);
+      
+        $to=User::where('structure_id',Media::find($id)->structure_id)->role('saisie')->first()->id;
+        Transmission::create([
+            'from'=>Auth::id(),
+            'to'=>$to,
+            'media_id'=>$id,
+            'is_last'=>true,
+        ]);
+
         return true;
     }
 
     public function publish($id)
     {
+        Media::find($id)->update(['is_published'=>true]);
+        
         return true;
     }
 
     public function unpublish($id)
     {
+        Media::find($id)->update(['is_published'=>false]);
+        
         return true;
     }
 
     public function archive($id)
     {
+        Media::find($id)->update(['is_archived'=>true]);
+        
         return true;
     }
 
     public function restore($id)
     {
+        Media::find($id)->update(['is_archived'=>false]);
+        
         return true;
     }
 

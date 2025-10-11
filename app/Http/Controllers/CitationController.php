@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\citationRepository;
+use App\Http\Repositories\CitationRepository;
 use App\Http\Requests\Citation\StoreCitationRequest;
 use App\Http\Requests\Citation\UpdateCitationRequest;
 use App\Services\LogService;
@@ -26,7 +26,7 @@ class CitationController
      */
     protected $ls;
 
-    public function __construct(citationRepository $citationRepository, LogService $ls)
+    public function __construct(CitationRepository $citationRepository, LogService $ls)
     {
         $this->citationRepository = $citationRepository;
         $this->ls = $ls;

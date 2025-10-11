@@ -304,5 +304,5 @@ public function download()
         $model->is_published = $state;
         $model->save();
         return $model;
-    }
+    }*/
 }

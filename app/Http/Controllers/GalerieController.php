@@ -19,7 +19,7 @@ class GalerieController
      *
      * @var GalerieRepository
      */
-    protected $galerieRepository;
+    protected $repository;
 
     /**
      * Log service
@@ -30,7 +30,7 @@ class GalerieController
 
     public function __construct(GalerieRepository $galerieRepository, LogService $ls)
     {
-        $this->galerieRepository = $galerieRepository;
+        $this->repository = $galerieRepository;
         $this->ls = $ls;
     }
 
@@ -83,7 +83,7 @@ class GalerieController
     public function index(Request $request)
     {
         try {
-            $result = $this->galerieRepository->getAll($request);
+            $result = $this->repository->getAll($request);
             $this->ls->trace(['action_name' => 'Journal des galeries', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des galeries', $result);
@@ -133,7 +133,7 @@ class GalerieController
     public function show($id)
     {
         try {
-            $result = $this->galerieRepository->show($id);
+            $result = $this->repository->show($id);
             $this->ls->trace(['action_name' => 'Détail galerie', 'description' => $id]);
 
             return Common::success('Détail galerie', $result);
@@ -181,7 +181,7 @@ class GalerieController
             $data = $request->validated();
             $data['user_id'] = Auth::id();
             
-            $result = $this->galerieRepository->create($data);
+            $result = $this->repository->create($data);
             $this->ls->trace(['action_name' => 'Création galerie', 'description' => json_encode($data)]);
 
             return Common::success('Galerie créée avec succès', $result);
@@ -241,7 +241,7 @@ class GalerieController
         try {
             $data = $request->validated();
             
-            $result = $this->galerieRepository->update($id, $data);
+            $result = $this->repository->update($id, $data);
             $this->ls->trace(['action_name' => 'Modification galerie', 'description' => json_encode($data)]);
 
             return Common::success('Galerie modifiée avec succès', $result);
@@ -291,7 +291,7 @@ class GalerieController
     public function destroy($id)
     {
         try {
-            $this->galerieRepository->delete($id);
+            $this->repository->delete($id);
             $this->ls->trace(['action_name' => 'Suppression galerie', 'description' => $id]);
 
             return Common::success('Galerie supprimée avec succès', []);
@@ -352,7 +352,7 @@ class GalerieController
     public function changeState(Request $request, $id)
     {
         try {
-            $result = $this->galerieRepository->changeState($id, $request->state);
+            $result = $this->repository->changeState($id, $request->state);
             $this->ls->trace(['action_name' => 'Changement état galerie', 'description' => json_encode(['id' => $id, 'state' => $request->state])]);
 
             return Common::success('État galerie modifié avec succès', $result);
@@ -405,7 +405,7 @@ class GalerieController
     public function search(Request $request)
     {
         try {
-            $result = $this->galerieRepository->search($request);
+            $result = $this->repository->search($request);
             $this->ls->trace(['action_name' => 'Recherche galeries', 'description' => json_encode($request->all())]);
 
             return Common::success('Recherche galeries', $result);
@@ -459,7 +459,7 @@ class GalerieController
     public function up($id)
     {
         try {
-            $result = $this->galerieRepository->up($id);
+            $result = $this->repository->up($id);
             $this->ls->trace(['action_name' => 'Déplacer galerie vers le haut', 'description' => $id]);
 
             return Common::success('Galerie déplacée vers le haut avec succès', $result);
@@ -513,7 +513,7 @@ class GalerieController
     public function down($id)
     {
         try {
-            $result = $this->galerieRepository->down($id);
+            $result = $this->repository->down($id);
             $this->ls->trace(['action_name' => 'Déplacer galerie vers le bas', 'description' => $id]);
 
             return Common::success('Galerie déplacée vers le bas avec succès', $result);
@@ -567,7 +567,7 @@ class GalerieController
     public function publish($id)
     {
         try {
-            $result = $this->galerieRepository->publish($id);
+            $result = $this->repository->publish($id);
             $this->ls->trace(['action_name' => 'Publication galerie', 'description' => $id]);
 
             return Common::success('Galerie publiée avec succès', $result);
@@ -621,7 +621,7 @@ class GalerieController
     public function unpublish($id)
     {
         try {
-            $result = $this->galerieRepository->unpublish($id);
+            $result = $this->repository->unpublish($id);
             $this->ls->trace(['action_name' => 'Dépublication galerie', 'description' => $id]);
 
             return Common::success('Galerie dépubliée avec succès', $result);
@@ -675,7 +675,7 @@ class GalerieController
     public function archive($id)
     {
         try {
-            $result = $this->galerieRepository->archive($id);
+            $result = $this->repository->archive($id);
             $this->ls->trace(['action_name' => 'Archivage galerie', 'description' => $id]);
 
             return Common::success('Galerie archivée avec succès', $result);
@@ -729,7 +729,7 @@ class GalerieController
     public function restore($id)
     {
         try {
-            $result = $this->galerieRepository->restore($id);
+            $result = $this->repository->restore($id);
             $this->ls->trace(['action_name' => 'Restauration galerie', 'description' => $id]);
 
             return Common::success('Galerie restaurée avec succès', $result);

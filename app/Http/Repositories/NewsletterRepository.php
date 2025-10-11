@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Models\Newsletter;
+use App\Models\Structure;
 use App\Models\Structures;
 use App\Models\TypesStructure;
 use App\Traits\Repository;
@@ -164,7 +165,7 @@ class NewsletterRepository
         $email = request()->input('email');
 
         $type = TypesStructure::where('is_parent', true)->first();
-        $structure = Structures::where('type_structure_id', $type->id)->first();
+        $structure = Structure::where('type_structure_id', $type->id)->first();
 
         if (!$this->isSubscribed($email)) {
             $newsletter = Newsletter::create([

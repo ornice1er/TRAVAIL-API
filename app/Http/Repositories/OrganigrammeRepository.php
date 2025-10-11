@@ -214,4 +214,166 @@ class OrganigrammeRepository
     {
         return $this->findOrFail($id)->update(['status' => $status]);
     }
+
+    /**
+     * Récupère les organigrammes par rôle et structure.
+     */
+    public function getByRoleAndStructure($structureId, $role, $userId)
+    {
+        if ($role == "saisie") {
+            return Media::with(['org'])->where("type", "organigramme")
+                ->where('structure_id', $structureId)
+                ->where('is_published', false)
+                ->whereHas('transmissions', function($q) use($userId) {
+                    $q->where('to', "=", $userId)->where('is_last', "=", true);
+                })->get();
+        } elseif ($role == "validation") {
+            return Media::with(['org'])->where("type", "organigramme")
+                ->where('structure_id', $structureId)
+                ->whereHas('transmissions', function($q) use($userId) {
+                    $q->where('to', "=", $userId)->where('is_last', "=", true);
+                })->get();
+        } elseif ($role == "ccom") {
+            return Media::with(['org'])->where("type", "organigramme")
+                ->where('structure_id', $structureId)->get();
+        }
+        
+        return collect();
+    }
+
+    /**
+     * Crée un organigramme avec Media, Parcours et Transmission.
+     */
+    public function createWithWorkflow($data)
+    {
+        $media = new Media();
+        $media->code = Str::uuid();
+        $media->structure_id = Auth::user()->structure_id;
+        $media->has_principal_access = $data['has_principal_access'] ?? false;
+        $media->type = "organigramme";
+        $media->save();
+
+        $slug = Str::slug($data['name']).'-'.date('ymdis').'-'.rand(0,999);
+        
+        // Traitement du fichier photo si présent
+        if (isset($data['photo'])) {
+            $data['photo'] = \App\Utilities\FileStorage::setFile('public', $data['photo'], 'organigrammes', $slug);
+        }
+        
+        $data['media_id'] = $media->id;
+        $organigramme = Organigramme::create($data);
+
+        // Création du parcours
+        \App\Models\Parcours::create([
+            'media_id' => $media->id,
+            "libelle" => "Création de l'organigramme " . $data['name']
+        ]);
+
+        // Création de la transmission
+        Transmission::create([
+            'from' => Auth::id(),
+            'to' => Auth::id(),
+            'media_id' => $media->id,
+            'is_last' => true,
+        ]);
+
+        return $organigramme;
+    }
+
+    /**
+     * Met à jour un organigramme avec gestion du fichier.
+     */
+    public function updateWithFile($id, $data, $file = null)
+    {
+        $media = Media::findOrFail($id);   
+        $org = $media->org;
+        
+        $media->fill(array_intersect_key($data, array_flip(['has_principal_access'])))->save();
+        
+        $updateData = array_intersect_key($data, array_flip(['name', 'legend']));
+        $slug = Str::slug($data['name']).'-'.date('ymdis').'-'.rand(0,999);
+
+        if ($file) {
+            \App\Utilities\FileStorage::deleteFile('public', $file, $org->photo);
+            $updateData['photo'] = \App\Utilities\FileStorage::setFile('public', $file, 'organigrammes', $slug);
+        }
+
+        return $org->fill($updateData)->save();
+    }
+
+    /**
+     * Faire remonter un organigramme (transmission vers validation).
+     */
+    public function moveUp($id)
+    {
+        Media::find($id)->transmissions->last()->update(['is_last' => false]);
+        
+        $to = User::where('structure_id', Auth::user()->structure_id)
+            ->role('validation')->first()->id;
+            
+        Transmission::create([
+            'from' => Auth::id(),
+            'to' => $to,
+            'media_id' => $id,
+            'is_last' => true,
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Faire redescendre un organigramme (transmission vers saisie).
+     */
+    public function moveDown($id, $motif = null)
+    {
+        if ($motif) {
+            Media::find($id)->update(['motif' => $motif]);
+        }
+        
+        Media::find($id)->transmissions->last()->update(['is_last' => false]);
+      
+        $to = User::where('structure_id', Media::find($id)->structure_id)
+            ->role('saisie')->first()->id;
+            
+        Transmission::create([
+            'from' => Auth::id(),
+            'to' => $to,
+            'media_id' => $id,
+            'is_last' => true,
+        ]);
+
+        return true;
+    }
+
+    /**
+     * Publier un organigramme.
+     */
+    public function publish($id)
+    {
+        return Media::find($id)->update(['is_published' => true]);
+    }
+
+    /**
+     * Dépublier un organigramme.
+     */
+    public function unpublish($id)
+    {
+        return Media::find($id)->update(['is_published' => false]);
+    }
+
+    /**
+     * Archiver un organigramme.
+     */
+    public function archive($id)
+    {
+        return Media::find($id)->update(['is_archived' => true]);
+    }
+
+    /**
+     * Restaurer un organigramme.
+     */
+    public function restore($id)
+    {
+        return Media::find($id)->update(['is_archived' => false]);
+    }
 }

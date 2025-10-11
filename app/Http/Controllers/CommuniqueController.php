@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\communiqueRepository;
+use App\Http\Repositories\CommuniqueRepository;
 use App\Http\Requests\Communique\StoreCommuniqueRequest;
 use App\Http\Requests\Communique\UpdateCommuniqueRequest;
 use App\Services\LogService;
@@ -17,7 +17,7 @@ class CommuniqueController
      *
      * @var CommuniqueRepository
      */
-    protected $communiqueRepository;
+    private CommuniqueRepository $repository;
 
     /**
      * Log service
@@ -26,9 +26,9 @@ class CommuniqueController
      */
     protected $ls;
 
-    public function __construct(communiqueRepository $communiqueRepository, LogService $ls)
+    public function __construct(CommuniqueRepository $communiqueRepository, LogService $ls)
     {
-        $this->communiqueRepository = $communiqueRepository;
+        $this->repository = $communiqueRepository;
         $this->ls = $ls;
     }
 
@@ -83,7 +83,7 @@ class CommuniqueController
         $message = 'Récupération de la liste des communiqués';
 
         try {
-            $result = $this->communiqueRepository->getAll($request);
+            $result = $this->repository->getAll($request);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
@@ -145,7 +145,7 @@ class CommuniqueController
         $message = 'Récupération du communiqué';
 
         try {
-            $result = $this->communiqueRepository->getById($id);
+            $result = $this->repository->getById($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -199,7 +199,7 @@ class CommuniqueController
         $message = 'Création du communiqué';
 
         try {
-            $result = $this->communiqueRepository->store($request->all());
+            $result = $this->repository->store($request->all());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
@@ -268,7 +268,7 @@ class CommuniqueController
         $message = 'Mise à jour du communiqué';
 
         try {
-            $result = $this->communiqueRepository->update($request->all(), $id);
+            $result = $this->repository->update($request->all(), $id);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all()) . ' - ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -330,7 +330,7 @@ class CommuniqueController
         $message = 'Suppression du communiqué';
 
         try {
-            $result = $this->communiqueRepository->destroy($id);
+            $result = $this->repository->destroy($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -406,7 +406,7 @@ class CommuniqueController
         $message = 'Changement de statut du communiqué';
 
         try {
-            $result = $this->communiqueRepository->changeState($request->state, $id);
+            $result = $this->repository->changeState($request->state, $id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id . ' - État: ' . $request->state]);
 
             return Common::success($message, $result);
@@ -468,7 +468,7 @@ class CommuniqueController
         $message = 'Recherche de communiqués';
 
         try {
-            $result = $this->communiqueRepository->search($request);
+            $result = $this->repository->search($request);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
@@ -530,7 +530,7 @@ class CommuniqueController
         $message = 'Déplacement du communiqué vers le haut';
 
         try {
-            $result = $this->communiqueRepository->up($id);
+            $result = $this->repository->up($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -592,7 +592,7 @@ class CommuniqueController
         $message = 'Déplacement du communiqué vers le bas';
 
         try {
-            $result = $this->communiqueRepository->down([], $id);
+            $result = $this->repository->down([], $id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -654,7 +654,7 @@ class CommuniqueController
         $message = 'Publication du communiqué';
 
         try {
-            $result = $this->communiqueRepository->publish($id);
+            $result = $this->repository->publish($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -716,7 +716,7 @@ class CommuniqueController
         $message = 'Dépublication du communiqué';
 
         try {
-            $result = $this->communiqueRepository->unpublish($id);
+            $result = $this->repository->unpublish($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -778,7 +778,7 @@ class CommuniqueController
         $message = 'Archivage du communiqué';
 
         try {
-            $result = $this->communiqueRepository->archive($id);
+            $result = $this->repository->archive($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -840,7 +840,7 @@ class CommuniqueController
         $message = 'Restauration du communiqué';
 
         try {
-            $result = $this->communiqueRepository->restore($id);
+            $result = $this->repository->restore($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -898,7 +898,7 @@ class CommuniqueController
         $message = 'Génération du lien QR Code pour le communiqué';
 
         try {
-            $result = $this->communiqueRepository->generateLink($id, []);
+            $result = $this->repository->generateLink($id, []);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -956,7 +956,7 @@ class CommuniqueController
         $message = 'Génération du lien média QR Code pour le communiqué';
 
         try {
-            $result = $this->communiqueRepository->generateMediaLink($id);
+            $result = $this->repository->generateMediaLink($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -1013,7 +1013,7 @@ class CommuniqueController
         $message = 'Vérification du lien QR Code';
 
         try {
-            $result = $this->communiqueRepository->verifyLink($code);
+            $result = $this->repository->verifyLink($code);
 
             return Common::success($message, $result);
         } catch (\Throwable $th) {
@@ -1068,7 +1068,7 @@ class CommuniqueController
         $message = 'Participation au communiqué';
 
         try {
-            $result = $this->communiqueRepository->participate($id);
+            $result = $this->repository->participate($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);

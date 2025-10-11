@@ -18,7 +18,7 @@ class NotificationController
      *
      * @var NotificationRepository
      */
-    protected $notificationRepository;
+    protected $repository;
 
     /**
      * Log service
@@ -29,7 +29,7 @@ class NotificationController
 
     public function __construct(NotificationRepository $notificationRepository, LogService $ls)
     {
-        $this->notificationRepository = $notificationRepository;
+        $this->repository = $notificationRepository;
         $this->ls = $ls;
     }
 
@@ -83,7 +83,7 @@ class NotificationController
         $message = 'Récupération de toutes les notifications';
         
         try {
-            $notifications = $this->notificationRepository->all();
+            $notifications = $this->repository->all();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Notifications récupérées avec succès']);
             return Common::success($notifications, 'Notifications récupérées avec succès');
@@ -125,7 +125,7 @@ class NotificationController
         $message = "Récupération de la notification avec ID: $id";
         
         try {
-            $notification = $this->notificationRepository->findById($id);
+            $notification = $this->repository->findById($id);
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
@@ -177,7 +177,7 @@ class NotificationController
         
         try {
             $data = $request->validated();
-            $notification = $this->notificationRepository->create($data);
+            $notification = $this->repository->create($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Notification créée avec succès avec ID: ' . $notification->id]);
             return Common::success($notification, 'Notification créée avec succès');
@@ -231,7 +231,7 @@ class NotificationController
         $message = "Mise à jour de la notification avec ID: $id";
         
         try {
-            $notification = $this->notificationRepository->findById($id);
+            $notification = $this->repository->findById($id);
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée pour mise à jour avec ID: $id"]);
@@ -239,7 +239,7 @@ class NotificationController
             }
             
             $data = $request->validated();
-            $updatedNotification = $this->notificationRepository->update($id, $data);
+            $updatedNotification = $this->repository->update($id, $data);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Notification mise à jour avec succès pour ID: $id"]);
             return Common::success($updatedNotification, 'Notification mise à jour avec succès');
@@ -280,14 +280,14 @@ class NotificationController
         $message = "Suppression de la notification avec ID: $id";
         
         try {
-            $notification = $this->notificationRepository->findById($id);
+            $notification = $this->repository->findById($id);
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée pour suppression avec ID: $id"]);
                 return Common::error('Notification non trouvée', []);
             }
             
-            $this->notificationRepository->delete($id);
+            $this->repository->delete($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Notification supprimée avec succès pour ID: $id"]);
             return Common::success(null, 'Notification supprimée avec succès');
@@ -329,14 +329,14 @@ class NotificationController
         $message = "Marquer la notification comme lue avec ID: $id";
         
         try {
-            $notification = $this->notificationRepository->findById($id);
+            $notification = $this->repository->findById($id);
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
                 return Common::error('Notification non trouvée', []);
             }
             
-            $updatedNotification = $this->notificationRepository->update($id, ['lu_à' => now()]);
+            $updatedNotification = $this->repository->update($id, ['lu_à' => now()]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Notification marquée comme lue pour ID: $id"]);
             return Common::success($updatedNotification, 'Notification marquée comme lue avec succès');
@@ -378,7 +378,7 @@ class NotificationController
         
         try {
             $query = $request->input('query');
-            $results = $this->notificationRepository->search($query);
+            $results = $this->repository->search($query);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Recherche effectuée avec le terme: $query"]);
             return Common::success($results, 'Résultats de recherche obtenus avec succès');
@@ -420,7 +420,7 @@ class NotificationController
         $message = "Remontée de position pour la notification avec ID: $id";
         
         try {
-            $notification = $this->notificationRepository->findById($id);
+            $notification = $this->repository->findById($id);
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
@@ -468,7 +468,7 @@ class NotificationController
         $message = "Descente de position pour la notification avec ID: $id";
         
         try {
-            $notification = $this->notificationRepository->findById($id);
+            $notification = $this->repository->findById($id);
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
@@ -516,14 +516,14 @@ class NotificationController
         $message = "Activation de la notification avec ID: $id";
         
         try {
-            $notification = $this->notificationRepository->findById($id);
+            $notification = $this->repository->findById($id);
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
                 return Common::error('Notification non trouvée', []);
             }
             
-            $updatedNotification = $this->notificationRepository->update($id, ['is_active' => true]);
+            $updatedNotification = $this->repository->update($id, ['is_active' => true]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Notification activée avec succès pour ID: $id"]);
             return Common::success($updatedNotification, 'Notification activée avec succès');
@@ -565,14 +565,14 @@ class NotificationController
         $message = "Désactivation de la notification avec ID: $id";
         
         try {
-            $notification = $this->notificationRepository->findById($id);
+            $notification = $this->repository->findById($id);
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
                 return Common::error('Notification non trouvée', []);
             }
             
-            $updatedNotification = $this->notificationRepository->update($id, ['is_active' => false]);
+            $updatedNotification = $this->repository->update($id, ['is_active' => false]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Notification désactivée avec succès pour ID: $id"]);
             return Common::success($updatedNotification, 'Notification désactivée avec succès');
@@ -606,7 +606,7 @@ class NotificationController
         $message = 'Récupération des notifications non lues';
         
         try {
-            $notifications = $this->notificationRepository->getUnread();
+            $notifications = $this->repository->getUnread();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Notifications non lues récupérées avec succès']);
             return Common::success($notifications, 'Notifications non lues récupérées avec succès');
@@ -639,13 +639,150 @@ class NotificationController
         $message = 'Marquer toutes les notifications comme lues';
         
         try {
-            $this->notificationRepository->markAllAsRead();
+            $this->repository->markAllAsRead();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Toutes les notifications marquées comme lues avec succès']);
             return Common::success(null, 'Toutes les notifications marquées comme lues avec succès');
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors du marquage de toutes les notifications', []);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/notifications/user",
+     *     tags={"Notification"},
+     *     summary="Récupérer les notifications de l'utilisateur connecté",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Notifications récupérées avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Notification")),
+     *             @OA\Property(property="message", type="string", example="Notifications récupérées avec succès")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Non autorisé"),
+     *     @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function getUserNotifications()
+    {
+        $message = 'Récupération des notifications de l\'utilisateur';
+        
+        try {
+            $notifications = \App\Models\Notification::where("sent_to", auth()->id())->get();
+            
+            $this->ls->trace(['action_name' => $message, 'description' => 'Notifications utilisateur récupérées avec succès']);
+            return Common::success($notifications, 'Notifications récupérées avec succès');
+        } catch (\Exception $e) {
+            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
+            return Common::error('Erreur lors de la récupération des notifications', []);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/notifications/{id}/read",
+     *     tags={"Notification"},
+     *     summary="Marquer une notification comme lue et rediriger",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID de la notification"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Notification marquée comme lue",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object"),
+     *             @OA\Property(property="actionURL", type="string", example="/some-action-url"),
+     *             @OA\Property(property="message", type="string", example="Notification marquée comme lue")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Non autorisé"),
+     *     @OA\Response(response=404, description="Notification non trouvée"),
+     *     @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function markAsReadAndGetAction($id)
+    {
+        $message = 'Marquer notification comme lue et récupérer l\'action';
+        
+        try {
+            $notification = \App\Models\Notification::where('sent_to', auth()->id())->where('id', $id)->first();
+
+            if ($notification) {
+                $notification->markAsRead();
+                
+                $actionURL = $notification->data['actionURL'] ?? null;
+                
+                $this->ls->trace(['action_name' => $message, 'description' => 'Notification marquée comme lue avec succès']);
+                return Common::success(['actionURL' => $actionURL], 'Notification marquée comme lue');
+            } else {
+                return Common::error('Notification non trouvée', []);
+            }
+        } catch (\Exception $e) {
+            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
+            return Common::error('Erreur lors du marquage de la notification', []);
+        }
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/notifications/{id}/delete",
+     *     tags={"Notification"},
+     *     summary="Supprimer une notification spécifique",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID de la notification à supprimer"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Notification supprimée avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object"),
+     *             @OA\Property(property="message", type="string", example="La notification a été supprimée avec succès")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Non autorisé"),
+     *     @OA\Response(response=404, description="Notification non trouvée"),
+     *     @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function deleteNotification($id)
+    {
+        $message = 'Suppression de notification spécifique';
+        
+        try {
+            $notification = \App\Models\Notification::find($id);
+            
+            if ($notification) {
+                $status = $notification->delete();
+                
+                if ($status) {
+                    $this->ls->trace(['action_name' => $message, 'description' => 'Notification supprimée avec succès']);
+                    return Common::success(null, 'La notification a été supprimée avec succès');
+                } else {
+                    return Common::error('Erreur lors de la suppression', []);
+                }
+            } else {
+                return Common::error('Notification non trouvée', []);
+            }
+        } catch (\Exception $e) {
+            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
+            return Common::error('Erreur lors de la suppression de la notification', []);
         }
     }
 }

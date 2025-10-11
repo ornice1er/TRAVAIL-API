@@ -19,13 +19,13 @@ class UserController extends Controller
      *
      * @var UserRepository
      */
-    protected $userRepository;
+    protected $repository;
 
     protected $ls;
 
     public function __construct(UserRepository $userRepository, LogService $ls)
     {
-        $this->userRepository = $userRepository;
+        $this->repository = $userRepository;
         $this->ls = $ls;
 
         $this->middleware('auth:api')->except(['getNotified', 'show']);
@@ -115,7 +115,7 @@ class UserController extends Controller
         $message = 'Récupération de la liste des utilisateurs';
 
         try {
-            $result = $this->userRepository->getAll($request);
+            $result = $this->repository->getAll($request);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
@@ -207,7 +207,7 @@ class UserController extends Controller
         $message = 'Récupération de la liste des utilisateurs';
 
         try {
-            $result = $this->userRepository->getAll($request);
+            $result = $this->repository->getAll($request);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result->select('id'));
@@ -268,7 +268,7 @@ class UserController extends Controller
         $message = 'Récupération de la liste des utilisateurs pour RH';
 
         try {
-            $result = $this->userRepository->getAllRH($request);
+            $result = $this->repository->getAllRH($request);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
@@ -340,7 +340,7 @@ class UserController extends Controller
         $message = 'Récupération d\'un utilisateur';
 
         try {
-            $result = $this->userRepository->get($id);
+            $result = $this->repository->get($id);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($result)]);
 
             return Common::success('Utilisateur trouvé', $result);
@@ -412,7 +412,7 @@ class UserController extends Controller
         $message = 'Récupération d\'un utilisateur';
 
         try {
-            $result = $this->userRepository->getRH($id);
+            $result = $this->repository->getRH($id);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($result)]);
 
             return Common::success('Utilisateur trouvé', $result);
@@ -470,7 +470,7 @@ class UserController extends Controller
         $message = 'Enregistrement d\'un utilisateur';
 
         try {
-            $result = $this->userRepository->makeStore($request->validated());
+            $result = $this->repository->makeStore($request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->validated())]);
 
             return Common::successCreate('Utilisateur créé avec succès', $result);
@@ -529,7 +529,7 @@ class UserController extends Controller
         $message = 'Enregistrement d\'un utilisateur';
 
         try {
-            $result = $this->userRepository->makeStore2($request->validated());
+            $result = $this->repository->makeStore2($request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->validated())]);
 
             return Common::successCreate('Utilisateur créé avec succès', $result);
@@ -545,7 +545,7 @@ class UserController extends Controller
         $message = 'Enregistrement d\'un utilisateur';
 
         try {
-            $result = $this->userRepository->makeStorePR($request->validated());
+            $result = $this->repository->makeStorePR($request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->validated())]);
 
             return Common::successCreate('Utilisateur créé avec succès', $result);
@@ -614,7 +614,7 @@ class UserController extends Controller
         $message = 'Mise à jour d\'un utilisateur';
 
         try {
-            $result = $this->userRepository->makeUpdate($id, $request->validated());
+            $result = $this->repository->makeUpdate($id, $request->validated());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->validated())]);
 
             return Common::success('Mise à jour de l\'utilisateur effectuée avec succès', $result);
@@ -676,9 +676,9 @@ class UserController extends Controller
         $message = 'Suppression d\'un utilisateur';
 
         try {
-            $recup = $this->userRepository->get($id);
+            $recup = $this->repository->get($id);
 
-            $result = $this->userRepository->makeDestroy($id);
+            $result = $this->repository->makeDestroy($id);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($recup)]);
 
             return Common::successDelete('Utilisateur supprimé avec succès', $result);
@@ -751,7 +751,7 @@ class UserController extends Controller
         $message = 'Changement de l\'état d\'un utilisateur';
 
         try {
-            $result = $this->userRepository->setStatus($id, $state);
+            $result = $this->repository->setStatus($id, $state);
             $statusMessage = $state == 1 ? 'activé' : 'désactivé';
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($result)]);
 
@@ -811,7 +811,7 @@ class UserController extends Controller
 
         try {
             $term = $request->term;
-            $result = $this->userRepository->search($term);
+            $result = $this->repository->search($term);
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success('Filtrage effectué avec succès', $result);

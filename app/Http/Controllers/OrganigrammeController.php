@@ -18,7 +18,7 @@ class OrganigrammeController
      *
      * @var OrganigrammeRepository
      */
-    protected $organigrammeRepository;
+    protected $repository;
 
     /**
      * Log service
@@ -29,7 +29,7 @@ class OrganigrammeController
 
     public function __construct(OrganigrammeRepository $organigrammeRepository, LogService $ls)
     {
-        $this->organigrammeRepository = $organigrammeRepository;
+        $this->repository = $organigrammeRepository;
         $this->ls = $ls;
     }
 
@@ -83,7 +83,7 @@ class OrganigrammeController
         $message = 'Récupération de tous les organigrammes';
         
         try {
-            $organigrammes = $this->organigrammeRepository->all();
+            $organigrammes = $this->repository->all();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Organigrammes récupérés avec succès']);
             return Common::success($organigrammes, 'Organigrammes récupérés avec succès');
@@ -125,7 +125,7 @@ class OrganigrammeController
         $message = "Récupération de l'organigramme avec ID: $id";
         
         try {
-            $organigramme = $this->organigrammeRepository->findById($id);
+            $organigramme = $this->repository->findById($id);
             
             if (!$organigramme) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Organigramme non trouvé avec ID: $id"]);
@@ -179,7 +179,7 @@ class OrganigrammeController
         
         try {
             $data = $request->validated();
-            $organigramme = $this->organigrammeRepository->create($data);
+            $organigramme = $this->repository->create($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Organigramme créé avec succès avec ID: ' . $organigramme->id]);
             return Common::success($organigramme, 'Organigramme créé avec succès');
@@ -234,7 +234,7 @@ class OrganigrammeController
         $message = "Mise à jour de l'organigramme avec ID: $id";
         
         try {
-            $organigramme = $this->organigrammeRepository->findById($id);
+            $organigramme = $this->repository->findById($id);
             
             if (!$organigramme) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Organigramme non trouvé pour mise à jour avec ID: $id"]);
@@ -242,7 +242,7 @@ class OrganigrammeController
             }
             
             $data = $request->validated();
-            $updatedOrganigramme = $this->organigrammeRepository->update($id, $data);
+            $updatedOrganigramme = $this->repository->update($id, $data);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme mis à jour avec succès pour ID: $id"]);
             return Common::success($updatedOrganigramme, 'Organigramme mis à jour avec succès');
@@ -283,14 +283,14 @@ class OrganigrammeController
         $message = "Suppression de l'organigramme avec ID: $id";
         
         try {
-            $organigramme = $this->organigrammeRepository->findById($id);
+            $organigramme = $this->repository->findById($id);
             
             if (!$organigramme) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Organigramme non trouvé pour suppression avec ID: $id"]);
                 return Common::error('Organigramme non trouvé', []);
             }
             
-            $this->organigrammeRepository->delete($id);
+            $this->repository->delete($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme supprimé avec succès pour ID: $id"]);
             return Common::success(null, 'Organigramme supprimé avec succès');
@@ -339,7 +339,7 @@ class OrganigrammeController
         $message = "Changement d'état de l'organigramme avec ID: $id";
         
         try {
-            $organigramme = $this->organigrammeRepository->findById($id);
+            $organigramme = $this->repository->findById($id);
             
             if (!$organigramme) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Organigramme non trouvé avec ID: $id"]);
@@ -347,7 +347,7 @@ class OrganigrammeController
             }
             
             $status = $request->input('status');
-            $updatedOrganigramme = $this->organigrammeRepository->update($id, ['status' => $status]);
+            $updatedOrganigramme = $this->repository->update($id, ['status' => $status]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "État changé vers '$status' pour ID: $id"]);
             return Common::success($updatedOrganigramme, 'État de l\'organigramme modifié avec succès');
@@ -389,7 +389,7 @@ class OrganigrammeController
         
         try {
             $query = $request->input('query');
-            $results = $this->organigrammeRepository->search($query);
+            $results = $this->repository->search($query);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Recherche effectuée avec le terme: $query"]);
             return Common::success($results, 'Résultats de recherche obtenus avec succès');
@@ -431,7 +431,7 @@ class OrganigrammeController
         $message = "Remontée de position pour l'organigramme avec ID: $id";
         
         try {
-            $organigramme = $this->organigrammeRepository->findById($id);
+            $organigramme = $this->repository->findById($id);
             
             if (!$organigramme) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Organigramme non trouvé avec ID: $id"]);
@@ -479,7 +479,7 @@ class OrganigrammeController
         $message = "Descente de position pour l'organigramme avec ID: $id";
         
         try {
-            $organigramme = $this->organigrammeRepository->findById($id);
+            $organigramme = $this->repository->findById($id);
             
             if (!$organigramme) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Organigramme non trouvé avec ID: $id"]);
@@ -527,14 +527,14 @@ class OrganigrammeController
         $message = "Publication de l'organigramme avec ID: $id";
         
         try {
-            $organigramme = $this->organigrammeRepository->findById($id);
+            $organigramme = $this->repository->findById($id);
             
             if (!$organigramme) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Organigramme non trouvé avec ID: $id"]);
                 return Common::error('Organigramme non trouvé', []);
             }
             
-            $updatedOrganigramme = $this->organigrammeRepository->update($id, ['is_published' => true]);
+            $updatedOrganigramme = $this->repository->update($id, ['is_published' => true]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme publié avec succès pour ID: $id"]);
             return Common::success($updatedOrganigramme, 'Organigramme publié avec succès');
@@ -576,14 +576,14 @@ class OrganigrammeController
         $message = "Dépublication de l'organigramme avec ID: $id";
         
         try {
-            $organigramme = $this->organigrammeRepository->findById($id);
+            $organigramme = $this->repository->findById($id);
             
             if (!$organigramme) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Organigramme non trouvé avec ID: $id"]);
                 return Common::error('Organigramme non trouvé', []);
             }
             
-            $updatedOrganigramme = $this->organigrammeRepository->update($id, ['is_published' => false]);
+            $updatedOrganigramme = $this->repository->update($id, ['is_published' => false]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme dépublié avec succès pour ID: $id"]);
             return Common::success($updatedOrganigramme, 'Organigramme dépublié avec succès');
@@ -625,14 +625,14 @@ class OrganigrammeController
         $message = "Archivage de l'organigramme avec ID: $id";
         
         try {
-            $organigramme = $this->organigrammeRepository->findById($id);
+            $organigramme = $this->repository->findById($id);
             
             if (!$organigramme) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Organigramme non trouvé avec ID: $id"]);
                 return Common::error('Organigramme non trouvé', []);
             }
             
-            $updatedOrganigramme = $this->organigrammeRepository->update($id, ['is_archived' => true]);
+            $updatedOrganigramme = $this->repository->update($id, ['is_archived' => true]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme archivé avec succès pour ID: $id"]);
             return Common::success($updatedOrganigramme, 'Organigramme archivé avec succès');
@@ -674,20 +674,265 @@ class OrganigrammeController
         $message = "Restauration de l'organigramme avec ID: $id";
         
         try {
-            $organigramme = $this->organigrammeRepository->findById($id);
+            $organigramme = $this->repository->findById($id);
             
             if (!$organigramme) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Organigramme non trouvé avec ID: $id"]);
                 return Common::error('Organigramme non trouvé', []);
             }
             
-            $updatedOrganigramme = $this->organigrammeRepository->update($id, ['is_archived' => false]);
+            $updatedOrganigramme = $this->repository->update($id, ['is_archived' => false]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme restauré avec succès pour ID: $id"]);
             return Common::success($updatedOrganigramme, 'Organigramme restauré avec succès');
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la restauration de l\'organigramme', []);
+        }
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/api/organigrammes/by-role",
+     *     tags={"Organigramme"},
+     *     summary="Récupérer les organigrammes par rôle et structure",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Organigrammes récupérés avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Media")),
+     *             @OA\Property(property="message", type="string", example="Organigrammes récupérés avec succès")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Non autorisé"),
+     *     @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function getByRole()
+    {
+        $message = 'Récupération des organigrammes par rôle';
+        
+        try {
+            $user = Auth::user();
+            $role = $user->roles()->first()->name;
+            $structureId = $user->structure_id;
+            $userId = $user->id;
+            
+            $medias = $this->repository->getByRoleAndStructure($structureId, $role, $userId);
+            
+            $this->ls->trace(['action_name' => $message, 'description' => 'Organigrammes récupérés par rôle avec succès']);
+            return Common::success($medias, 'Organigrammes récupérés avec succès');
+        } catch (\Exception $e) {
+            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
+            return Common::error('Erreur lors de la récupération des organigrammes', []);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/organigrammes/with-workflow",
+     *     tags={"Organigramme"},
+     *     summary="Créer un organigramme avec workflow complet",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(property="name", type="string", example="Organigramme Direction"),
+     *                 @OA\Property(property="legend", type="string", example="Légende de l'organigramme"),
+     *                 @OA\Property(property="has_principal_access", type="boolean", example=true),
+     *                 @OA\Property(property="photo", type="string", format="binary", description="Fichier image")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Organigramme créé avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", ref="#/components/schemas/Organigramme"),
+     *             @OA\Property(property="message", type="string", example="Organigramme créé avec succès")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Non autorisé"),
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function createWithWorkflow(Request $request)
+    {
+        $message = 'Création d\'organigramme avec workflow';
+        
+        try {
+            $request->validate([
+                'name' => 'string|required',
+                'photo' => 'file|required',
+            ]);
+
+            $data = $request->all();
+            $data['photo'] = $request->file('photo');
+            
+            $organigramme = $this->repository->createWithWorkflow($data);
+            
+            $this->ls->trace(['action_name' => $message, 'description' => 'Organigramme créé avec workflow avec succès']);
+            return Common::success($organigramme, 'Organigramme créé avec succès');
+        } catch (\Exception $e) {
+            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
+            return Common::error('Erreur lors de la création de l\'organigramme', []);
+        }
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/api/organigrammes/{id}/with-file",
+     *     tags={"Organigramme"},
+     *     summary="Mettre à jour un organigramme avec gestion de fichier",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID de l'organigramme"
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\MediaType(
+     *             mediaType="multipart/form-data",
+     *             @OA\Schema(
+     *                 @OA\Property(property="name", type="string", example="Organigramme modifié"),
+     *                 @OA\Property(property="legend", type="string", example="Nouvelle légende"),
+     *                 @OA\Property(property="has_principal_access", type="boolean", example=false),
+     *                 @OA\Property(property="photo", type="string", format="binary", description="Nouveau fichier image (optionnel)")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Organigramme mis à jour avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Organigramme mis à jour avec succès")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Non autorisé"),
+     *     @OA\Response(response=404, description="Organigramme non trouvé"),
+     *     @OA\Response(response=422, description="Données invalides"),
+     *     @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function updateWithFile(Request $request, $id)
+    {
+        $message = 'Mise à jour d\'organigramme avec fichier';
+        
+        try {
+            $request->validate([
+                'name' => 'string|required',
+            ]);
+
+            $data = $request->all();
+            $file = $request->file('photo');
+            
+            $result = $this->repository->updateWithFile($id, $data, $file);
+            
+            $this->ls->trace(['action_name' => $message, 'description' => 'Organigramme mis à jour avec succès']);
+            return Common::success($result, 'Organigramme mis à jour avec succès');
+        } catch (\Exception $e) {
+            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
+            return Common::error('Erreur lors de la mise à jour de l\'organigramme', []);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/organigrammes/{id}/move-up",
+     *     tags={"Organigramme"},
+     *     summary="Faire remonter un organigramme vers validation",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID de l'organigramme"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Organigramme remonté avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Organigramme remonté avec succès")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Non autorisé"),
+     *     @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function moveUp($id)
+    {
+        $message = 'Remontée d\'organigramme';
+        
+        try {
+            $result = $this->repository->moveUp($id);
+            
+            $this->ls->trace(['action_name' => $message, 'description' => 'Organigramme remonté avec succès']);
+            return Common::success($result, 'Organigramme remonté avec succès');
+        } catch (\Exception $e) {
+            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
+            return Common::error('Erreur lors de la remontée de l\'organigramme', []);
+        }
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/api/organigrammes/{id}/move-down",
+     *     tags={"Organigramme"},
+     *     summary="Faire redescendre un organigramme vers saisie",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="integer"),
+     *         description="ID de l'organigramme"
+     *     ),
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="motif", type="string", example="Corrections nécessaires")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Organigramme redescendu avec succès",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="Organigramme redescendu avec succès")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Non autorisé"),
+     *     @OA\Response(response=500, description="Erreur serveur")
+     * )
+     */
+    public function moveDown(Request $request, $id)
+    {
+        $message = 'Redescente d\'organigramme';
+        
+        try {
+            $motif = $request->input('motif');
+            $result = $this->repository->moveDown($id, $motif);
+            
+            $this->ls->trace(['action_name' => $message, 'description' => 'Organigramme redescendu avec succès']);
+            return Common::success($result, 'Organigramme redescendu avec succès');
+        } catch (\Exception $e) {
+            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
+            return Common::error('Erreur lors de la redescente de l\'organigramme', []);
         }
     }
 }

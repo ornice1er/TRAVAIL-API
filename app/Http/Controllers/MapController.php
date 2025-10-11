@@ -19,7 +19,7 @@ class MapController
      *
      * @var MapRepository
      */
-    protected $mapRepository;
+    protected $repository;
 
     /**
      * Log service
@@ -30,7 +30,7 @@ class MapController
 
     public function __construct(MapRepository $mapRepository, LogService $ls)
     {
-        $this->mapRepository = $mapRepository;
+        $this->repository = $mapRepository;
         $this->ls = $ls;
     }
 
@@ -82,7 +82,7 @@ class MapController
     public function index(Request $request)
     {
         try {
-            $result = $this->mapRepository->getAll($request);
+            $result = $this->repository->getAll($request);
             $this->ls->trace(['action_name' => 'Journal des maps', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des maps', $result);
@@ -132,7 +132,7 @@ class MapController
     public function show($id)
     {
         try {
-            $result = $this->mapRepository->show($id);
+            $result = $this->repository->show($id);
             $this->ls->trace(['action_name' => 'Détail map', 'description' => $id]);
 
             return Common::success('Détail map', $result);
@@ -180,7 +180,7 @@ class MapController
             $data = $request->validated();
             $data['user_id'] = Auth::id();
             
-            $result = $this->mapRepository->create($data);
+            $result = $this->repository->create($data);
             $this->ls->trace(['action_name' => 'Création map', 'description' => json_encode($data)]);
 
             return Common::success('Map créée avec succès', $result);
@@ -240,7 +240,7 @@ class MapController
         try {
             $data = $request->validated();
             
-            $result = $this->mapRepository->update($id, $data);
+            $result = $this->repository->update($id, $data);
             $this->ls->trace(['action_name' => 'Modification map', 'description' => json_encode($data)]);
 
             return Common::success('Map modifiée avec succès', $result);
@@ -290,7 +290,7 @@ class MapController
     public function destroy($id)
     {
         try {
-            $this->mapRepository->delete($id);
+            $this->repository->delete($id);
             $this->ls->trace(['action_name' => 'Suppression map', 'description' => $id]);
 
             return Common::success('Map supprimée avec succès', []);
@@ -351,7 +351,7 @@ class MapController
     public function changeState(Request $request, $id)
     {
         try {
-            $result = $this->mapRepository->changeState($id, $request->state);
+            $result = $this->repository->changeState($id, $request->state);
             $this->ls->trace(['action_name' => 'Changement état map', 'description' => json_encode(['id' => $id, 'state' => $request->state])]);
 
             return Common::success('État map modifié avec succès', $result);
@@ -404,7 +404,7 @@ class MapController
     public function search(Request $request)
     {
         try {
-            $result = $this->mapRepository->search($request);
+            $result = $this->repository->search($request);
             $this->ls->trace(['action_name' => 'Recherche maps', 'description' => json_encode($request->all())]);
 
             return Common::success('Recherche maps', $result);
@@ -458,7 +458,7 @@ class MapController
     public function up($id)
     {
         try {
-            $result = $this->mapRepository->up($id);
+            $result = $this->repository->up($id);
             $this->ls->trace(['action_name' => 'Déplacer map vers le haut', 'description' => $id]);
 
             return Common::success('Map déplacée vers le haut avec succès', $result);
@@ -512,7 +512,7 @@ class MapController
     public function down($id)
     {
         try {
-            $result = $this->mapRepository->down($id);
+            $result = $this->repository->down($id);
             $this->ls->trace(['action_name' => 'Déplacer map vers le bas', 'description' => $id]);
 
             return Common::success('Map déplacée vers le bas avec succès', $result);
@@ -566,7 +566,7 @@ class MapController
     public function publish($id)
     {
         try {
-            $result = $this->mapRepository->publish($id);
+            $result = $this->repository->publish($id);
             $this->ls->trace(['action_name' => 'Publication map', 'description' => $id]);
 
             return Common::success('Map publiée avec succès', $result);
@@ -620,7 +620,7 @@ class MapController
     public function unpublish($id)
     {
         try {
-            $result = $this->mapRepository->unpublish($id);
+            $result = $this->repository->unpublish($id);
             $this->ls->trace(['action_name' => 'Dépublication map', 'description' => $id]);
 
             return Common::success('Map dépubliée avec succès', $result);
@@ -674,7 +674,7 @@ class MapController
     public function archive($id)
     {
         try {
-            $result = $this->mapRepository->archive($id);
+            $result = $this->repository->archive($id);
             $this->ls->trace(['action_name' => 'Archivage map', 'description' => $id]);
 
             return Common::success('Map archivée avec succès', $result);
@@ -728,7 +728,7 @@ class MapController
     public function restore($id)
     {
         try {
-            $result = $this->mapRepository->restore($id);
+            $result = $this->repository->restore($id);
             $this->ls->trace(['action_name' => 'Restauration map', 'description' => $id]);
 
             return Common::success('Map restaurée avec succès', $result);

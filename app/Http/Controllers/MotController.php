@@ -19,7 +19,7 @@ class MotController
      *
      * @var MotRepository
      */
-    protected $motRepository;
+    protected $repository;
 
     /**
      * Log service
@@ -30,7 +30,7 @@ class MotController
 
     public function __construct(MotRepository $motRepository, LogService $ls)
     {
-        $this->motRepository = $motRepository;
+        $this->repository = $motRepository;
         $this->ls = $ls;
     }
 
@@ -82,7 +82,7 @@ class MotController
     public function index(Request $request)
     {
         try {
-            $result = $this->motRepository->getAll($request);
+            $result = $this->repository->getAll($request);
             $this->ls->trace(['action_name' => 'Journal des mots', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des mots', $result);
@@ -132,7 +132,7 @@ class MotController
     public function show($id)
     {
         try {
-            $result = $this->motRepository->show($id);
+            $result = $this->repository->show($id);
             $this->ls->trace(['action_name' => 'Détail mot', 'description' => $id]);
 
             return Common::success('Détail mot', $result);
@@ -180,7 +180,7 @@ class MotController
             $data = $request->validated();
             $data['user_id'] = Auth::id();
             
-            $result = $this->motRepository->create($data);
+            $result = $this->repository->create($data);
             $this->ls->trace(['action_name' => 'Création mot', 'description' => json_encode($data)]);
 
             return Common::success('Mot créé avec succès', $result);
@@ -240,7 +240,7 @@ class MotController
         try {
             $data = $request->validated();
             
-            $result = $this->motRepository->update($id, $data);
+            $result = $this->repository->update($id, $data);
             $this->ls->trace(['action_name' => 'Modification mot', 'description' => json_encode($data)]);
 
             return Common::success('Mot modifié avec succès', $result);
@@ -290,7 +290,7 @@ class MotController
     public function destroy($id)
     {
         try {
-            $this->motRepository->delete($id);
+            $this->repository->delete($id);
             $this->ls->trace(['action_name' => 'Suppression mot', 'description' => $id]);
 
             return Common::success('Mot supprimé avec succès', []);
@@ -351,7 +351,7 @@ class MotController
     public function changeState(Request $request, $id)
     {
         try {
-            $result = $this->motRepository->changeState($id, $request->state);
+            $result = $this->repository->changeState($id, $request->state);
             $this->ls->trace(['action_name' => 'Changement état mot', 'description' => json_encode(['id' => $id, 'state' => $request->state])]);
 
             return Common::success('État mot modifié avec succès', $result);
@@ -404,7 +404,7 @@ class MotController
     public function search(Request $request)
     {
         try {
-            $result = $this->motRepository->search($request);
+            $result = $this->repository->search($request);
             $this->ls->trace(['action_name' => 'Recherche mots', 'description' => json_encode($request->all())]);
 
             return Common::success('Recherche mots', $result);
@@ -458,7 +458,7 @@ class MotController
     public function up($id)
     {
         try {
-            $result = $this->motRepository->up($id);
+            $result = $this->repository->up($id);
             $this->ls->trace(['action_name' => 'Déplacer mot vers le haut', 'description' => $id]);
 
             return Common::success('Mot déplacé vers le haut avec succès', $result);
@@ -512,7 +512,7 @@ class MotController
     public function down($id)
     {
         try {
-            $result = $this->motRepository->down($id);
+            $result = $this->repository->down($id);
             $this->ls->trace(['action_name' => 'Déplacer mot vers le bas', 'description' => $id]);
 
             return Common::success('Mot déplacé vers le bas avec succès', $result);
@@ -566,7 +566,7 @@ class MotController
     public function publish($id)
     {
         try {
-            $result = $this->motRepository->publish($id);
+            $result = $this->repository->publish($id);
             $this->ls->trace(['action_name' => 'Publication mot', 'description' => $id]);
 
             return Common::success('Mot publié avec succès', $result);
@@ -620,7 +620,7 @@ class MotController
     public function unpublish($id)
     {
         try {
-            $result = $this->motRepository->unpublish($id);
+            $result = $this->repository->unpublish($id);
             $this->ls->trace(['action_name' => 'Dépublication mot', 'description' => $id]);
 
             return Common::success('Mot dépublié avec succès', $result);
@@ -674,7 +674,7 @@ class MotController
     public function archive($id)
     {
         try {
-            $result = $this->motRepository->archive($id);
+            $result = $this->repository->archive($id);
             $this->ls->trace(['action_name' => 'Archivage mot', 'description' => $id]);
 
             return Common::success('Mot archivé avec succès', $result);
@@ -728,7 +728,7 @@ class MotController
     public function restore($id)
     {
         try {
-            $result = $this->motRepository->restore($id);
+            $result = $this->repository->restore($id);
             $this->ls->trace(['action_name' => 'Restauration mot', 'description' => $id]);
 
             return Common::success('Mot restauré avec succès', $result);

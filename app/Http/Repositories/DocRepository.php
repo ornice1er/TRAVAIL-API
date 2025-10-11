@@ -3,6 +3,9 @@
 namespace App\Http\Repositories;
 
 use App\Models\Doc;
+use App\Models\User;
+use App\Models\Media;
+use App\Models\Transmission;
 use App\Models\Invite;
 use App\Traits\Repository;
 use App\Services\AwsService;
@@ -217,34 +220,60 @@ class DocRepository
 
      public function up($id)
     {
-        // Implement actual logic for moving doc up in order
-        return $this->findOrFail($id);
+        Media::find($id)->transmissions->last()->update(['is_last'=>false]);
+        $to=User::where('structure_id',Auth::user()->structure_id)->role('validation')->first()->id;
+        Transmission::create([
+            'from'=>Auth::id(),
+            'to'=>$to,
+            'media_id'=>$id,
+            'is_last'=>true,
+        ]);
+
+        return true;
     }
 
     public function down($request, $id)
     {  
-        // Implement actual logic for moving doc down in order
-        return $this->findOrFail($id);
+        Media::find($id)->update(['motif'=>$request['motif']]);
+        Media::find($id)->transmissions->last()->update(['is_last'=>false]);
+      
+        $to=User::where('structure_id',Media::find($id)->structure_id)->role('saisie')->first()->id;
+        Transmission::create([
+            'from'=>Auth::id(),
+            'to'=>$to,
+            'media_id'=>$id,
+            'is_last'=>true,
+        ]);
+
+        return true;
     }
           
     public function publish($id)
     {
-        return $this->findOrFail($id)->update(['is_published' => true]);
+        Media::find($id)->update(['is_published'=>true]);
+        
+        return true;
     }
 
     public function unpublish($id)
     {
-        return $this->findOrFail($id)->update(['is_published' => false]);
+        Media::find($id)->update(['is_published'=>false]);
+        
+        return true;
     }
 
     public function archive($id)
     {
-        return $this->findOrFail($id)->update(['is_archived' => true]);
+        Media::find($id)->update(['is_archived'=>true]);
+        
+        return true;
     }
 
     public function restore($id)
     {
-        return $this->findOrFail($id)->update(['is_archived' => false]);
+        Media::find($id)->update(['is_archived'=>false]);
+        
+        return true;
     }
 
 }

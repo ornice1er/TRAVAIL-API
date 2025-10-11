@@ -2,17 +2,18 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\Aof;
-use App\Models\Invite;
-use App\Traits\Repository;
-use App\Utilities\Core;
 use QrCode;
-use Illuminate\Support\Str;
-use App\Models\Media;
-use App\Models\Parcours;
-use App\Models\Transmission;
+use App\Models\Aof;
 use App\Models\User;
+use App\Models\Media;
+use App\Models\Invite;
+use App\Utilities\Core;
+use App\Models\Parcours;
+use App\Traits\Repository;
+use Illuminate\Support\Str;
+use App\Models\Transmission;
 use App\Utilities\FileStorage;
+use Illuminate\Support\Facades\Auth;
 
  
 
@@ -50,7 +51,6 @@ class AofRepository
     {
         $user = Auth::user();
         $user_id = $user->id;
-        $role = $user->roles()->first()->name;
         $per_page = 10;
 
         $query = Media::with(['aof'])
@@ -61,19 +61,13 @@ class AofRepository
                 ->where('is_last', true);
             });
 
-        if ($role === 'saisie') {
-            $query->where('is_published', false);
-        }
-
         // Gestion de la pagination personnalisée
         if ($request->has('per_page')) {
             $per_page = $request->input('per_page');
-            $medias = $query->paginate($per_page);
+            return $query->paginate($per_page);
         } else {
-            $medias = $query->get();
+            return $query->get();
         }
-
-return view('admin.aofs.index', compact('medias'));
     }
 
     /**
@@ -90,89 +84,104 @@ return view('admin.aofs.index', compact('medias'));
     public function makeStore($data): Aof
     {
         // ✅ Validation
-            $this->validate($request, [
-                'mission' => 'required|string',
-                'aof' => 'required|file', // fichier obligatoire
-            ]);
+        $validator = validator($data, [
+            'mission' => 'required|string',
+            'aof' => 'required|file', // fichier obligatoire
+        ]);
 
-            // 🛠 Création du media
-            $media = new Media();
-            $media->code = Str::uuid();
-            $media->structure_id = Auth::user()->structure_id;
-            $media->has_principal_access = $request->has_principal_access;
-            $media->type = "aof";
-            $media->save();
+        if ($validator->fails()) {
+            throw new \InvalidArgumentException($validator->errors()->first());
+        }
 
-            // 📦 Préparer les données Aof
-            $data = $request->only(['mission', 'attribution']);
-            $slug = Str::slug($request->name ?? 'aof') . '-' . date('ymdis') . '-' . rand(0, 999);
+        // 🛠 Création du media
+        $media = new Media();
+        $media->code = Str::uuid();
+        $media->structure_id = Auth::user()->structure_id;
+        $media->has_principal_access = $data['has_principal_access'] ?? false;
+        $media->type = "aof";
+        $media->save();
 
-            $data['aof'] = FileStorage::setFile('public', $request->file('aof'), 'aofs', $slug);
-            $data['media_id'] = $media->id;
+        // 📦 Préparer les données Aof
+        $aofData = [];
+        if (isset($data['mission'])) $aofData['mission'] = $data['mission'];
+        if (isset($data['attribution'])) $aofData['attribution'] = $data['attribution'];
+        
+        $slug = Str::slug($data['name'] ?? 'aof') . '-' . date('ymdis') . '-' . rand(0, 999);
 
-            // 📝 Création de l'Aof
-            $model = new Aof($data);
-            $model->save();
+        if (isset($data['aof'])) {
+            $aofData['aof'] = FileStorage::setFile('public', $data['aof'], 'aofs', $slug);
+        }
+        $aofData['media_id'] = $media->id;
 
-            // 🧭 Historique
-            Parcours::create([
-                'media_id' => $media->id,
-                'libelle' => "Création de l'AOF " . ($request->name ?? '[Sans nom]'),
-            ]);
+        // 📝 Création de l'Aof
+        $model = new Aof($aofData);
+        $model->save();
 
-            // 🔁 Transmission
-            Transmission::create([
-                'from' => Auth::id(),
-                'to' => Auth::id(),
-                'media_id' => $media->id,
-                'is_last' => true,
-            ]);
+        // 🧭 Historique
+        Parcours::create([
+            'media_id' => $media->id,
+            'libelle' => "Création de l'AOF " . ($data['name'] ?? '[Sans nom]'),
+        ]);
 
-            return $model;
-            }
+        // 🔁 Transmission
+        Transmission::create([
+            'from' => Auth::id(),
+            'to' => Auth::id(),
+            'media_id' => $media->id,
+            'is_last' => true,
+        ]);
+
+        return $model;
+    }
 
     /**
      * Met à jour une fête.
      */
     public function makeUpdate($id, $data): Aof
     {
-       // ✅ Récupérer l'AOF et son media associé
-            $model = Aof::findOrFail($id);
-            $media = $model->media;
+        // ✅ Récupérer l'AOF et son media associé
+        $model = Aof::findOrFail($id);
+        $media = $model->media;
 
-            // ✅ Validation
-            $this->validate($request, [
-                'mission' => 'nullable|string',
-                'has_principal_access' => 'nullable|boolean',
-                'aof' => 'nullable|file',
-            ]);
+        // ✅ Validation
+        $validator = validator($data, [
+            'mission' => 'nullable|string',
+            'has_principal_access' => 'nullable|boolean',
+            'aof' => 'nullable|file',
+        ]);
 
-            // ✅ Mise à jour du média (si champ fourni)
-            if ($media && $request->has('has_principal_access')) {
-                $media->has_principal_access = $request->has_principal_access;
-                $media->save();
-            }
+        if ($validator->fails()) {
+            throw new \InvalidArgumentException($validator->errors()->first());
+        }
 
-            // 📦 Préparer les données AOF à mettre à jour
-            $data = $request->only('mission', 'attribution');
+        // ✅ Mise à jour du média (si champ fourni)
+        if ($media && isset($data['has_principal_access'])) {
+            $media->has_principal_access = $data['has_principal_access'];
+            $media->save();
+        }
 
-            // 📁 Gestion du remplacement du fichier
-            if ($request->hasFile('aof')) {
-                // Supprimer l'ancien fichier
-                FileStorage::deleteFile('public', $model->aof);
+        // 📦 Préparer les données AOF à mettre à jour
+        $updateData = [];
+        if (isset($data['mission'])) $updateData['mission'] = $data['mission'];
+        if (isset($data['attribution'])) $updateData['attribution'] = $data['attribution'];
 
-                // Générer un nouveau slug
-                $slug = Str::slug($request->name ?? 'aof') . '-' . date('ymdis') . '-' . rand(0, 999);
+        // 📁 Gestion du remplacement du fichier
+        if (isset($data['aof'])) {
+            // Supprimer l'ancien fichier
+            FileStorage::deleteFile('public', $model->aof);
 
-                // Enregistrer le nouveau fichier
-                $data['aof'] = FileStorage::setFile('public', $request->file('aof'), 'aofs', time() . $slug);
-            }
+            // Générer un nouveau slug
+            $slug = Str::slug($data['name'] ?? 'aof') . '-' . date('ymdis') . '-' . rand(0, 999);
 
-            // 📝 Mettre à jour le modèle Aof
-            $model->update($data);
+            // Enregistrer le nouveau fichier
+            $updateData['aof'] = FileStorage::setFile('public', $data['aof'], 'aofs', time() . $slug);
+        }
 
-            return $model;
-            }
+        // 📝 Mettre à jour le modèle Aof
+        $model->update($updateData);
+
+        return $model;
+    }
 
     /**
      * Supprime une fête.

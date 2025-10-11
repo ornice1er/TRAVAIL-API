@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\docRepository;
+use App\Http\Repositories\DocRepository;
 use App\Http\Requests\Doc\StoreDocRequest;
 use App\Http\Requests\Doc\UpdateDocRequest;
 use App\Services\LogService;
@@ -17,7 +17,7 @@ class DocController
      *
      * @var DocRepository
      */
-    protected $docRepository;
+    protected $repository;
 
     /**
      * Log service
@@ -26,9 +26,9 @@ class DocController
      */
     protected $ls;
 
-    public function __construct(docRepository $docRepository, LogService $ls)
+    public function __construct(DocRepository $docRepository, LogService $ls)
     {
-        $this->docRepository = $docRepository;
+        $this->repository = $docRepository;
         $this->ls = $ls;
     }
 
@@ -81,7 +81,7 @@ class DocController
     public function index(Request $request)
     {
         try {
-            $result = $this->docRepository->getAll($request);
+            $result = $this->repository->getAll($request);
             $this->ls->trace(['action_name' => 'Journal des docs', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des docs', $result);
@@ -143,7 +143,7 @@ class DocController
         $message = 'Récupération du document';
 
         try {
-            $result = $this->docRepository->get($id);
+            $result = $this->repository->get($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -197,7 +197,7 @@ class DocController
         $message = 'Création du document';
 
         try {
-            $result = $this->docRepository->makeStore($request->all());
+            $result = $this->repository->makeStore($request->all());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
@@ -266,7 +266,7 @@ class DocController
         $message = 'Mise à jour du document';
 
         try {
-            $result = $this->docRepository->makeUpdate($id, $request->all());
+            $result = $this->repository->makeUpdate($id, $request->all());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all()) . ' - ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -328,7 +328,7 @@ class DocController
         $message = 'Suppression du document';
 
         try {
-            $result = $this->docRepository->makeDestroy($id);
+            $result = $this->repository->makeDestroy($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -404,7 +404,7 @@ class DocController
         $message = 'Changement de statut du document';
 
         try {
-            $result = $this->docRepository->setStatus($id, $request->input('state'));
+            $result = $this->repository->setStatus($id, $request->input('state'));
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id . ' - State: ' . $request->input('state')]);
 
             return Common::success($message, $result);
@@ -466,7 +466,7 @@ class DocController
         $message = 'Recherche de documents';
 
         try {
-            $result = $this->docRepository->search($request->input('keyword', ''));
+            $result = $this->repository->search($request->input('keyword', ''));
             $this->ls->trace(['action_name' => $message, 'description' => 'Keyword: ' . $request->input('keyword', '')]);
 
             return Common::success($message, $result);
@@ -528,7 +528,7 @@ class DocController
         $message = 'Déplacement du document vers le haut';
 
         try {
-            $result = $this->docRepository->up($id);
+            $result = $this->repository->up($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -590,7 +590,7 @@ class DocController
         $message = 'Déplacement du document vers le bas';
 
         try {
-            $result = $this->docRepository->down(request(), $id);
+            $result = $this->repository->down(request(), $id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -652,7 +652,7 @@ class DocController
         $message = 'Publication du document';
 
         try {
-            $result = $this->docRepository->publish($id);
+            $result = $this->repository->publish($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -714,7 +714,7 @@ class DocController
         $message = 'Dépublication du document';
 
         try {
-            $result = $this->docRepository->unpublish($id);
+            $result = $this->repository->unpublish($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -776,7 +776,7 @@ class DocController
         $message = 'Archivage du document';
 
         try {
-            $result = $this->docRepository->archive($id);
+            $result = $this->repository->archive($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -838,7 +838,7 @@ class DocController
         $message = 'Restauration du document';
 
         try {
-            $result = $this->docRepository->restore($id);
+            $result = $this->repository->restore($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);

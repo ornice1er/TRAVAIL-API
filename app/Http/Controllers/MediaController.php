@@ -19,7 +19,7 @@ class MediaController
      *
      * @var MediaRepository
      */
-    protected $mediaRepository;
+    protected $repository;
 
     /**
      * Log service
@@ -30,7 +30,7 @@ class MediaController
 
     public function __construct(MediaRepository $mediaRepository, LogService $ls)
     {
-        $this->mediaRepository = $mediaRepository;
+        $this->repository = $mediaRepository;
         $this->ls = $ls;
     }
 
@@ -82,7 +82,7 @@ class MediaController
     public function index(Request $request)
     {
         try {
-            $result = $this->mediaRepository->getAll($request);
+            $result = $this->repository->getAll($request);
             $this->ls->trace(['action_name' => 'Journal des medias', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des medias', $result);
@@ -132,7 +132,7 @@ class MediaController
     public function show($id)
     {
         try {
-            $result = $this->mediaRepository->show($id);
+            $result = $this->repository->show($id);
             $this->ls->trace(['action_name' => 'Détail media', 'description' => $id]);
 
             return Common::success('Détail media', $result);
@@ -180,7 +180,7 @@ class MediaController
             $data = $request->validated();
             $data['adding_by'] = Auth::id();
             
-            $result = $this->mediaRepository->create($data);
+            $result = $this->repository->create($data);
             $this->ls->trace(['action_name' => 'Création media', 'description' => json_encode($data)]);
 
             return Common::success('Media créé avec succès', $result);
@@ -240,7 +240,7 @@ class MediaController
         try {
             $data = $request->validated();
             
-            $result = $this->mediaRepository->update($id, $data);
+            $result = $this->repository->update($id, $data);
             $this->ls->trace(['action_name' => 'Modification media', 'description' => json_encode($data)]);
 
             return Common::success('Media modifié avec succès', $result);
@@ -290,7 +290,7 @@ class MediaController
     public function destroy($id)
     {
         try {
-            $this->mediaRepository->delete($id);
+            $this->repository->delete($id);
             $this->ls->trace(['action_name' => 'Suppression media', 'description' => $id]);
 
             return Common::success('Media supprimé avec succès', []);
@@ -351,7 +351,7 @@ class MediaController
     public function changeState(Request $request, $id)
     {
         try {
-            $result = $this->mediaRepository->changeState($id, $request->state);
+            $result = $this->repository->changeState($id, $request->state);
             $this->ls->trace(['action_name' => 'Changement état media', 'description' => json_encode(['id' => $id, 'state' => $request->state])]);
 
             return Common::success('État media modifié avec succès', $result);
@@ -404,7 +404,7 @@ class MediaController
     public function search(Request $request)
     {
         try {
-            $result = $this->mediaRepository->search($request);
+            $result = $this->repository->search($request);
             $this->ls->trace(['action_name' => 'Recherche medias', 'description' => json_encode($request->all())]);
 
             return Common::success('Recherche medias', $result);
@@ -458,7 +458,7 @@ class MediaController
     public function up($id)
     {
         try {
-            $result = $this->mediaRepository->up($id);
+            $result = $this->repository->up($id);
             $this->ls->trace(['action_name' => 'Déplacer media vers le haut', 'description' => $id]);
 
             return Common::success('Media déplacé vers le haut avec succès', $result);
@@ -512,7 +512,7 @@ class MediaController
     public function down($id)
     {
         try {
-            $result = $this->mediaRepository->down($id);
+            $result = $this->repository->down($id);
             $this->ls->trace(['action_name' => 'Déplacer media vers le bas', 'description' => $id]);
 
             return Common::success('Media déplacé vers le bas avec succès', $result);
@@ -566,7 +566,7 @@ class MediaController
     public function publish($id)
     {
         try {
-            $result = $this->mediaRepository->publish($id);
+            $result = $this->repository->publish($id);
             $this->ls->trace(['action_name' => 'Publication media', 'description' => $id]);
 
             return Common::success('Media publié avec succès', $result);
@@ -620,7 +620,7 @@ class MediaController
     public function unpublish($id)
     {
         try {
-            $result = $this->mediaRepository->unpublish($id);
+            $result = $this->repository->unpublish($id);
             $this->ls->trace(['action_name' => 'Dépublication media', 'description' => $id]);
 
             return Common::success('Media dépublié avec succès', $result);
@@ -674,7 +674,7 @@ class MediaController
     public function archive($id)
     {
         try {
-            $result = $this->mediaRepository->archive($id);
+            $result = $this->repository->archive($id);
             $this->ls->trace(['action_name' => 'Archivage media', 'description' => $id]);
 
             return Common::success('Media archivé avec succès', $result);
@@ -728,7 +728,7 @@ class MediaController
     public function restore($id)
     {
         try {
-            $result = $this->mediaRepository->restore($id);
+            $result = $this->repository->restore($id);
             $this->ls->trace(['action_name' => 'Restauration media', 'description' => $id]);
 
             return Common::success('Media restauré avec succès', $result);

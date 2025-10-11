@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\communiquesFileRepository;
+use App\Http\Repositories\CommuniquesFileRepository;
 use App\Http\Requests\CommuniquesFile\StoreCommuniquesFileRequest;
 use App\Http\Requests\CommuniquesFile\UpdateCommuniquesFileRequest;
 use App\Services\LogService;
@@ -17,7 +17,7 @@ class CommuniquesFileController
      *
      * @var CommuniquesFileRepository
      */
-    protected $communiquesFileRepository;
+    protected $repository;
 
     /**
      * Log service
@@ -26,9 +26,9 @@ class CommuniquesFileController
      */
     protected $ls;
 
-    public function __construct(communiquesFileRepository $communiquesFileRepository, LogService $ls)
+    public function __construct(CommuniquesFileRepository $communiquesFileRepository, LogService $ls)
     {
-        $this->communiquesFileRepository = $communiquesFileRepository;
+        $this->repository = $communiquesFileRepository;
         $this->ls = $ls;
     }
 
@@ -80,7 +80,7 @@ class CommuniquesFileController
     public function index(Request $request)
     {
         try {
-            $result = $this->communiquesFileRepository->getAll($request);
+            $result = $this->repository->getAll($request);
             $this->ls->trace(['action_name' => 'Journal des communiquesFiles', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des communiquesFiles', $result);
@@ -142,7 +142,7 @@ class CommuniquesFileController
         $message = 'Récupération du fichier de communiqué';
 
         try {
-            $result = $this->communiquesFileRepository->get($id);
+            $result = $this->repository->get($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -196,7 +196,7 @@ class CommuniquesFileController
         $message = 'Création du fichier de communiqué';
 
         try {
-            $result = $this->communiquesFileRepository->makeStore($request->all());
+            $result = $this->repository->makeStore($request->all());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
@@ -265,7 +265,7 @@ class CommuniquesFileController
         $message = 'Mise à jour du fichier de communiqué';
 
         try {
-            $result = $this->communiquesFileRepository->makeUpdate($id, $request->all());
+            $result = $this->repository->makeUpdate($id, $request->all());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all()) . ' - ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -327,7 +327,7 @@ class CommuniquesFileController
         $message = 'Suppression du fichier de communiqué';
 
         try {
-            $result = $this->communiquesFileRepository->makeDestroy($id);
+            $result = $this->repository->makeDestroy($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -403,7 +403,7 @@ class CommuniquesFileController
         $message = 'Changement de statut du fichier de communiqué';
 
         try {
-            $result = $this->communiquesFileRepository->setStatus($id, $request->input('state'));
+            $result = $this->repository->setStatus($id, $request->input('state'));
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id . ' - State: ' . $request->input('state')]);
 
             return Common::success($message, $result);
@@ -465,7 +465,7 @@ class CommuniquesFileController
         $message = 'Recherche de fichiers de communiqués';
 
         try {
-            $result = $this->communiquesFileRepository->search($request->input('keyword', ''));
+            $result = $this->repository->search($request->input('keyword', ''));
             $this->ls->trace(['action_name' => $message, 'description' => 'Keyword: ' . $request->input('keyword', '')]);
 
             return Common::success($message, $result);
@@ -527,7 +527,7 @@ class CommuniquesFileController
         $message = 'Déplacement du fichier de communiqué vers le haut';
 
         try {
-            $result = $this->communiquesFileRepository->up($id);
+            $result = $this->repository->up($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -589,7 +589,7 @@ class CommuniquesFileController
         $message = 'Déplacement du fichier de communiqué vers le bas';
 
         try {
-            $result = $this->communiquesFileRepository->down(request(), $id);
+            $result = $this->repository->down(request(), $id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -651,7 +651,7 @@ class CommuniquesFileController
         $message = 'Publication du fichier de communiqué';
 
         try {
-            $result = $this->communiquesFileRepository->publish($id);
+            $result = $this->repository->publish($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -713,7 +713,7 @@ class CommuniquesFileController
         $message = 'Dépublication du fichier de communiqué';
 
         try {
-            $result = $this->communiquesFileRepository->unpublish($id);
+            $result = $this->repository->unpublish($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -775,7 +775,7 @@ class CommuniquesFileController
         $message = 'Archivage du fichier de communiqué';
 
         try {
-            $result = $this->communiquesFileRepository->archive($id);
+            $result = $this->repository->archive($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -837,7 +837,7 @@ class CommuniquesFileController
         $message = 'Restauration du fichier de communiqué';
 
         try {
-            $result = $this->communiquesFileRepository->restore($id);
+            $result = $this->repository->restore($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);

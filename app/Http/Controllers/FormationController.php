@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\formationRepository;
+use App\Http\Repositories\FormationRepository;
 use App\Http\Requests\Formation\StoreFormationRequest;
 use App\Http\Requests\Formation\UpdateFormationRequest;
 use App\Services\LogService;
@@ -17,7 +17,7 @@ class FormationController
      *
      * @var FormationRepository
      */
-    protected $formationRepository;
+    protected $repository;
 
     /**
      * Log service
@@ -26,9 +26,9 @@ class FormationController
      */
     protected $ls;
 
-    public function __construct(formationRepository $formationRepository, LogService $ls)
+    public function __construct(FormationRepository $formationRepository, LogService $ls)
     {
-        $this->formationRepository = $formationRepository;
+        $this->repository = $formationRepository;
         $this->ls = $ls;
     }
 
@@ -81,7 +81,7 @@ class FormationController
     public function index(Request $request)
     {
         try {
-            $result = $this->formationRepository->getAll($request);
+            $result = $this->repository->getAll($request);
             $this->ls->trace(['action_name' => 'Journal des formations', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des formations', $result);
@@ -143,7 +143,7 @@ class FormationController
         $message = 'Récupération de la formation';
 
         try {
-            $result = $this->formationRepository->get($id);
+            $result = $this->repository->get($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -197,7 +197,7 @@ class FormationController
         $message = 'Création de la formation';
 
         try {
-            $result = $this->formationRepository->makeStore($request->all());
+            $result = $this->repository->makeStore($request->all());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
@@ -266,7 +266,7 @@ class FormationController
         $message = 'Mise à jour de la formation';
 
         try {
-            $result = $this->formationRepository->makeUpdate($id, $request->all());
+            $result = $this->repository->makeUpdate($id, $request->all());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all()) . ' - ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -328,7 +328,7 @@ class FormationController
         $message = 'Suppression de la formation';
 
         try {
-            $result = $this->formationRepository->makeDestroy($id);
+            $result = $this->repository->makeDestroy($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -404,7 +404,7 @@ class FormationController
         $message = 'Changement de statut de la formation';
 
         try {
-            $result = $this->formationRepository->setStatus($id, $request->input('state'));
+            $result = $this->repository->setStatus($id, $request->input('state'));
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id . ' - State: ' . $request->input('state')]);
 
             return Common::success($message, $result);
@@ -466,7 +466,7 @@ class FormationController
         $message = 'Recherche de formations';
 
         try {
-            $result = $this->formationRepository->search($request->input('keyword', ''));
+            $result = $this->repository->search($request->input('keyword', ''));
             $this->ls->trace(['action_name' => $message, 'description' => 'Keyword: ' . $request->input('keyword', '')]);
 
             return Common::success($message, $result);
@@ -528,7 +528,7 @@ class FormationController
         $message = 'Transmission de la formation vers validation';
 
         try {
-            $result = $this->formationRepository->up($id);
+            $result = $this->repository->up($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -604,7 +604,7 @@ class FormationController
         $message = 'Retour de la formation vers saisie';
 
         try {
-            $result = $this->formationRepository->down($request, $id);
+            $result = $this->repository->down($request, $id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id . ' - Motif: ' . $request->input('motif', '')]);
 
             return Common::success($message, $result);
@@ -666,7 +666,7 @@ class FormationController
         $message = 'Publication de la formation';
 
         try {
-            $result = $this->formationRepository->publish($id);
+            $result = $this->repository->publish($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -728,7 +728,7 @@ class FormationController
         $message = 'Dépublication de la formation';
 
         try {
-            $result = $this->formationRepository->unpublish($id);
+            $result = $this->repository->unpublish($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -790,7 +790,7 @@ class FormationController
         $message = 'Archivage de la formation';
 
         try {
-            $result = $this->formationRepository->archive($id);
+            $result = $this->repository->archive($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
@@ -852,7 +852,7 @@ class FormationController
         $message = 'Restauration de la formation';
 
         try {
-            $result = $this->formationRepository->restore($id);
+            $result = $this->repository->restore($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);

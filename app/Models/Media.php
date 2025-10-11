@@ -78,6 +78,11 @@ class Media extends Model
         return $this->hasOne(Stage::class, 'media_id');
     }
 
+    public function recrutement()
+    {
+        return $this->hasOne(Recrutement::class, 'media_id');
+    }
+
     public function structure()
     {
         return $this->belongsTo(Structure::class, 'structure_id');
