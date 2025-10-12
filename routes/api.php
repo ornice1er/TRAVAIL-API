@@ -51,92 +51,48 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::get('/delete-file', 'UserAuthController@deleteFile');
 
         Route::apiResources([
-             'structures'=>'StructuresController',
-                'users'=>'UserController',
-                'communiques'=>'CommuniquesController',
-                'actualites'=>'ActualitesController',
-                'prestations'=>'PrestationsController',
-                'documents'=>'DocsController',
-                'organigrammes'=>'OrganigrammesController',
-                'aofs'=>'AofController',
-                'recrutements'=>'RecrutementsController',
-                'stages'=>'StageController',
-                'links'=>'LinkController',
-                'maps'=>'MapsController',
-                'docs'=>'DocsController',
-                'citations'=>'CitationsController',
-                'mots'=>'MotsController',
-                'sts'=>'StructuresSousTutuelleController',
-                'appels_offre'=>'AppelsOffreController',
-                'posters'=>'PosterController',
-                'teams'=>'TeamController',
+            'structures'=>'StructuresController',
+    'users'=>'UserController',
+    'communiques'=>'CommuniqueController',
+    'actualites'=>'ActualiteController',
+    'prestations'=>'PrestationController',
+    'documents'=>'DocController',
+    'organigrammes'=>'OrganigrammeController',
+    'aofs'=>'AofController',
+    'links'=>'LinkController',
+    'maps'=>'MapsController',
+  //  'docs'=>'DocsController',
+    'citations'=>'CitationController',
+    'mots'=>'MotController',
+    'sts'=>'StructureSousTutuelleController',
+    'posters'=>'PosterController',
+    'teams'=>'TeamController',
+            'roles' => 'RoleController',
+            'permissions' => 'PermissionController',
+            'user-projects' => 'UserProjectController',
+            'notifications' => 'NotificationController',
         ]);
 
-        Route::get('/logs', 'LogController@index');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-        Route::get('notifications/{id}/state/{state}', 'NotificationController@changeState');
-        Route::post('notifications-search', 'NotificationController@search');
+// NewsLetter
+Route::post('/subscribe','NewslettersController@subscribe')->name('subscribe');
+Route::get('/historique/{type}','MediaController@index')->name('medias.index');
+Route::get('/historique-show/{type}/{id}','MediaController@show')->name('medias.show');
+Route::get('/journals','MediaController@index2')->name('medias.index2');
 
-        Route::get('corps/{id}/state/{state}', 'CorpsController@changeState');
-        Route::post('corps-search', 'CorpsController@search');
 
-        Route::get('statuts/{id}/state/{state}', 'StatutController@changeState');
-        Route::post('statuts-search', 'StatutController@search');
-        
-        Route::get('primes/{id}/state/{state}', 'PrimeController@changeState');
-        Route::post('primes-search', 'PrimeController@search');
+//poster 
 
-        Route::get('fonctions/{id}/state/{state}', 'FonctionController@changeState');
-        Route::post('fonctions-search', 'FonctionController@search');
-
-        Route::get('grades/{id}/state/{state}', 'GradeController@changeState');
-        Route::post('grades-search', 'GradeController@search');
-
-        Route::get('periodes/{id}/state/{state}', 'PeriodeController@changeState');
-        Route::post('periodes-search', 'PeriodeController@search');
-
-        Route::get('uas/{id}/state/{state}', 'UAController@changeState');
-        Route::post('uas-search', 'UAController@search');
-
-        Route::get('typeactes/{id}/state/{state}', 'TypeacteController@changeState');
-        Route::post('typeactes-search', 'TypeacteController@search');
-
-        Route::get('typeprimes/{id}/state/{state}', 'TypeprimeController@changeState');
-        Route::post('typeprimes-search', 'TypeprimeController@search');
-
-        Route::get('primestatuts/{id}/state/{state}', 'PrimestatutController@changeState');
-        Route::post('primestatuts-search', 'PrimestatutController@search');
-
-        Route::get('retenues/{id}/state/{state}', 'RetenueController@changeState');
-        Route::post('retenues-search', 'RetenueController@search');
-
-        Route::get('agents/{id}/state/{state}', 'AgentController@changeState');
-        Route::post('agents-search', 'AgentController@search');
-
-        Route::get('joursferies/{id}/state/{state}', 'JoursferieController@changeState');
-        Route::post('joursferies-search', 'JoursferieController@search');
-
-        Route::get('notationagents/{id}/state/{state}', 'NotationagentController@changeState');
-        Route::post('notationagents-search', 'NotationagentController@search');
-
-        Route::get('hsups/{id}/state/{state}', 'HsupController@changeState');
-        Route::post('hsups-search', 'HsupController@search');
-
-        Route::post('roles-search', 'RoleController@search');
-        Route::post('permissions-search', 'PermissionController@search');
-
-        Route::get('user-settings', 'UserSettingController@index');
-        Route::put('user-settings', 'UserSettingController@update');
-
-        Route::post('projects-search', 'ProjectController@search');
-        Route::get('projects/{id}/state/{state}', 'ProjectController@changeState');
+Route::get('/posters/publication/up/{id}','StageController@publish')->name('posters.publish');
+Route::get('/posters/publication/down/{id}','StageController@unpublish')->name('posters.unpublish');
+Route::get('/posters/archivied/{id}','StageController@archive')->name('posters.archived');
+Route::get('/posters/restored/{id}','StageController@restore')->name('posters.restored');
 
         Route::get('users/{id}/state/{state}', 'UserController@changeState');
         Route::post('users-search', 'UserController@search');
 
-        Route::get('users-rh', 'UserController@indexRH');
-        Route::get('users-rh/{id}', 'UserController@showRH');
     });
 
 
