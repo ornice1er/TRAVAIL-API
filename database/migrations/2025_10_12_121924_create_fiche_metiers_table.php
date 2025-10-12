@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('titre');
             $table->string('resume');
-            $table->text('description');
+            $table->longText('description');
             $table->unsignedBigInteger('structure_id'); 
             $table->json('thematique'); 
             $table->timestamps();
