@@ -11,12 +11,18 @@ use Str;
 
 class Communique extends Model
 {
-    use HasFactory, Filterable, HasUuids;
+    use HasFactory, Filterable;
 
     protected $fillable = ['title', 'description', 'media_id', 'slug'];
 
     public function files()
     {
-        return $this->hasMany(CommuniqueFiles::class, 'communiques_id');
+        return $this->hasMany(CommuniqueFile::class, 'communiques_id');
+    }
+
+
+     public function media()
+    {
+        return $this->belongsTo(Media::class,'media_id');
     }
 }

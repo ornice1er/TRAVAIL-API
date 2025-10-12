@@ -49,7 +49,7 @@ class MediaRepository
     {
          $per_page = 10;
 
-        $req = Media::ignoreRequest(['per_page'])
+        $req = Media::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
@@ -80,7 +80,7 @@ class MediaRepository
         $query->where('type', $request->type);
     }
 
-    if ($request->has('per_page')) {
+    if ($request->has('pageSize')) {
         $per_page = (int) $request->per_page;
         $medias = $query->paginate($per_page);
     } else {

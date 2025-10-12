@@ -45,7 +45,7 @@ class HsupRepository
     {
         $per_page = 10;
 
-        $req = Hsup::ignoreRequest(['per_page'])
+        $req = Hsup::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))

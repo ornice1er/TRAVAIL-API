@@ -13,6 +13,7 @@ final class Common
             'message' => $message,
             'data' => $data,
             'warning' => $warning,
+            'isPaginate' => request()->has('pageSize') ? true:false,
             'error_list' => null,
         ], 200);
 

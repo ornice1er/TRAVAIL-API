@@ -43,7 +43,7 @@ class CitationRepository
     {
         $per_page = 10;
 
-        $req = Citations::ignoreRequest(['per_page'])
+        $req = Citations::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))

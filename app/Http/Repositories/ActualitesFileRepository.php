@@ -27,7 +27,11 @@ class ActualitesFileRepository
     {
         $per_page = 10;
 
-        $req = ActualitesFiles::query()
+        $req = ActualitesFile::ignoreRequest(['per_page','pageSize','page'])
+            ->filter(array_filter($request->all(), function ($k) {
+                return $k != 'page';
+            }, ARRAY_FILTER_USE_KEY))
+            // ->with('invites')
             ->orderByDesc('created_at');
 
         if ($request->has('per_page')) {

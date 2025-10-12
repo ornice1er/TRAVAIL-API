@@ -77,7 +77,7 @@ class ActualiteRepository
                 $mediaIds = $mediaQuery->pluck('id');
 
                 // Requête sur Actualite liée aux medias filtrés
-                $req = Actualite::ignoreRequest(['per_page'])
+                $req = Actualite::ignoreRequest(['per_page','pageSize','page'])
                     ->whereIn('media_id', $mediaIds)
                     ->filter(array_filter($request->all(), function ($k) {
                         return $k !== 'page';
@@ -85,8 +85,8 @@ class ActualiteRepository
                     ->orderByDesc('created_at');
 
                 // Pagination si demandée
-                if ($request->has('per_page')) {
-                    $per_page = $request->input('per_page');
+                if ($request->has('pageSize')) {
+                    $per_page = $request->input('pageSize');
                     return $req->paginate($per_page);
                 } else {
                     return $req->get();

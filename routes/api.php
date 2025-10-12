@@ -50,160 +50,94 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::post('/upload-file', 'UserAuthController@uploadFile');
         Route::get('/delete-file', 'UserAuthController@deleteFile');
 
-    Route::apiResources([   
-    'structures'=>'StructuresController',
-    'users'=>'UserController',
-    'communiques'=>'CommuniquesController',
-    'actualites'=>'ActualitesController',
-    'prestations'=>'PrestationsController',
-    'documents'=>'DocsController',
-    'organigrammes'=>'OrganigrammesController',
-    'aofs'=>'AofController',
-    'recrutements'=>'RecrutementsController',
-    'stages'=>'StageController',
-    'links'=>'LinkController',
-    'maps'=>'MapsController',
-    'docs'=>'DocsController',
-    'citations'=>'CitationsController',
-    'mots'=>'MotsController',
-    'sts'=>'StructuresSousTutuelleController',
-    'recrutements'=>'RecrutementsController',
-    'appels_offre'=>'AppelsOffreController',
-    'posters'=>'PosterController',
-    'teams'=>'TeamController',
-]);
+        Route::apiResources([
+             'structures'=>'StructuresController',
+                'users'=>'UserController',
+                'communiques'=>'CommuniquesController',
+                'actualites'=>'ActualitesController',
+                'prestations'=>'PrestationsController',
+                'documents'=>'DocsController',
+                'organigrammes'=>'OrganigrammesController',
+                'aofs'=>'AofController',
+                'recrutements'=>'RecrutementsController',
+                'stages'=>'StageController',
+                'links'=>'LinkController',
+                'maps'=>'MapsController',
+                'docs'=>'DocsController',
+                'citations'=>'CitationsController',
+                'mots'=>'MotsController',
+                'sts'=>'StructuresSousTutuelleController',
+                'appels_offre'=>'AppelsOffreController',
+                'posters'=>'PosterController',
+                'teams'=>'TeamController',
+        ]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-
-// NewsLetter
-Route::post('/subscribe','NewslettersController@subscribe')->name('subscribe');
-Route::get('/historique/{type}','MediaController@index')->name('medias.index');
-Route::get('/historique-show/{type}/{id}','MediaController@show')->name('medias.show');
-Route::get('/journals','MediaController@index2')->name('medias.index2');
-
-Route::get('/download-journal','MediaController@download')->name('download.journal');
+        Route::get('/logs', 'LogController@index');
 
 
+        Route::get('notifications/{id}/state/{state}', 'NotificationController@changeState');
+        Route::post('notifications-search', 'NotificationController@search');
 
-// biographie
-Route::get('/biographie','StructuresController@getBiographie')->name('biographie.index');
-Route::post('/biographie','StructuresController@changeBiographie')->name('biographie.update');
+        Route::get('corps/{id}/state/{state}', 'CorpsController@changeState');
+        Route::post('corps-search', 'CorpsController@search');
 
-// ma structure 
-Route::get('/ma-structure','StructuresController@getRepStructureInfo')->name('respos.index');
-Route::post('/ma-structure','StructuresController@changeRepStructureInfo')->name('respos.update');
+        Route::get('statuts/{id}/state/{state}', 'StatutController@changeState');
+        Route::post('statuts-search', 'StatutController@search');
+        
+        Route::get('primes/{id}/state/{state}', 'PrimeController@changeState');
+        Route::post('primes-search', 'PrimeController@search');
 
-//account setting
-Route::post('/users/change-password','UserController@changePassword')->name('users.password');
+        Route::get('fonctions/{id}/state/{state}', 'FonctionController@changeState');
+        Route::post('fonctions-search', 'FonctionController@search');
 
- // Notification
- Route::get('/notification/{id}','NotificationsController@show')->name('admin.notification');
- Route::get('/notifications','NotificationsController@index')->name('all.notification');
- Route::delete('/notification/{id}','NotificationsController@delete')->name('notification.delete');
+        Route::get('grades/{id}/state/{state}', 'GradeController@changeState');
+        Route::post('grades-search', 'GradeController@search');
 
- //transmission communiqué
- Route::get('/communiques/transmission/up/{id}','CommuniquesController@up')->name('communiques.up');
- Route::post('/communiques/transmission/down/{id}','CommuniquesController@down')->name('communiques.down');
- Route::get('/communiques/publication/up/{id}','CommuniquesController@publish')->name('communiques.publish');
- Route::get('/communiques/publication/down/{id}','CommuniquesController@unpublish')->name('communiques.unpublish');
- Route::get('/communiques/archivied/{id}','CommuniquesController@archive')->name('communiques.archived');
- Route::get('/communiques/restored/{id}','CommuniquesController@restore')->name('communiques.restored');
- 
- 
- //transmission actualité
- Route::get('/actualites/transmission/up/{id}','ActualitesController@up')->name('actualites.up');
- Route::post('/actualites/transmission/down/{id}','ActualitesController@down')->name('actualites.down');
- Route::get('/actualites/publication/up/{id}','ActualitesController@publish')->name('actualites.publish');
- Route::get('/actualites/publication/down/{id}','ActualitesController@unpublish')->name('actualites.unpublish');
- Route::get('/actualites/archivied/{id}','ActualitesController@archive')->name('actualites.archived');
- Route::get('/actualites/restored/{id}','ActualitesController@restore')->name('actualites.restored');
+        Route::get('periodes/{id}/state/{state}', 'PeriodeController@changeState');
+        Route::post('periodes-search', 'PeriodeController@search');
 
- //prestation actualité
- Route::get('/prestations/transmission/up/{id}','PrestationsController@up')->name('prestations.up');
- Route::post('/prestations/transmission/down/{id}','PrestationsController@down')->name('prestations.down');
- Route::get('/prestations/publication/up/{id}','PrestationsController@publish')->name('prestations.publish');
- Route::get('/prestations/publication/down/{id}','PrestationsController@unpublish')->name('prestations.unpublish');
- Route::get('/prestations/archivied/{id}','PrestationsController@archive')->name('prestations.archived');
- Route::get('/prestations/restored/{id}','PrestationsController@restore')->name('prestations.restored');
- 
- 
- //docs actualité
- Route::get('/documents/transmission/up/{id}','DocsController@up')->name('documents.up');
- Route::post('/documents/transmission/down/{id}','DocsController@down')->name('documents.down');
- Route::get('/documents/publication/up/{id}','DocsController@publish')->name('documents.publish');
- Route::get('/documents/publication/down/{id}','DocsController@unpublish')->name('documents.unpublish');
- Route::get('/documents/archivied/{id}','DocsController@archive')->name('documents.archived');
- Route::get('/documents/restored/{id}','DocsController@restore')->name('documents.restored');
- //Route::get('/documents/delete/{id}','DocsController@delete')->name('documents.delete');
+        Route::get('uas/{id}/state/{state}', 'UAController@changeState');
+        Route::post('uas-search', 'UAController@search');
 
+        Route::get('typeactes/{id}/state/{state}', 'TypeacteController@changeState');
+        Route::post('typeactes-search', 'TypeacteController@search');
 
- //Organigramme actualité
- Route::get('/organigrammes/transmission/up/{id}','OrganigrammesController@up')->name('organigrammes.up');
- Route::post('/organigrammes/transmission/down/{id}','OrganigrammesController@down')->name('organigrammes.down');
- Route::get('/organigrammes/publication/up/{id}','OrganigrammesController@publish')->name('organigrammes.publish');
- Route::get('/organigrammes/publication/down/{id}','OrganigrammesController@unpublish')->name('organigrammes.unpublish');
- Route::get('/organigrammes/archivied/{id}','OrganigrammesController@archive')->name('organigrammes.archived');
- Route::get('/organigrammes/restored/{id}','OrganigrammesController@restore')->name('organigrammes.restored');
- 
- //Organigramme actualité
- Route::get('/aofs/transmission/up/{id}','AofController@up')->name('aofs.up');
- Route::post('/aofs/transmission/down/{id}','AofController@down')->name('aofs.down');
- Route::get('/aofs/publication/up/{id}','AofController@publish')->name('aofs.publish');
- Route::get('/aofs/publication/down/{id}','AofController@unpublish')->name('aofs.unpublish');
- Route::get('/aofs/archivied/{id}','AofController@archive')->name('aofs.archived');
- Route::get('/aofs/restored/{id}','AofController@restore')->name('aofs.restored');
+        Route::get('typeprimes/{id}/state/{state}', 'TypeprimeController@changeState');
+        Route::post('typeprimes-search', 'TypeprimeController@search');
 
- //Stage 
- Route::get('/stages/transmission/up/{id}','StageController@up')->name('stages.up');
- Route::post('/stages/transmission/down/{id}','StageController@down')->name('stages.down');
- Route::get('/stages/publication/up/{id}','StageController@publish')->name('stages.publish');
- Route::get('/stages/publication/down/{id}','StageController@unpublish')->name('stages.unpublish');
- Route::get('/stages/archivied/{id}','StageController@archive')->name('stages.archived');
- Route::get('/stages/restored/{id}','StageController@restore')->name('stages.restored');
+        Route::get('primestatuts/{id}/state/{state}', 'PrimestatutController@changeState');
+        Route::post('primestatuts-search', 'PrimestatutController@search');
 
- //Appel d'offre 
- Route::get('/appels-offre/transmission/up/{id}','StageController@up')->name('appels_offre.up');
- Route::post('/appels-offre/transmission/down/{id}','StageController@down')->name('appels_offre.down');
- Route::get('/appels-offre/publication/up/{id}','StageController@publish')->name('appels_offre.publish');
- Route::get('/appels-offre/publication/down/{id}','StageController@unpublish')->name('appels_offre.unpublish');
- Route::get('/appels-offre/archivied/{id}','StageController@archive')->name('appels_offre.archived');
- Route::get('/appels-offre/restored/{id}','StageController@restore')->name('appels_offre.restored');
+        Route::get('retenues/{id}/state/{state}', 'RetenueController@changeState');
+        Route::post('retenues-search', 'RetenueController@search');
 
- //users actualité
- Route::get('/users/account-state/up/{id}','UserController@up')->name('users.up');
- Route::get('/users/account-state/down/{id}','UserController@down')->name('users.down');
+        Route::get('agents/{id}/state/{state}', 'AgentController@changeState');
+        Route::post('agents-search', 'AgentController@search');
 
-//poster 
+        Route::get('joursferies/{id}/state/{state}', 'JoursferieController@changeState');
+        Route::post('joursferies-search', 'JoursferieController@search');
 
-Route::get('/posters/publication/up/{id}','StageController@publish')->name('posters.publish');
-Route::get('/posters/publication/down/{id}','StageController@unpublish')->name('posters.unpublish');
-Route::get('/posters/archivied/{id}','StageController@archive')->name('posters.archived');
-Route::get('/posters/restored/{id}','StageController@restore')->name('posters.restored');
+        Route::get('notationagents/{id}/state/{state}', 'NotationagentController@changeState');
+        Route::post('notationagents-search', 'NotationagentController@search');
 
-// Types Structures
-Route::resource('/type-structures','TypesStructuresController');
+        Route::get('hsups/{id}/state/{state}', 'HsupController@changeState');
+        Route::post('hsups-search', 'HsupController@search');
 
-// Galeries
-Route::resource('/galeries','GaleriesController');
+        Route::post('roles-search', 'RoleController@search');
+        Route::post('permissions-search', 'PermissionController@search');
 
-// Mots
-Route::resource('/mots','MotsController');
+        Route::get('user-settings', 'UserSettingController@index');
+        Route::put('user-settings', 'UserSettingController@update');
 
-// Citations
-Route::resource('/citations','CitationsController');
+        Route::post('projects-search', 'ProjectController@search');
+        Route::get('projects/{id}/state/{state}', 'ProjectController@changeState');
 
-// Legendes
-Route::resource('/legendes','LegendesController');
+        Route::get('users/{id}/state/{state}', 'UserController@changeState');
+        Route::post('users-search', 'UserController@search');
 
-// Communiques
-//Route::resource('/communiques','CommuniquesController');
-
-// Communiques Files
-Route::resource('/communiques-files','CommuniquesFilesController');
-
-// Communiques Files
-Route::resource('/actualites-files','ActualitesFilesController');
+        Route::get('users-rh', 'UserController@indexRH');
+        Route::get('users-rh/{id}', 'UserController@showRH');
+    });
 
 
 
@@ -231,7 +165,7 @@ Route::get('aof/{id?}', 'PublicController@index')->name('aof');
 Route::get('eservices', 'PublicController@index')->name('eservices');
 Route::get('ministre/{category?}', 'PublicController@index')->name('ministre');
 Route::get('public/documents', 'PublicController@getDocuments')->name('document');
-Route::get('communiques', 'PublicController@index')->name('communiques');
+Route::get('public/communiques', 'PublicController@getCommuniques')->name('communiques');
 Route::get('recrutements', 'PublicController@index')->name('recrutements');
 Route::get('opp-stages', 'PublicController@index')->name('stages');
 Route::get('formations', 'PublicController@index')->name('formations');
@@ -249,5 +183,16 @@ Route::get('structure/presentation/{st}', 'PublicController@index')->name('struc
 
 Route::post('send-contact-form', 'PublicController@sendContactForm');
 
-    });
+
+
+
+
+ Route::get('/communiques/transmission/up/{id}','CommuniqueController@up')->name('communiques.up');
+ Route::post('/communiques/transmission/down/{id}','CommuniqueController@down')->name('communiques.down');
+ Route::get('/communiques/publication/up/{id}','CommuniqueController@publish')->name('communiques.publish');
+ Route::get('/communiques/publication/down/{id}','CommuniqueController@unpublish')->name('communiques.unpublish');
+ Route::get('/communiques/archivied/{id}','CommuniqueController@archive')->name('communiques.archived');
+ Route::get('/communiques/restored/{id}','CommuniqueController@restore')->name('communiques.restored');
+ 
+
 });

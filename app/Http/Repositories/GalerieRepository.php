@@ -46,7 +46,7 @@ class GalerieRepository
     {
         $per_page = 10;
 
-        $req = Galerie::ignoreRequest(['per_page'])
+        $req = Galerie::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))

@@ -686,13 +686,21 @@ class PublicController extends Controller
       public function getCommuniquePage($slug)
     {
 
-        $communique=Communique::whereSlug($slug)->first();
+        $communique=Communique::with('files')->whereSlug($slug)->first();
 
         $title="COMMUNIQUES";
         $share_path="page/communique/".$slug;
         $share_title=$communique->title;
 
-        return Common::success("Données de site récupérées",compact(['communique','title','share_path',"share_title"]));
+           $shareLinks = Share::page($share_path, $share_title)
+        ->facebook()
+        ->twitter()
+        ->linkedin()
+        ->whatsapp()
+        ->telegram()
+        ->getRawLinks();
+
+        return Common::success("Données de site récupérées",compact(['communique','title','shareLinks']));
 
     }
 
@@ -726,6 +734,16 @@ class PublicController extends Controller
 
     }
 
+      function getCommuniques(Request $request) {
+
+               // $communiques=Media::with('communique')->where('type','communique')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get();
+
+        $categories=["Concours","Activité"];
+        $communiques=Communique::with('media')->orderBy('id','desc')->paginate($request->pageSize);
+        $structures=Structure::all();
+        return Common::success("Données de site récupérées",compact(['communiques','categories','structures']));
+
+    }
 
     function getDocuments(Request $request){
 

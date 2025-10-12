@@ -62,9 +62,9 @@ class AofRepository
             });
 
         // Gestion de la pagination personnalisée
-        if ($request->has('per_page')) {
-            $per_page = $request->input('per_page');
-            return $query->paginate($per_page);
+        if ($request->has('pageSize')) {
+            $per_page = $request->input('pageSize');
+            $medias = $query->paginate($per_page);
         } else {
             return $query->get();
         }

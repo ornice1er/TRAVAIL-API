@@ -45,7 +45,7 @@ class AppelsOffreFileRepository
     {
         $per_page = 10;
 
-        $req = AppelsOffreFile::ignoreRequest(['per_page'])
+        $req = AppelsOffreFile::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))

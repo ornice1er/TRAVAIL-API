@@ -16,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements JWTSubject
 {
-    use Filterable, HasApiTokens, HasFactory, Notifiable, SoftDeletes, HasRoles;
+    use Filterable, HasApiTokens, HasFactory, Notifiable, HasRoles;
 
     // Liste blanche des attributs pouvant être filtrés
     private static $whiteListFilter = ['*'];
