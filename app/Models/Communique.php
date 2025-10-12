@@ -17,6 +17,7 @@ class Communique extends Model
 
     public function files()
     {
+<<<<<<< HEAD
         return $this->hasMany(CommuniqueFile::class, 'communiques_id');
     }
 
@@ -24,5 +25,8 @@ class Communique extends Model
      public function media()
     {
         return $this->belongsTo(Media::class,'media_id');
+=======
+        return $this->hasMany(CommuniqueFiles::class, 'communiques_id');
+>>>>>>> 7d4cb4df1684de918cc971035daf01dbe3174fd8
     }
 }

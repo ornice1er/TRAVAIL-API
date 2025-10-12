@@ -73,24 +73,26 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
             'notifications' => 'NotificationController',
         ]);
 
-        Route::get('/logs', 'LogController@index');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-        Route::get('notifications/{id}/state/{state}', 'NotificationController@changeState');
-        Route::post('notifications-search', 'NotificationController@search');
+// NewsLetter
+Route::post('/subscribe','NewslettersController@subscribe')->name('subscribe');
+Route::get('/historique/{type}','MediaController@index')->name('medias.index');
+Route::get('/historique-show/{type}/{id}','MediaController@show')->name('medias.show');
+Route::get('/journals','MediaController@index2')->name('medias.index2');
 
 
-        Route::post('roles-search', 'RoleController@search');
-        Route::post('permissions-search', 'PermissionController@search');
+//poster 
 
-        Route::get('user-settings', 'UserSettingController@index');
-        Route::put('user-settings', 'UserSettingController@update');
+Route::get('/posters/publication/up/{id}','StageController@publish')->name('posters.publish');
+Route::get('/posters/publication/down/{id}','StageController@unpublish')->name('posters.unpublish');
+Route::get('/posters/archivied/{id}','StageController@archive')->name('posters.archived');
+Route::get('/posters/restored/{id}','StageController@restore')->name('posters.restored');
 
         Route::get('users/{id}/state/{state}', 'UserController@changeState');
         Route::post('users-search', 'UserController@search');
 
-        Route::get('users-rh', 'UserController@indexRH');
-        Route::get('users-rh/{id}', 'UserController@showRH');
     });
 
 
