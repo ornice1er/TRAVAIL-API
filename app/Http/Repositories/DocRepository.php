@@ -3,12 +3,16 @@
 namespace App\Http\Repositories;
 
 use App\Models\Doc;
+use App\Models\User;
+use App\Models\Media;
+use App\Models\Transmission;
 use App\Models\Invite;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
 use QrCode;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
  
 
 class DocRepository
@@ -82,7 +86,8 @@ class DocRepository
         if (request()->hasFile('doc')) {
             // Génère un slug pour nommer le fichier
             $slug = Str::slug($data['name'] ?? 'document') . '-' . date('ymdis') . '-' . rand(0, 999);
-            $model->filename = FileStorage::setFile('public', request()->file('doc'), 'docs', $slug . ".pdf");
+            // TODO: Implémenter le service de stockage de fichiers
+            // $model->filename = FileStorage::setFile('public', request()->file('doc'), 'docs', $slug . ".pdf");
         }
 
         $model->save();
@@ -140,12 +145,12 @@ class DocRepository
     }
 
     /**
-     * Recherche dans les fêtes (par nom, lieu...).
+     * Recherche dans les documents (par nom, description...).
      */
     public function search($term)
     {
         $query = Doc::query();
-        $attrs = ['nom', 'lieu', 'type_Doc'];
+        $attrs = ['name', 'description', 'type'];
         
         foreach ($attrs as $value) {
             $query->orWhere($value, 'like', '%'.$term.'%');
@@ -188,7 +193,7 @@ class DocRepository
 
     function verifyLink($data) {
         if (isset($data['link_token'])) {
-            return Doc::where('link_token', )->first();
+            return Doc::where('link_token', $data['link_token'])->first();
         }else{
             return Doc::where('media_token', $data['media_token'])->first();
 
@@ -215,70 +220,60 @@ class DocRepository
 
      public function up($id)
     {
-             // Désactive la dernière transmission active
-            Media::find($id)->transmissions->last()->update(['is_last' => false]);
+        Media::find($id)->transmissions->last()->update(['is_last'=>false]);
+        $to=User::where('structure_id',Auth::user()->structure_id)->role('validation')->first()->id;
+        Transmission::create([
+            'from'=>Auth::id(),
+            'to'=>$to,
+            'media_id'=>$id,
+            'is_last'=>true,
+        ]);
 
-            // Récupère l'utilisateur avec le rôle 'validation' dans la même structure
-            $to = User::where('structure_id', Auth::user()->structure_id)
-                ->role('validation')
-                ->first()
-                ->id;
-
-            // Crée une nouvelle transmission vers cet utilisateur
-            Transmission::create([
-                'from' => Auth::id(),
-                'to' => $to,
-                'media_id' => $id,
-                'is_last' => true,
-            ]);
-
-            return true;
+        return true;
     }
 
-         public function down($request, $id)
+    public function down($request, $id)
     {  
-             $media = Media::findOrFail($id);
-            $media->update(['motif' => $request->motif]);
+        Media::find($id)->update(['motif'=>$request['motif']]);
+        Media::find($id)->transmissions->last()->update(['is_last'=>false]);
+      
+        $to=User::where('structure_id',Media::find($id)->structure_id)->role('saisie')->first()->id;
+        Transmission::create([
+            'from'=>Auth::id(),
+            'to'=>$to,
+            'media_id'=>$id,
+            'is_last'=>true,
+        ]);
 
-            $media->transmissions->last()->update(['is_last' => false]);
-
-            $to = User::where('structure_id', $media->structure_id)
-                    ->role('saisie')
-                    ->first()
-                    ->id;
-
-            Transmission::create([
-                'from' => Auth::id(),
-                'to' => $to,
-                'media_id' => $id,
-                'is_last' => true,
-            ]);
-
-            return true;
+        return true;
     }
           
-          public function publish($id)
+    public function publish($id)
     {
-         Media::findOrFail($id)->update(['is_published' => true]);
-         return true;
+        Media::find($id)->update(['is_published'=>true]);
+        
+        return true;
     }
 
     public function unpublish($id)
     {
-         Media::findOrFail($id)->update(['is_published' => false]);
-         return true;
+        Media::find($id)->update(['is_published'=>false]);
+        
+        return true;
     }
 
     public function archive($id)
     {
-         Media::findOrFail($id)->update(['is_archived' => true]);
-         return true;
+        Media::find($id)->update(['is_archived'=>true]);
+        
+        return true;
     }
 
     public function restore($id)
     {
-         Media::findOrFail($id)->update(['is_archived' => false]);
-         return true;
+        Media::find($id)->update(['is_archived'=>false]);
+        
+        return true;
     }
 
 }

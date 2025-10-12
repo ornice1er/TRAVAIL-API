@@ -2,7 +2,7 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\Formation;
+use App\Models\Formations;
 use App\Models\Invite;
 use App\Traits\Repository;
 use App\Services\AwsService;
@@ -13,6 +13,7 @@ use App\Models\Media;
 use App\Models\Parcours;
 use App\Models\Transmission;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
  
 
@@ -23,7 +24,7 @@ class FormationRepository
     /**
      * Le modèle utilisé.
      *
-     * @var Formation
+     * @var Formations
      */
     protected $model;
 
@@ -32,7 +33,7 @@ class FormationRepository
      */
     public function __construct()
     {
-        $this->model = app(Formation::class);
+        $this->model = app(Formations::class);
     }
 
     /**
@@ -76,7 +77,7 @@ class FormationRepository
     /**
      * Crée une nouvelle fête.
      */
-    public function makeStore($data): Formation
+    public function makeStore($data): Formations
     {
         $media = new Media();
         $media->code = Str::uuid();
@@ -86,7 +87,7 @@ class FormationRepository
         $media->save();
 
         $slug = Str::slug($data['title']);
-        $count = Formation::where('slug', $slug)->count();
+        $count = Formations::where('slug', $slug)->count();
         if ($count > 0) {
             $slug = $slug . '-' . date('ymdis') . '-' . rand(0, 999);
         }
@@ -98,7 +99,7 @@ class FormationRepository
             $data['cloture'] = date_create($data['cloture']);
         }
 
-        $model = new Formation($data);
+        $model = new Formations($data);
 
         /*$aws = new AwsService();
         if(request()->file('file')) {
@@ -125,11 +126,11 @@ class FormationRepository
     /**
      * Met à jour une fête.
      */
-    public function makeUpdate($id, $data): Formation
+    public function makeUpdate($id, $data): Formations
     {
-        $model = Formation::findOrFail($id);
+        $model = Formations::findOrFail($id);
 
-        // Récupération du média lié à la formation
+        // Récupération du média lié à la Formations
         $media = $model->media;
 
         // Mise à jour du média si nécessaire
@@ -146,7 +147,7 @@ class FormationRepository
         // Génération du slug si 'title' est présent
         if (isset($data['title'])) {
             $slug = Str::slug($data['title']);
-            $count = Formation::where('slug', $slug)->where('id', '!=', $id)->count();
+            $count = Formations::where('slug', $slug)->where('id', '!=', $id)->count();
             if ($count > 0) {
                 $slug = $slug . '-' . date('ymdis') . '-' . rand(0, 999);
             }
@@ -183,12 +184,12 @@ class FormationRepository
     }
 
     /**
-     * Recherche dans les fêtes (par nom, lieu...).
+     * Recherche dans les formations (par titre, description...).
      */
     public function search($term)
     {
-        $query = Formation::query();
-        $attrs = ['nom', 'lieu', 'type_Formation'];
+        $query = Formations::query();
+        $attrs = ['title', 'label', 'libellé', 'description'];
         
         foreach ($attrs as $value) {
             $query->orWhere($value, 'like', '%'.$term.'%');
@@ -199,7 +200,7 @@ class FormationRepository
 
     /*
     function generateLink($id,$data) {
-        $code = Core::generateUniqueCode(Formation::class, 10, 'FET');
+        $code = Core::generateUniqueCode(Formations::class, 10, 'FET');
         $link_token = Str::random(40); // Génère un token de 40 caractères
         $url = env('APP_FRONT_URL').'/Formation/'.$code.'/'.$link_token;
         $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
@@ -209,13 +210,13 @@ class FormationRepository
         $data['lien_unique']=$url ;
         $data['qr_code'] = base64_encode($qrCode);
         $data['status'] = 1;
-        $model = Formation::findOrFail($id);
+        $model = Formations::findOrFail($id);
         $model->update($data);
         return $model;
     }
 
     function generateMediaLink($id) {
-        $model = Formation::findOrFail($id);
+        $model = Formations::findOrFail($id);
         $code = $model->code;
         $media_token = Str::random(40); // Génère un token de 40 caractères
         $url = env('APP_FRONT_URL').'/Formation-gallery/'.$code.'/'.$media_token;
@@ -231,9 +232,9 @@ class FormationRepository
 
     function verifyLink($data) {
         if (isset($data['link_token'])) {
-            return Formation::where('link_token', )->first();
+            return Formations::where('link_token', $data['link_token'])->first();
         }else{
-            return Formation::where('media_token', $data['media_token'])->first();
+            return Formations::where('media_token', $data['media_token'])->first();
 
         }
 

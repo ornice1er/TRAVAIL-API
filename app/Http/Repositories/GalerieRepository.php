@@ -7,6 +7,7 @@ use App\Models\Invite;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
+use App\Utilities\FileStorage;
 use QrCode;
 use Illuminate\Support\Str;
  
@@ -147,15 +148,19 @@ class GalerieRepository
     }
 
     /**
-     * Recherche dans les fêtes (par nom, lieu...).
+     * Recherche dans les galeries (par nom, description...).
      */
-    public function search($term)
+    public function search($request)
     {
+        $term = $request->input('q', '');
         $query = Galerie::query();
-        $attrs = ['nom', 'lieu', 'type_Galerie'];
         
-        foreach ($attrs as $value) {
-            $query->orWhere($value, 'like', '%'.$term.'%');
+        if ($term) {
+            $attrs = ['name', 'description'];
+            
+            foreach ($attrs as $value) {
+                $query->orWhere($value, 'like', '%'.$term.'%');
+            }
         }
 
         return $query->get();
@@ -195,12 +200,10 @@ class GalerieRepository
 
     function verifyLink($data) {
         if (isset($data['link_token'])) {
-            return Galerie::where('link_token', )->first();
+            return Galerie::where('link_token', $data['link_token'])->first();
         }else{
             return Galerie::where('media_token', $data['media_token'])->first();
-
         }
-
     }
 
     function participate($data){
@@ -225,7 +228,7 @@ class GalerieRepository
             return true;
     }
 
-         public function down($request, $id)
+         public function down($id)
     {  
             return true;
     }
@@ -250,6 +253,15 @@ class GalerieRepository
     {
         return true;
     }
+
+    public function changeState($id, $state)
+    {
+        $model = $this->find($id);
+        $model->status = $state;
+        $model->save();
+        return $model;
+    }
+}
         */
 
 }

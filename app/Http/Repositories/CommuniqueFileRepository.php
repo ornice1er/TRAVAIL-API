@@ -171,7 +171,7 @@ class CommuniquesFileRepository
 
     function verifyLink($data) {
         if (isset($data['link_token'])) {
-            return CommuniquesFile::where('link_token', )->first();
+            return CommuniquesFile::where('link_token', $data['link_token'])->first();
         }else{
             return CommuniquesFile::where('media_token', $data['media_token'])->first();
 
@@ -194,38 +194,38 @@ class CommuniquesFileRepository
         return $model;
 
     }
-
+    */
 
      public function up($id)
     {
-            return true;
+        // Implement actual logic for moving up in order
+        return $this->findOrFail($id);
     }
 
-         public function down($request, $id)
+    public function down($request, $id)
     {  
-            return true;
+        // Implement actual logic for moving down in order
+        return $this->findOrFail($id);
     }
           
-          public function publish($id)
+    public function publish($id)
     {
-        return true;
-
+        return $this->findOrFail($id)->update(['status' => 'published']);
     }
 
     public function unpublish($id)
     {
-        return true;
+        return $this->findOrFail($id)->update(['status' => 'draft']);
     }
 
     public function archive($id)
     {
-        return true;
+        return $this->findOrFail($id)->update(['status' => 'archived']);
     }
 
     public function restore($id)
     {
-        return true;
+        return $this->findOrFail($id)->update(['status' => 'active']);
     }
-*/
 
 }

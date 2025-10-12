@@ -2,29 +2,31 @@
 
 namespace App\Http\Repositories;
 
-use App\Exceptions\JsonResponseException;
-use App\Models\PasswordReset;
+use JWTAuth;
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\UserAuth;
-use App\Models\UserProject;
-use App\Notifications\DefaultNotification;
-use App\Notifications\ElectionPrClosedNotification;
-use App\Services\OTPService;
-use App\Traits\Repository;
 use App\Utilities\Common;
-use App\Utilities\FileStorage;
 use App\Utilities\Mailer;
-use Carbon\Carbon;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
+use App\Traits\Repository;
+use App\Models\UserProject;
 use Illuminate\Support\Str;
-use JWTAuth;
+use App\Services\OTPService;
+use Illuminate\Http\Request;
+use App\Models\PasswordReset;
+use App\Utilities\FileStorage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use NotificationChannels\Fcm\FcmChannel;
+use App\Exceptions\JsonResponseException;
+use App\Notifications\DefaultNotification;
+use Illuminate\Support\Facades\Notification;
 use NotificationChannels\Twilio\TwilioChannel;
+use App\Notifications\ElectionPrClosedNotification;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
+use PHPOpenSourceSaver\JWTAuth\Exceptions\TokenInvalidException;
 
 class UserAuthRepository
 {
@@ -161,7 +163,7 @@ class UserAuthRepository
 
             return null;
 
-        } catch (TokenExpiredException $exception) {
+        } catch (\PHPOpenSourceSaver\JWTAuth\Exceptions\TokenExpiredException $exception) {
             return response()->json([
                 'error' => true,
                 'message' => trans('auth.token.expired'),

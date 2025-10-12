@@ -9,13 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Str;
 
-class Galerie extends Model
+class Map extends Model
 {
     use HasFactory, Filterable, SoftDeletes, HasUuids;
     protected $fillable = [
         'site_name',
         'longitude',
-        'latitude'
+        'latitude',
+        'description',
+        'status',
+        'user_id'
     ];
 }
 

@@ -17,14 +17,15 @@ class UpdateMediaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required|string|max:191',
-            'is_published' => 'required|boolean',
-            'has_principal_access' => 'required|boolean',
-            'is_archived' => 'required|boolean',
-            'structure_id' => 'required|exists:structures,id',
+            'code' => 'sometimes|required|string|max:191',
+            'is_published' => 'sometimes|required|boolean',
+            'has_principal_access' => 'sometimes|required|boolean',
+            'is_archived' => 'sometimes|required|boolean',
+            'structure_id' => 'sometimes|required|exists:structures,id',
             'adding_by' => 'nullable|exists:users,id',
             'motif' => 'nullable|string',
-            'type' => 'required|string|max:255',        ];
+            'type' => 'sometimes|required|string|max:255',
+        ];
     }
 
     protected function failedValidation(Validator $validator)
