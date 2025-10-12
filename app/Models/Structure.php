@@ -11,7 +11,7 @@ use Str;
 
 class Structure extends Model
 {
-    use Filterable, HasFactory, SoftDeletes, HasUuids;
+    use Filterable, HasFactory, HasUuids;
     protected $fillable = [
         'name',
         'acronym',
@@ -43,7 +43,7 @@ class Structure extends Model
 
     public function mots()
     {
-        return $this->hasMany(Mots::class, 'structure_id');
+        return $this->hasMany(Mot::class, 'structure_id');
     }
 
     public function teams()

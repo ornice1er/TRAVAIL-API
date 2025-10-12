@@ -17,9 +17,10 @@ class StoreMapRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'site_name' => 'sometimes|required|string|max:191',
-            'longitude' => 'nullable|string|max:191',
-            'latitude' => 'sometimes|required|string|max:191',
+            'site_name' => 'required|string|max:191',
+            'longitude' => 'nullable|numeric',
+            'latitude' => 'nullable|numeric',
+            'description' => 'nullable|string|max:255',
         ];
     }
 
@@ -32,7 +33,8 @@ class StoreMapRequest extends FormRequest
     {
         return [
             'site_name.required' => 'Le nom du site est requis.',
-            'latitude.required' => 'La latitude est requise.',
+            'longitude.numeric' => 'La longitude doit être un nombre.',
+            'latitude.numeric' => 'La latitude doit être un nombre.',
         ];
     }
 

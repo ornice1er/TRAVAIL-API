@@ -166,7 +166,7 @@ class AppelsOffreFileRepository
 
     function verifyLink($data) {
         if (isset($data['link_token'])) {
-            return AppelsOffreFile::where('link_token', )->first();
+            return AppelsOffreFile::where('link_token', $data['link_token'])->first();
         }else{
             return AppelsOffreFile::where('media_token', $data['media_token'])->first();
 

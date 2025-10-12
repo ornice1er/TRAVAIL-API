@@ -17,10 +17,10 @@ class UpdateMotRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'title' => 'required|string|max:191',
-            'resume' => 'required|string',
+            'title' => 'sometimes|required|string|max:191',
+            'resume' => 'sometimes|required|string',
             'structure_id' => 'nullable|exists:structures,id',
-                ];
+        ];
     }
 
     protected function failedValidation(Validator $validator)

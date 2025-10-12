@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mot extends Model
 {
-    use HasFactory, Filterable, SoftDeletes, HasUuids;
+    use HasFactory, Filterable, HasUuids;
 
     protected $fillable = [
         'title',

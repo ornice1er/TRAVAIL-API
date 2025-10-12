@@ -17,11 +17,22 @@ class UpdateRecrutementRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'title' => 'sometimes|required|string|max:191',
-            'slug' => 'sometimes|required|string|max:191|unique:recrutements,slug,' . $this->route('recrutement'),
-            'resume' => 'nullable|string',
-            'has_result' => 'sometimes|required|boolean',
-            'status' => 'sometimes|required|in:active,inactive',
+            'title' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string',
+            'exigences' => 'nullable|string',
+            'avantages' => 'nullable|string',
+            'responsabilites' => 'nullable|string',
+            'type_contrat' => 'sometimes|required|string|max:100',
+            'lieu_travail' => 'sometimes|required|string|max:255',
+            'salaire_min' => 'nullable|numeric|min:0',
+            'salaire_max' => 'nullable|numeric|min:0|gte:salaire_min',
+            'date_limite' => 'sometimes|required|date|after:today',
+            'experience_requise' => 'nullable|string|max:255',
+            'niveau_etude' => 'nullable|string|max:255',
+            'structure_id' => 'sometimes|required|exists:structures,id',
+            'status' => 'sometimes|integer|in:0,1,2,3,4,5',
+            'fichier' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 
@@ -33,13 +44,21 @@ class UpdateRecrutementRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => 'Le titre est requis.',
-            'slug.required' => 'Le slug est requis.',
-            'slug.unique' => 'Ce slug est déjà utilisé.',
-            'has_result.required' => 'Le champ "a un résultat" est requis.',
-            'has_result.boolean' => 'Le champ "a un résultat" doit être un booléen.',
-            'status.required' => 'Le statut est requis.',
-            'status.in' => 'Le statut doit être "active" ou "inactive".',
+            'title.required' => 'Le titre est obligatoire.',
+            'title.max' => 'Le titre ne peut pas dépasser 255 caractères.',
+            'description.required' => 'La description est obligatoire.',
+            'type_contrat.required' => 'Le type de contrat est obligatoire.',
+            'lieu_travail.required' => 'Le lieu de travail est obligatoire.',
+            'date_limite.required' => 'La date limite est obligatoire.',
+            'date_limite.after' => 'La date limite doit être supérieure à aujourd\'hui.',
+            'salaire_max.gte' => 'Le salaire maximum doit être supérieur ou égal au salaire minimum.',
+            'structure_id.required' => 'La structure est obligatoire.',
+            'structure_id.exists' => 'La structure sélectionnée n\'existe pas.',
+            'fichier.mimes' => 'Le fichier doit être de type PDF, DOC ou DOCX.',
+            'fichier.max' => 'Le fichier ne peut pas dépasser 2 Mo.',
+            'image.image' => 'Le fichier doit être une image.',
+            'image.mimes' => 'L\'image doit être de type JPEG, PNG, JPG ou GIF.',
+            'image.max' => 'L\'image ne peut pas dépasser 2 Mo.',
         ];
     }
 
