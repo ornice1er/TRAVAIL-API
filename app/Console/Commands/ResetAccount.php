@@ -31,7 +31,7 @@ class ResetAccount extends Command
         $users=User::all();
 
         foreach ($users as $key => $value) {
-            $value->password=Hash::make('sae@2025');
+            $value->password=Hash::make('travail@2025');
             $value->save();
         }
     }
