@@ -17,10 +17,8 @@ class StoreCommuniqueRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
-            'description' => 'required|string',
-            'slug' => 'required|string',
-            'media_id' => 'required|exists:media,id',
+             'title'=>'string|required',
+            'description'=>'string|nullable'
         ];
     }
 
@@ -34,9 +32,7 @@ class StoreCommuniqueRequest extends FormRequest
         return [
             'title.required' => 'Le titre est requis.',
             'description.required' => 'La description est obligatoire.',
-            'slug.required' => 'Le slug est requis.',
-            'media_id.required' => 'Le média est requis.',
-            'media_id.exists' => 'Le média spécifié est introuvable.',        ];
+        ];
     }
 
     protected function prepareForValidation() {}
