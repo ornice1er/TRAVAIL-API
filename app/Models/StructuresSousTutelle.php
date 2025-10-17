@@ -11,6 +11,7 @@ use Str;
 
 class StructuresSousTutelle extends Model
 {
+     use Filterable,HasFactory;
     protected $fillable = [
         'name',
         'description',
