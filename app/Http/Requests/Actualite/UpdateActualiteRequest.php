@@ -17,8 +17,8 @@ class UpdateActualiteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'sometimes|required|string|max:50',
-            'identite' => 'sometimes|required|string|max:255',
+            'title'=>'string|required',
+            'description'=>'string|nullable',
         ];
     }
 
@@ -30,8 +30,8 @@ class UpdateActualiteRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'code.required' => 'Le nom est requis.',
-            'identite.required' => 'Le lieu est requis.',
+                'title.required' => 'Le titre est requis.',
+                'description.required' => 'La description est requise.',
         ];
     }
 

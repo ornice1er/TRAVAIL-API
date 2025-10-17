@@ -27,7 +27,7 @@ class ActualitesFileRepository
     {
         $per_page = 10;
 
-        $req = ActualitesFile::ignoreRequest(['per_page','pageSize','page'])
+        $req = ActualitesFiles::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
@@ -49,17 +49,6 @@ class ActualitesFileRepository
 
     public function makeStore($data): ActualitesFiles
     {
-        $validator = validator($data, [
-            'type' => 'string|required',
-            'nom' => 'string|required',
-            'reference' => 'string|nullable',
-            'actualites_id' => 'required|exists:actualites,id',
-            'file' => 'required|file',
-        ]);
-
-        if ($validator->fails()) {
-            throw new \InvalidArgumentException($validator->errors()->first());
-        }
 
         $slug = Str::slug($data['reference'] ?? 'actualite-file');
         $slug = $slug . '-' . date('ymdis') . '-' . rand(0, 999);

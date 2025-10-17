@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\categoryRepository;
-use App\Http\Requests\Category\StoreCategoryRequest;
-use App\Http\Requests\Category\UpdateCategoryRequest;
-use App\Services\LogService;
+
 use App\Utilities\Common;
+use App\Services\LogService;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
+use App\Http\Repositories\CategoryRepository;
+use App\Http\Requests\Category\StoreCategoryRequest;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 
 class CategoryController extends Controller
 {
@@ -21,7 +22,7 @@ class CategoryController extends Controller
 
     protected $ls;
 
-    public function __construct(categoryRepository $categoryRepository, LogService $ls)
+    public function __construct(CategoryRepository $categoryRepository, LogService $ls)
     {
         $this->categoryRepository = $categoryRepository;
         $this->ls = $ls;
