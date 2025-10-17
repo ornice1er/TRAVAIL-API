@@ -70,7 +70,7 @@ class MediaRepository
 
 
     public function index2(Request $request)
-{
+  {
     $per_page = 10;
 
     $query = Media::whereNotIn('type', ['stage', 'offre'])->orderBy('id', 'desc');
