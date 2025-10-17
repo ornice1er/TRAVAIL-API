@@ -93,6 +93,22 @@ class MediaController
         }
     }
 
+
+
+     public function index2(Request $request)
+    {
+        try {
+            $result = $this->repository->index2($request);
+            $this->ls->trace(['action_name' => 'Journal des medias', 'description' => json_encode($request->all())]);
+
+            return Common::success('Journal des medias', $result);
+        } catch (\Throwable $th) {
+            $this->ls->trace(['action_name' => 'Journal des medias', 'description' => $th->getMessage()]);
+
+            return Common::error($th->getMessage(), []);
+        }
+    }
+
     /**
      * @OA\Get(
      *      path="/medias/{id}",
