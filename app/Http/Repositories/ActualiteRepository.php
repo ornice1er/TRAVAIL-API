@@ -107,8 +107,6 @@ class ActualiteRepository
     public function makeStore($data): Actualite
     {
 
-        
-                // Création du media
             $media = new Media();
             $media->code = Str::uuid();
             $media->structure_id = Auth::user()->structure_id;
