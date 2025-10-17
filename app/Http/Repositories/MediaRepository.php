@@ -70,30 +70,27 @@ class MediaRepository
 
 
     public function index2(Request $request)
-  {
-    $per_page = 10;
+{
+    $perPage = $request->input('per_page', 10);
 
-    $query = Media::whereNotIn('type', ['stage', 'offre'])->orderBy('id', 'desc');
+    $query = Media::whereNotIn('type', ['stage', 'offre'])
+        ->orderBy('id', 'desc');
 
-    // Filtrer par type si demandé (par exemple via ?type=communique)
-    if ($request->has('type') && $request->type) {
+    
+    if ($request->filled('type')) {
         $query->where('type', $request->type);
     }
 
-    if ($request->has('pageSize')) {
-        $per_page = (int) $request->per_page;
-        $medias = $query->paginate($per_page);
+   
+    if ($request->has('per_page')) {
+        $medias = $query->paginate($perPage);
     } else {
-        $medias = $query->get();
+        $medias = $query->get()->groupBy('type');
     }
 
-    // Grouper par type uniquement si c'est une collection (pas une pagination)
-    if (!$medias instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-        $medias = $medias->groupBy('type');
-    }
-
-    return view('admin.journal', compact('medias'));
+    return response()->json($medias);
 }
+
 
 
 
