@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,8 +62,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     'aofs'=>'AofController',
     'links'=>'LinkController',
     'maps'=>'MapsController',
-  //  'docs'=>'DocsController',
+    'docs'=>'DocsController',
     'citations'=>'CitationController',
+    'category'=>'CategoryController',
     'mots'=>'MotController',
     'sts'=>'StructureSousTutuelleController',
     'posters'=>'PosterController',
@@ -90,8 +92,8 @@ Route::get('/posters/publication/down/{id}','StageController@unpublish')->name('
 Route::get('/posters/archivied/{id}','StageController@archive')->name('posters.archived');
 Route::get('/posters/restored/{id}','StageController@restore')->name('posters.restored');
 
-        Route::get('users/{id}/state/{state}', 'UserController@changeState');
-        Route::post('users-search', 'UserController@search');
+Route::get('users/{id}/state/{state}', 'UserController@changeState');
+Route::post('users-search', 'UserController@search');
 
     });
 
