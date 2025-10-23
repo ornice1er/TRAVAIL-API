@@ -17,11 +17,10 @@ class StoreCommuniqueFileRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'type' => 'required|string|max:191',
-            'nom' => 'required|string|max:191',
-            'reference' => 'required|string|max:191',
-            'filename' => 'required|string',
-            'communiques_id' => 'required|exists:communiques,id',
+           'type'=>'string|required',
+            'nom'=>'string|required',
+            'reference'=>'string|nullable',
+            'communiques_id'=>'required|exists:communiques,id',
 
         ];
     }
@@ -34,12 +33,14 @@ class StoreCommuniqueFileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'type.required' => 'Le type est requis.',
-            'nom.required' => 'Le nom est requis.',
-            'reference.required' => 'La référence est requise.',
-            'filename.required' => 'Le nom du fichier est requis.',
-            'communiques_id.required' => 'Le communiqué associé est requis.',
-            'communiques_id.exists' => 'Le communiqué spécifié est introuvable.',
+            'type.required' => 'Le type de fichier est requis.',
+            'nom.required' => 'Le nom du fichier est requis.',
+            'reference.required' => 'La référence est obligatoire.',
+            'filename.required' => 'Le fichier est requis.',
+            'filename.file' => 'Le champ doit contenir un fichier valide.',
+            'filename.max' => 'Le fichier ne doit pas dépasser 10 Mo.',
+            'communiques_id.required' => 'Un communiqué doit être associé au fichier.',
+            'communiques_id.exists' => 'Le communiqué associé est introuvable.',
         ];
     }
 

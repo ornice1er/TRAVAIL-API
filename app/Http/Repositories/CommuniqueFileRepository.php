@@ -2,7 +2,7 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\CommuniquesFile;
+use App\Models\CommuniqueFile;
 use App\Models\Invite;
 use App\Traits\Repository;
 use App\Services\AwsService;
@@ -11,14 +11,14 @@ use QrCode;
 use Illuminate\Support\Str;
  
 
-class CommuniquesFileRepository
+class CommuniqueFileRepository
 {
     use Repository;
 
     /**
      * Le modèle utilisé.
      *
-     * @var CommuniquesFile
+     * @var CommuniqueFile
      */
     protected $model;
 
@@ -27,7 +27,7 @@ class CommuniquesFileRepository
      */
     public function __construct()
     {
-        $this->model = app(CommuniquesFile::class);
+        $this->model = app(CommuniqueFile::class);
     }
 
     /**
@@ -45,7 +45,7 @@ class CommuniquesFileRepository
     {
        $per_page = 10;
 
-        $req = CommuniquesFile::ignoreRequest(['per_page','pageSize','page'])
+        $req = CommuniqueFile::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
@@ -71,9 +71,9 @@ class CommuniquesFileRepository
     /**
      * Crée une nouvelle fête.
      */
-    public function makeStore($data): CommuniquesFile
+    public function makeStore($data): CommuniqueFile
     {
-       $model = new CommuniquesFile($data);
+       $model = new CommuniqueFile($data);
         /* $aws = new AwsService();
         if (request()->file('file')) {
             $model->file = $aws->upload(request()->file('file'), "CommuniquesFiles")['full_url'];
@@ -86,9 +86,9 @@ class CommuniquesFileRepository
     /**
      * Met à jour une fête.
      */
-    public function makeUpdate($id, $data): CommuniquesFile
+    public function makeUpdate($id, $data): CommuniqueFile
     {
-      $model = CommuniquesFile::findOrFail($id);
+      $model = CommuniqueFile::findOrFail($id);
         /* $aws = new AwsService();
         if (request()->file('file')) {
             $data['file'] = $aws->upload(request()->file('file'), "CommuniquesFiles")['full_url'];
@@ -127,7 +127,7 @@ class CommuniquesFileRepository
      */
     public function search($term)
     {
-        $query = CommuniquesFile::query();
+        $query = CommuniqueFile::query();
         $attrs = ['nom', 'lieu', 'type_CommuniquesFile'];
         
         foreach ($attrs as $value) {
@@ -139,9 +139,9 @@ class CommuniquesFileRepository
 
     /*
     function generateLink($id,$data) {
-        $code = Core::generateUniqueCode(CommuniquesFile::class, 10, 'FET');
+        $code = Core::generateUniqueCode(CommuniqueFile::class, 10, 'FET');
         $link_token = Str::random(40); // Génère un token de 40 caractères
-        $url = env('APP_FRONT_URL').'/CommuniquesFile/'.$code.'/'.$link_token;
+        $url = env('APP_FRONT_URL').'/CommuniqueFile/'.$code.'/'.$link_token;
         $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
         $qrCode = QrCode::format('png')->size(300)->generate($url);
         $data['link_token']=$link_token;
@@ -149,16 +149,16 @@ class CommuniquesFileRepository
         $data['lien_unique']=$url ;
         $data['qr_code'] = base64_encode($qrCode);
         $data['status'] = 1;
-        $model = CommuniquesFile::findOrFail($id);
+        $model = CommuniqueFile::findOrFail($id);
         $model->update($data);
         return $model;
     }
 
     function generateMediaLink($id) {
-        $model = CommuniquesFile::findOrFail($id);
+        $model = CommuniqueFile::findOrFail($id);
         $code = $model->code;
         $media_token = Str::random(40); // Génère un token de 40 caractères
-        $url = env('APP_FRONT_URL').'/CommuniquesFile-gallery/'.$code.'/'.$media_token;
+        $url = env('APP_FRONT_URL').'/CommuniqueFile-gallery/'.$code.'/'.$media_token;
         $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
         $qrCodeMedia = QrCode::format('png')->size(300)->generate($url);
         $data['media_token']=$media_token;
@@ -171,9 +171,9 @@ class CommuniquesFileRepository
 
     function verifyLink($data) {
         if (isset($data['link_token'])) {
-            return CommuniquesFile::where('link_token', $data['link_token'])->first();
+            return CommuniqueFile::where('link_token', $data['link_token'])->first();
         }else{
-            return CommuniquesFile::where('media_token', $data['media_token'])->first();
+            return CommuniqueFile::where('media_token', $data['media_token'])->first();
 
         }
 

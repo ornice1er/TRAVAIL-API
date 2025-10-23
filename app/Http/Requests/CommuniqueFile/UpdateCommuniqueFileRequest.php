@@ -17,11 +17,11 @@ class UpdateCommuniqueFileRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'type' => 'sometimes|required|string|max:191',
-            'nom' => 'sometimes|required|string|max:191',
-            'reference' => 'sometimes|required|string|max:191',
-            'filename' => 'sometimes|required|string',
-            'communiques_id' => 'sometimes|required|exists:communiques,id',
+              'type'=>'string|required',
+            'nom'=>'string|required',
+            'reference'=>'string|nullable',
+            'filename'=>'string|required',
+            'communiques_id'=>'required|exists:communiques,id',
              ];
     }
 
@@ -33,11 +33,12 @@ class UpdateCommuniqueFileRequest extends FormRequest
     public function messages(): array
     {
         return [
-           'type' => 'sometimes|required|string|max:191',
-            'nom' => 'sometimes|required|string|max:191',
-            'reference' => 'sometimes|required|string|max:191',
-            'filename' => 'sometimes|required|string',
-            'communiques_id' => 'sometimes|required|exists:communiques,id',
+                'type.required' => 'Le type est requis.',
+                'nom.required' => 'Le nom est requis.',
+                'reference.required' => 'La référence est requise.',
+                'filename.required' => 'Le fichier est requis.',
+                'communiques_id.required' => 'Le communiqué associée est requise.',
+                'communiques_id.exists' => 'Le communiqué associée est introuvable.',
         ];
     }
 

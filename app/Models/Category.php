@@ -11,7 +11,7 @@ use Str;
 
 class Category extends Model
 {
-    use HasFactory;
+    use HasFactory,Filterable;
 
     protected $guarded = [];
 }
