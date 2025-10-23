@@ -11,7 +11,7 @@ use Str;
 
 class Team extends Model
 {
-    use Filterable, HasFactory, SoftDeletes, HasUuids;
+    use Filterable, HasFactory, HasUuids;
 
     protected $guarded = [];
 

@@ -7,9 +7,10 @@ use App\Models\Invite;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
+use App\Utilities\FileStorage;
 use QrCode;
 use Illuminate\Support\Str;
-use App\Models\Maps;
+use Illuminate\Support\Facades\Validator;
  
 
 class MapRepository
@@ -46,7 +47,7 @@ class MapRepository
     {
          $per_page = 10;
 
-        $req = Map::ignoreRequest(['per_page'])
+        $req = Map::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
@@ -70,22 +71,10 @@ class MapRepository
     }
 
     /**
-     * Crée une nouvelle fête.
+     * Crée une nouvelle map.
      */
     public function makeStore($data): Map
     {
-         $this->validate($request, [
-        'site_name' => 'string|required',
-        'longitude' => 'nullable|numeric',
-        'latitude'  => 'nullable|numeric',
-        ], [
-            'site_name.required' => 'Le nom du site est requis',
-            'longitude.numeric'  => 'La longitude doit être un nombre',
-            'latitude.numeric'   => 'La latitude doit être un nombre',
-        ]);
-
-        $data = $request->all();
-
         $model = new Map($data);
         /*$aws= new AwsService();
         if ($request->file('file')) {
@@ -97,29 +86,18 @@ class MapRepository
     }
 
     /**
-     * Met à jour une fête.
+     * Met à jour une map.
      */
     public function makeUpdate($id, $data): Map
     {
-         // Validation manuelle des données
-            Validator::make($data, [
-                'site_name' => 'string|required',
-                'longitude' => 'nullable|numeric',
-                'latitude'  => 'nullable|numeric',
-            ], [
-                'site_name.required' => 'Le nom du site est requis',
-                'longitude.numeric'  => 'La longitude doit être un nombre',
-                'latitude.numeric'   => 'La latitude doit être un nombre',
-            ])->validate();
+        $model = Map::findOrFail($id);
 
-            $model = Map::findOrFail($id);
+        /*$aws= new AwsService();
+        if(request()->file('file'))  $data['file'] = $aws->upload(request()->file('file'),"Maps")['full_url'];*/
 
-            /*$aws= new AwsService();
-            if(request()->file('file'))  $data['file'] = $aws->upload(request()->file('file'),"Maps")['full_url'];*/
+        $model->update($data);
 
-            $model->update($data);
-
-            return $model;
+        return $model;
     }
 
     /**
@@ -147,15 +125,19 @@ class MapRepository
     }
 
     /**
-     * Recherche dans les fêtes (par nom, lieu...).
+     * Recherche dans les maps (par nom, description...).
      */
-    public function search($term)
+    public function search($request)
     {
+        $term = $request->input('q', '');
         $query = Map::query();
-        $attrs = ['nom', 'lieu', 'type_Map'];
         
-        foreach ($attrs as $value) {
-            $query->orWhere($value, 'like', '%'.$term.'%');
+        if ($term) {
+            $attrs = ['site_name', 'description'];
+            
+            foreach ($attrs as $value) {
+                $query->orWhere($value, 'like', '%'.$term.'%');
+            }
         }
 
         return $query->get();
@@ -252,19 +234,42 @@ class MapRepository
         return true;
     }
     */
-    
-    public function Map()
-{
-    $config['site_name'] = 'Ministère du Travail et de la Fonction Publique';
-    $config['longitude'] = '';
-    $config['latitude'] = '';
 
-    $gmap = new GMaps();
-    $gmap->initialize($config);
+    public function up($id)
+    {
+        return true;
+    }
 
-    $map = $gmap->create_map();
+    public function down($id)
+    {  
+        return true;
+    }
+      
+    public function publish($id)
+    {
+        return true;
+    }
 
-    return view('map', compact('map'));
-}
+    public function unpublish($id)
+    {
+        return true;
+    }
 
+    public function archive($id)
+    {
+        return true;
+    }
+
+    public function restore($id)
+    {
+        return true;
+    }
+
+    public function changeState($id, $state)
+    {
+        $model = $this->find($id);
+        $model->status = $state;
+        $model->save();
+        return $model;
+    }
 }

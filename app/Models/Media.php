@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Media extends Model
 {
-    use HasFactory, Filterable, SoftDeletes, HasUuids;
+    use HasFactory, Filterable, HasUuids,SoftDeletes;
 
     protected $fillable = [
         'code',
@@ -35,17 +35,17 @@ class Media extends Model
 
     public function communique()
     {
-        return $this->hasOne(Communiques::class, 'media_id');
+        return $this->hasOne(Communique::class, 'media_id');
     }
 
     public function actualite()
     {
-        return $this->hasOne(Actualites::class, 'media_id');
+        return $this->hasOne(Actualite::class, 'media_id');
     }
 
     public function prestation()
     {
-        return $this->hasOne(Prestations::class, 'media_id');
+        return $this->hasOne(Prestation::class, 'media_id');
     }
 
     public function offre()
@@ -55,17 +55,17 @@ class Media extends Model
 
     public function doc()
     {
-        return $this->hasOne(Docs::class, 'media_id');
+        return $this->hasOne(Doc::class, 'media_id');
     }
 
     public function docdecrets()
     {
-        return $this->hasOne(Docs::class, 'media_id')->where('type', 'decrets');
+        return $this->hasOne(Doc::class, 'media_id')->where('type', 'decrets');
     }
 
     public function org()
     {
-        return $this->hasOne(Organigrammes::class, 'media_id');
+        return $this->hasOne(Organigramme::class, 'media_id');
     }
 
     public function aof()
@@ -78,8 +78,13 @@ class Media extends Model
         return $this->hasOne(Stage::class, 'media_id');
     }
 
+    public function recrutement()
+    {
+        return $this->hasOne(Recrutement::class, 'media_id');
+    }
+
     public function structure()
     {
-        return $this->belongsTo(Structures::class, 'structure_id');
+        return $this->belongsTo(Structure::class, 'structure_id');
     }
 }

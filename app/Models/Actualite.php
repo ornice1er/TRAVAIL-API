@@ -19,7 +19,7 @@ class Actualite extends Model
       protected $fillable=['title','sub_description','author','media_id','slug','description','photo','big_photo','category_id','link'];
  
     public static function getAllActualites(){
-        return  Actualites::orderBy('id','DESC')->with('title')->paginate(10);
+        return  Actualite::orderBy('id','DESC')->with('title')->paginate(10);
     }
 
     public function files()
@@ -45,6 +45,11 @@ class Actualite extends Model
     public function category()
     {
         return $this->belongsTo(Category::class,'category_id');
+    }
+
+     public function media()
+    {
+        return $this->belongsTo(Media::class,'media_id');
     }
     
     public static function boot()

@@ -46,7 +46,7 @@ class MotRepository
     {
         $per_page = 10;
 
-        $req = Mots::ignoreRequest(['per_page'])
+        $req = Mots::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
@@ -166,15 +166,19 @@ class MotRepository
     }
 
     /**
-     * Recherche dans les fêtes (par nom, lieu...).
+     * Recherche dans les mots (par titre, résumé...).
      */
-    public function search($term)
+    public function search($request)
     {
+        $term = $request->input('q', '');
         $query = Mot::query();
-        $attrs = ['nom', 'lieu', 'type_Mot'];
         
-        foreach ($attrs as $value) {
-            $query->orWhere($value, 'like', '%'.$term.'%');
+        if ($term) {
+            $attrs = ['title', 'resume'];
+            
+            foreach ($attrs as $value) {
+                $query->orWhere($value, 'like', '%'.$term.'%');
+            }
         }
 
         return $query->get();
@@ -238,21 +242,19 @@ class MotRepository
 
     }
 
-
-     public function up($id)
-    {
-            return true;
-    }
-
-         public function down($request, $id)
-    {  
-            return true;
-    }
-          
-          public function publish($id)
+    public function up($id)
     {
         return true;
+    }
 
+    public function down($id)
+    {  
+        return true;
+    }
+      
+    public function publish($id)
+    {
+        return true;
     }
 
     public function unpublish($id)
@@ -269,6 +271,12 @@ class MotRepository
     {
         return true;
     }
-*/
 
+    public function changeState($id, $state)
+    {
+        $model = $this->find($id);
+        $model->status = $state;
+        $model->save();
+        return $model;
+    }*/
 }

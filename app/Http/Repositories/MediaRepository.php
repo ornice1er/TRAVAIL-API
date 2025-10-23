@@ -7,9 +7,11 @@ use App\Models\Invite;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
+use App\Utilities\FileStorage;
 use QrCode;
 use Illuminate\Support\Str;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 
  
 
@@ -47,7 +49,7 @@ class MediaRepository
     {
          $per_page = 10;
 
-        $req = Media::ignoreRequest(['per_page'])
+        $req = Media::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
@@ -69,29 +71,26 @@ class MediaRepository
 
     public function index2(Request $request)
 {
-    $per_page = 10;
+    $perPage = $request->input('per_page', 10);
 
-    $query = Media::whereNotIn('type', ['stage', 'offre'])->orderBy('id', 'desc');
+    $query = Media::whereNotIn('type', ['stage', 'offre'])
+        ->orderBy('id', 'desc');
 
-    // Filtrer par type si demandé (par exemple via ?type=communique)
-    if ($request->has('type') && $request->type) {
+    
+    if ($request->filled('type')) {
         $query->where('type', $request->type);
     }
 
+   
     if ($request->has('per_page')) {
-        $per_page = (int) $request->per_page;
-        $medias = $query->paginate($per_page);
+        $medias = $query->paginate($perPage);
     } else {
-        $medias = $query->get();
+        $medias = $query->get()->groupBy('type');
     }
 
-    // Grouper par type uniquement si c'est une collection (pas une pagination)
-    if (!$medias instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-        $medias = $medias->groupBy('type');
-    }
-
-    return view('admin.journal', compact('medias'));
+    return response()->json($medias);
 }
+
 
 
 
@@ -167,15 +166,19 @@ public function download()
     }
 
     /**
-     * Recherche dans les fêtes (par nom, lieu...).
+     * Recherche dans les medias (par code, type, motif...).
      */
-    public function search($term)
+    public function search($request)
     {
+        $term = $request->input('q', '');
         $query = Media::query();
-        $attrs = ['nom', 'lieu', 'type_Media'];
         
-        foreach ($attrs as $value) {
-            $query->orWhere($value, 'like', '%'.$term.'%');
+        if ($term) {
+            $attrs = ['code', 'type', 'motif'];
+            
+            foreach ($attrs as $value) {
+                $query->orWhere($value, 'like', '%'.$term.'%');
+            }
         }
 
         return $query->get();
@@ -239,21 +242,42 @@ public function download()
 
     }
 
-
-     public function up($id)
-    {
-            return true;
-    }
-
-         public function down($request, $id)
-    {  
-            return true;
-    }
-          
-          public function publish($id)
+    public function up($id)
     {
         return true;
+    }
 
+    public function down($id)
+    {  
+        return true;
+    }
+      
+    public function publish($id)
+    {
+        return true;
+    }
+        return true;
+
+    }
+
+    public function unpublish($id)
+    {
+        return true;
+    }
+
+    public function up($id)
+    {
+        return true;
+    }
+
+    public function down($id)
+    {  
+        return true;
+    }
+      
+    public function publish($id)
+    {
+        return true;
     }
 
     public function unpublish($id)
@@ -270,6 +294,12 @@ public function download()
     {
         return true;
     }
- */
 
+    public function changeState($id, $state)
+    {
+        $model = $this->find($id);
+        $model->is_published = $state;
+        $model->save();
+        return $model;
+    }*/
 }

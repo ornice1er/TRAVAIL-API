@@ -2,8 +2,7 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\Corps;
-use App\Models\Invite;
+use App\Models\Category;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
@@ -11,14 +10,14 @@ use QrCode;
 use Illuminate\Support\Str;
  
 
-class CorpsRepository
+class CategoryRepository
 {
     use Repository;
 
     /**
      * Le modèle utilisé.
      *
-     * @var Corps
+     * @var Category
      */
     protected $model;
 
@@ -27,7 +26,7 @@ class CorpsRepository
      */
     public function __construct()
     {
-        $this->model = app(Corps::class);
+        $this->model = app(Category::class);
     }
 
     /**
@@ -45,7 +44,7 @@ class CorpsRepository
     {
         $per_page = 10;
 
-        $req = Corps::ignoreRequest(['per_page'])
+        $req = Category::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
@@ -71,11 +70,11 @@ class CorpsRepository
     /**
      * Crée une nouvelle fête.
      */
-    public function makeStore($data): Corps
+    public function makeStore($data): Category
     {
-        $model = new Corps($data);
+        $model = new Category($data);
         /*$aws= new AwsService();
-        if(request()->file('file'))  $model->file = $aws->upload(request()->file('file'),"Corpss")['full_url'];*/
+        if(request()->file('file'))  $model->file = $aws->upload(request()->file('file'),"Categorys")['full_url'];*/
         $model->save();
 
         return $model;
@@ -84,11 +83,11 @@ class CorpsRepository
     /**
      * Met à jour une fête.
      */
-    public function makeUpdate($id, $data): Corps
+    public function makeUpdate($id, $data): Category
     {
-        $model = Corps::findOrFail($id);
+        $model = Category::findOrFail($id);
         /*$aws= new AwsService();
-        if(request()->file('file'))  $data['file'] = $aws->upload(request()->file('file'),"Corpss")['full_url'];*/
+        if(request()->file('file'))  $data['file'] = $aws->upload(request()->file('file'),"Categorys")['full_url'];*/
         $model->update($data);
 
         return $model;
@@ -123,8 +122,8 @@ class CorpsRepository
      */
     public function search($term)
     {
-        $query = Corps::query();
-        $attrs = ['nom', 'lieu', 'type_Corps'];
+        $query = Category::query();
+        $attrs = ['nom', 'lieu', 'type_Category'];
         
         foreach ($attrs as $value) {
             $query->orWhere($value, 'like', '%'.$term.'%');
@@ -134,31 +133,31 @@ class CorpsRepository
     }
 
     function generateLink($id,$data) {
-        $code = Core::generateUniqueCode(Corps::class, 10, 'FET');
+        $code = Core::generateUniqueCode(Category::class, 10, 'CAT');
         $link_token = Str::random(40); // Génère un token de 40 caractères
-        $url = env('APP_FRONT_URL').'/Corps/'.$code.'/'.$link_token;
+        $url = env('APP_FRONT_URL').'/Category/'.$code.'/'.$link_token;
         $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
-        $qrCode = QrCode::format('png')->size(300)->generate($url);
+        // $qrCode = QrCode::format('png')->size(300)->generate($url);
         $data['link_token']=$link_token;
         $data['code']=$code;
         $data['lien_unique']=$url ;
-        $data['qr_code'] = base64_encode($qrCode);
+        $data['qr_code'] = ''; // base64_encode($qrCode);
         $data['status'] = 1;
-        $model = Corps::findOrFail($id);
+        $model = Category::findOrFail($id);
         $model->update($data);
         return $model;
     }
 
     function generateMediaLink($id) {
-        $model = Corps::findOrFail($id);
+        $model = Category::findOrFail($id);
         $code = $model->code;
         $media_token = Str::random(40); // Génère un token de 40 caractères
-        $url = env('APP_FRONT_URL').'/Corps-gallery/'.$code.'/'.$media_token;
+        $url = env('APP_FRONT_URL').'/Category-gallery/'.$code.'/'.$media_token;
         $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
-        $qrCodeMedia = QrCode::format('png')->size(300)->generate($url);
+        // $qrCodeMedia = QrCode::format('png')->size(300)->generate($url);
         $data['media_token']=$media_token;
         $data['lien_unique_media']=$url ;
-        $data['qr_code_media'] = base64_encode($qrCodeMedia);
+        $data['qr_code_media'] = ''; // base64_encode($qrCodeMedia);
         $data['status'] = 2;
         $model->update($data);
         return $model;
@@ -166,28 +165,17 @@ class CorpsRepository
 
     function verifyLink($data) {
         if (isset($data['link_token'])) {
-            return Corps::where('link_token', )->first();
+            return Category::where('link_token', $data['link_token'])->first();
         }else{
-            return Corps::where('media_token', $data['media_token'])->first();
+            return Category::where('media_token', $data['media_token'])->first();
 
         }
 
     }
 
     function participate($data){
-        $check=Invite::where('Corps_id', $data['Corps_id'])
-            ->where('phone', $data['phone'])
-            ->first();
-            if ($check) {
-                $check->update($data);
-            }else{
-                $model = new Invite($data);
-                $model->save();
-            }
-   
-
-        return $model;
-
+        // TODO: Implement proper participation logic when Invite model is available
+        return true;
     }
 
 

@@ -17,11 +17,11 @@ class StoreActualitesFileRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'type' => 'required|string|in:image,video,pdf',
-            'nom' => 'required|string|max:191',
-            'reference' => 'required|string|max:191',
-            'filename' => 'required|file|max:10240', // 10 Mo max
-            'actualites_id' => 'required|exists:actualites,id',
+
+            'type'=>'string|required',
+            'nom'=>'string|required',
+            'reference'=>'string|nullable',
+            'actualites_id'=>'required|exists:actualites,id',
         ];
     }
 
@@ -34,14 +34,14 @@ class StoreActualitesFileRequest extends FormRequest
     {
         return [
             'type.required' => 'Le type de fichier est requis.',
-            'type.in' => 'Le type doit être soit image, vidéo ou pdf.',
             'nom.required' => 'Le nom du fichier est requis.',
             'reference.required' => 'La référence est obligatoire.',
             'filename.required' => 'Le fichier est requis.',
             'filename.file' => 'Le champ doit contenir un fichier valide.',
             'filename.max' => 'Le fichier ne doit pas dépasser 10 Mo.',
             'actualites_id.required' => 'Une actualité doit être associée au fichier.',
-            'actualites_id.exists' => 'L’actualité associée est introuvable.',                ];
+            'actualites_id.exists' => 'L’actualité associée est introuvable.',
+            ];
     }
 
     protected function prepareForValidation() {}

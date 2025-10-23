@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TypesStructure extends Model
 {
-    use Filterable, HasFactory, SoftDeletes, HasUuids;
+    use Filterable, HasFactory, HasUuids;
     protected $fillable = [
         'title', 
         'is_parent'];

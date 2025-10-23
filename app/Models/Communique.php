@@ -9,14 +9,20 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Str;
 
-class Communiques extends Model
+class Communique extends Model
 {
-    use HasFactory, Filterable, SoftDeletes, HasUuids;
+    use HasFactory, Filterable;
 
     protected $fillable = ['title', 'description', 'media_id', 'slug'];
 
     public function files()
     {
-        return $this->hasMany(CommuniquesFiles::class, 'communiques_id');
+        return $this->hasMany(CommuniqueFile::class, 'communiques_id');
+    }
+
+
+     public function media()
+    {
+        return $this->belongsTo(Media::class,'media_id');
     }
 }

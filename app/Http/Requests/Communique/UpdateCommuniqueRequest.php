@@ -17,10 +17,8 @@ class UpdateCommuniqueRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'sometimes|required|string',
-            'description' => 'sometimes|required|string',
-            'slug' => 'sometimes|required|string',
-            'media_id' => 'sometimes|required|exists:media,id',           ];
+           'title'=>'string|required',
+            'description'=>'string|nullable',      ];
     }
 
     protected function failedValidation(Validator $validator)
@@ -31,12 +29,10 @@ class UpdateCommuniqueRequest extends FormRequest
     public function messages(): array
     {
         return [
-           'title.required' => 'Le titre est requis.',
+          
+            'title.required' => 'Le titre est requis.',
             'description.required' => 'La description est obligatoire.',
-            'slug.required' => 'Le slug est requis.',
-            'media_id.required' => 'Le média est requis.',
-            'media_id.exists' => 'Le média spécifié est introuvable.',        ];
-    }
+        ];}
 
     protected function prepareForValidation() {}
 }

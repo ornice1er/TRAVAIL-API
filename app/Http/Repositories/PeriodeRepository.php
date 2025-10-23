@@ -45,7 +45,7 @@ class PeriodeRepository
     {
         $per_page = 10;
 
-        $req = Periode::ignoreRequest(['per_page'])
+        $req = Periode::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))

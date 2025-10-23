@@ -11,7 +11,7 @@ use Str;
 
 class AppelsOffreFile extends Model
 {
-   use HasFactory;
+    use Filterable,HasFactory;
 
     protected $fillable = [
         'is_result_file',

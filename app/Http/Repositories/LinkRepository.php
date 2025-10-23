@@ -2,13 +2,14 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\Link;
+use App\Models\LiensUtile;
 use App\Models\Invite;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
 use QrCode;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
  
 
 class LinkRepository
@@ -18,7 +19,7 @@ class LinkRepository
     /**
      * Le modèle utilisé.
      *
-     * @var Link
+     * @var LiensUtile
      */
     protected $model;
 
@@ -27,11 +28,11 @@ class LinkRepository
      */
     public function __construct()
     {
-        $this->model = app(Link::class);
+        $this->model = app(LiensUtile::class);
     }
 
     /**
-     * Vérifie si la fête existe.
+     * Vérifie si le lien utile existe.
      */
     public function ifExist($id)
     {
@@ -39,29 +40,27 @@ class LinkRepository
     }
 
     /**
-     * Récupère toutes les fêtes avec pagination et filtres.
+     * Récupère tous les liens utiles avec pagination et filtres.
      */
     public function getAll($request)
     {
         $per_page = 10;
 
-        $req = Link::ignoreRequest(['per_page'])
+        $req = Link::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
-            /*->with('invites')*/
             ->orderByDesc('created_at');
 
         if (array_key_exists('per_page', $request->all())) {
-            $per_page = $request['per_page'];
-            return $req->paginate($per_page);
+            return $req->paginate($request['per_page']);
         } else {
             return $req->get();
         }
     }
 
     /**
-     * Récupère une fête spécifique.
+     * Récupère un lien utile spécifique.
      */
     public function get($id)
     {
@@ -69,54 +68,27 @@ class LinkRepository
     }
 
     /**
-     * Crée une nouvelle fête.
+     * Crée un nouveau lien utile.
      */
-    public function makeStore($data): Link
+    public function makeStore($data): LiensUtile
     {
-        // Validation des données
-        Validator::make($data, [
-            'title' => 'string|required',
-            'link' => 'string|required|unique:liens_utiles',
-        ], [
-            'title.required' => "Le libellé du lien est requis",
-            'link.required' => "Le lien est requis",
-            'link.unique' => "Ce lien est déjà utilisé",
-        ])->validate();
-
         // Création du modèle
-        $model = new Link($data);
-        /*$aws= new AwsService();
-        if(request()->file('file'))  $model->file = $aws->upload(request()->file('file'),"Links")['full_url'];*/
-        $model->save();
-
+        $model = LiensUtile::create($data);
         return $model;
     }
 
     /**
-     * Met à jour une fête.
+     * Met à jour un lien utile.
      */
-    public function makeUpdate($id, $data): Link
+    public function makeUpdate($id, $data): LiensUtile
     {
-        // Validation des données avant mise à jour
-            Validator::make($data, [
-                'title' => 'string|required',
-                'link' => 'string|nullable',
-            ], [
-                'title.required' => "Le libellé du lien est requis",
-            ])->validate();
-
-            $model = Link::findOrFail($id);
-
-            /*$aws= new AwsService();
-            if(request()->file('file'))  $data['file'] = $aws->upload(request()->file('file'),"Links")['full_url'];*/
-
-            $model->update($data);
-
-            return $model;
+        $model = LiensUtile::findOrFail($id);
+        $model->update($data);
+        return $model;
     }
 
     /**
-     * Supprime une fête.
+     * Supprime un lien utile.
      */
     public function makeDestroy($id)
     {
@@ -124,7 +96,7 @@ class LinkRepository
     }
 
     /**
-     * Récupère les fêtes les plus récentes.
+     * Récupère les liens utiles les plus récents.
      */
     public function getlatest()
     {
@@ -132,7 +104,7 @@ class LinkRepository
     }
 
     /**
-     * Modifie le statut d'une fête.
+     * Modifie le statut d'un lien utile.
      */
     public function setStatus($id, $status)
     {
@@ -140,12 +112,12 @@ class LinkRepository
     }
 
     /**
-     * Recherche dans les fêtes (par nom, lieu...).
+     * Recherche dans les liens utiles.
      */
     public function search($term)
     {
-        $query = Link::query();
-        $attrs = ['nom', 'lieu', 'type_Link'];
+        $query = LiensUtile::query();
+        $attrs = ['title', 'link'];
         
         foreach ($attrs as $value) {
             $query->orWhere($value, 'like', '%'.$term.'%');
@@ -153,96 +125,4 @@ class LinkRepository
 
         return $query->get();
     }
-
-    /*
-    function generateLink($id,$data) {
-        $code = Core::generateUniqueCode(Link::class, 10, 'FET');
-        $link_token = Str::random(40); // Génère un token de 40 caractères
-        $url = env('APP_FRONT_URL').'/Link/'.$code.'/'.$link_token;
-        $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
-        $qrCode = QrCode::format('png')->size(300)->generate($url);
-        $data['link_token']=$link_token;
-        $data['code']=$code;
-        $data['lien_unique']=$url ;
-        $data['qr_code'] = base64_encode($qrCode);
-        $data['status'] = 1;
-        $model = Link::findOrFail($id);
-        $model->update($data);
-        return $model;
-    }
-
-    function generateMediaLink($id) {
-        $model = Link::findOrFail($id);
-        $code = $model->code;
-        $media_token = Str::random(40); // Génère un token de 40 caractères
-        $url = env('APP_FRONT_URL').'/Link-gallery/'.$code.'/'.$media_token;
-        $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
-        $qrCodeMedia = QrCode::format('png')->size(300)->generate($url);
-        $data['media_token']=$media_token;
-        $data['lien_unique_media']=$url ;
-        $data['qr_code_media'] = base64_encode($qrCodeMedia);
-        $data['status'] = 2;
-        $model->update($data);
-        return $model;
-    }
-
-    function verifyLink($data) {
-        if (isset($data['link_token'])) {
-            return Link::where('link_token', )->first();
-        }else{
-            return Link::where('media_token', $data['media_token'])->first();
-
-        }
-
-    }
-
-    function participate($data){
-        $check=Invite::where('Link_id', $data['Link_id'])
-            ->where('phone', $data['phone'])
-            ->first();
-            if ($check) {
-                $check->update($data);
-            }else{
-                $model = new Invite($data);
-                $model->save();
-            }
-   
-
-        return $model;
-
-    }
-
-
-     public function up($id)
-    {
-            return true;
-    }
-
-         public function down($request, $id)
-    {  
-            return true;
-    }
-          
-          public function publish($id)
-    {
-        return true;
-
-    }
-
-    public function unpublish($id)
-    {
-        return true;
-    }
-
-    public function archive($id)
-    {
-        return true;
-    }
-
-    public function restore($id)
-    {
-        return true;
-    }
-*/
-
 }
