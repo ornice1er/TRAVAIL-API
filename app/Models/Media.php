@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Media extends Model
 {
-    use HasFactory, Filterable, HasUuids;
+    use HasFactory, Filterable, HasUuids,SoftDeletes;
 
     protected $fillable = [
         'code',
