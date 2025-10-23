@@ -2,12 +2,13 @@
 
 namespace App\Providers;
 
-use App\Events\ChangeStatutAgentEvent;
-use App\Listeners\ChangeStatutAgentListener;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
+use App\Events\ChangeStatutAgentEvent;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use App\Listeners\ChangeStatutAgentListener;
 
 class AppServiceProvider extends ServiceProvider
 {
