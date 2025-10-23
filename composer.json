@@ -13,6 +13,7 @@
         "jenssegers/agent": "^2.6",
         "jorenvanhocht/laravel-share": "^4.2",
         "laravel-notification-channels/fcm": "^4.5",
+        "laravel/envoy": "^2.10",
         "laravel/framework": "^10.10",
         "laravel/horizon": "^5.31",
         "laravel/sanctum": "^3.3",
