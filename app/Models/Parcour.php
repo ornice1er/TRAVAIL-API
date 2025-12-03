@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Parcour extends Model
 {
-    use HasFactory, Filterable, SoftDeletes, HasUuids;
+    use HasFactory, Filterable, SoftDeletes;
     protected $fillable = [
         'libelle',
         'media_id',

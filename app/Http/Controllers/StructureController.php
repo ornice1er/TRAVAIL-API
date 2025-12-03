@@ -66,15 +66,15 @@ class StructureController
     {
         $message = 'Récupération des structures';
         
-        try {
+     //   try {
             $structures = $this->repository->getAll($request);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structures récupérées avec succès']);
-            return Common::success($structures, 'Structures récupérées avec succès');
-        } catch (\Exception $e) {
-            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
-            return Common::error('Erreur lors de la récupération des structures', []);
-        }
+            return Common::success( 'Structures récupérées avec succès',$structures);
+        // } catch (\Exception $e) {
+        //     $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
+        //     return Common::error('Erreur lors de la récupération des structures', []);
+        // }
     }
 
     /**

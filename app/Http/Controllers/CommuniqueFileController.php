@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\CommuniquesFileRepository;
+use App\Http\Repositories\CommuniqueFileRepository;
 use App\Http\Requests\CommuniquesFile\StoreCommuniquesFileRequest;
 use App\Http\Requests\CommuniquesFile\UpdateCommuniquesFileRequest;
 use App\Services\LogService;
@@ -10,12 +10,12 @@ use App\Utilities\Common;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
-class CommuniquesFileController
+class CommuniqueFileController
 {
     /**
      * The CommuniquesFile repository being queried.
      *
-     * @var CommuniquesFileRepository
+     * @var CommuniqueFileRepository
      */
     protected $repository;
 
@@ -26,7 +26,7 @@ class CommuniquesFileController
      */
     protected $ls;
 
-    public function __construct(CommuniquesFileRepository $communiquesFileRepository, LogService $ls)
+    public function __construct(CommuniqueFileRepository $communiquesFileRepository, LogService $ls)
     {
         $this->repository = $communiquesFileRepository;
         $this->ls = $ls;

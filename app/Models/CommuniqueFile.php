@@ -13,7 +13,7 @@ use eloquentFilter\QueryFilter\ModelFilters\Filterable;
 
 class CommuniqueFile extends Model
 {
-    use HasFactory, Filterable, HasUuids;
+    use HasFactory, Filterable;
     protected $fillable = ['type', 'nom', 'reference', 'filename', 'communiques_id'];
 
     // Normalement, un fichier lié à un communiqué est une relation "belongsTo" vers Communiques,

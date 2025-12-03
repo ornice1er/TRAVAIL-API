@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transmission extends Model
 {
-    use Filterable, HasFactory, SoftDeletes, HasUuids;
+    use Filterable, HasFactory;
     protected $fillable = [
         'libelle', 
         'is_last', 

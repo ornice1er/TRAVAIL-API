@@ -9,15 +9,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class TypesStructure extends Model
+class TypeStructure extends Model
 {
     use Filterable, HasFactory, HasUuids;
+
+        protected $table = 'types_structures';
+
+
     protected $fillable = [
         'title', 
         'is_parent'];
 
     public function structures()
     {
-        return $this->hasMany(Structures::class, 'type_structure_id');
+        return $this->hasMany(Structure::class, 'type_structure_id');
     }
 }

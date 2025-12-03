@@ -51,10 +51,15 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         Route::post('/upload-file', 'UserAuthController@uploadFile');
         Route::get('/delete-file', 'UserAuthController@deleteFile');
 
+
+                Route::get('/dash', 'DashController@getDash');
+
+
         Route::apiResources([
-            'structures'=>'StructuresController',
+            'structures'=>'StructureController',
     'users'=>'UserController',
     'communiques'=>'CommuniqueController',
+        'communique-files'=>'CommuniqueFileController',
     'actualites'=>'ActualiteController',
     'prestations'=>'PrestationController',
     'documents'=>'DocController',
@@ -64,7 +69,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     'maps'=>'MapsController',
     'docs'=>'DocsController',
     'citations'=>'CitationController',
-    'category'=>'CategoryController',
+    'categories'=>'CategoryController',
     'mots'=>'MotController',
     'sts'=>'StructureSousTutuelleController',
     'posters'=>'PosterController',

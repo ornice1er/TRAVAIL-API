@@ -9,6 +9,7 @@ use App\Services\AwsService;
 use App\Utilities\Core;
 use QrCode;
 use Illuminate\Support\Str;
+use App\Utilities\FileStorage;
  
 
 class CommuniqueFileRepository
@@ -73,11 +74,13 @@ class CommuniqueFileRepository
      */
     public function makeStore($data): CommuniqueFile
     {
+           if (request()->hasFile('file')) {
+                $data['filename'] = FileStorage::setFile('public', request()->file('file'), 'communiques', Str::slug($data['nom']).time());
+            }
+
        $model = new CommuniqueFile($data);
-        /* $aws = new AwsService();
-        if (request()->file('file')) {
-            $model->file = $aws->upload(request()->file('file'), "CommuniquesFiles")['full_url'];
-        } */
+         
+
         $model->save();
 
         return $model;

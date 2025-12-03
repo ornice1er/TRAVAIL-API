@@ -82,6 +82,7 @@ class ActualiteRepository
                     ->filter(array_filter($request->all(), function ($k) {
                         return $k !== 'page';
                     }, ARRAY_FILTER_USE_KEY))
+                    ->with(['category','media'])
                     ->orderByDesc('created_at');
 
                 // Pagination si demandée
@@ -98,7 +99,7 @@ class ActualiteRepository
      */
     public function get($id)
     {
-        return $this->findOrFail($id);
+        return $this->findOrFail($id)->load('media.structure');
     }
 
     /**
@@ -158,7 +159,7 @@ class ActualiteRepository
     /**
      * Met à jour une fête.
      */
-    public function makeUpdate($id, $data): Actualite
+    public function makeUpdate($id, $data)
     {
 
           $media=Media::findOrFail($id);   

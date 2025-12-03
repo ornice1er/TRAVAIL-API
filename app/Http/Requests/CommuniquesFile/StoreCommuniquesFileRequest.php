@@ -17,7 +17,8 @@ class StoreCommuniquesFileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string',
+            'nom' => 'required|string',
+            'reference' => 'nullable|string',
             'description' => 'nullable|string',
             'file' => 'required|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240', // 10MB max
         ];
@@ -31,7 +32,7 @@ class StoreCommuniquesFileRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => 'Le titre est requis.',
+            'nom.required' => 'Le titre est requis.',
             'file.required' => 'Le fichier est requis.',
             'file.mimes' => 'Le fichier doit être de type : pdf, doc, docx, jpg, jpeg, png.',
             'file.max' => 'Le fichier ne doit pas dépasser 10MB.',

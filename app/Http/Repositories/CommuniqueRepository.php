@@ -51,7 +51,7 @@ class CommuniqueRepository
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
-             ->with('media')
+             ->with('media','files')
             ->orderByDesc('created_at');
 
         if ($request->has('pageSize')) {
@@ -67,7 +67,7 @@ class CommuniqueRepository
      */
     public function get($id)
     {
-        return $this->findOrFail($id);
+        return $this->findOrFail($id)->load('files');
     }
 
     /**
@@ -134,7 +134,7 @@ class CommuniqueRepository
     // Fonctions standardisées pour le controller
     public function getById($id)
     {
-        return $this->findOrFail($id);
+        return $this->findOrFail($id)->load('files');
     }
 
     public function store($data)

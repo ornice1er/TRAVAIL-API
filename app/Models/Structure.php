@@ -88,4 +88,12 @@ class Structure extends Model
     {
         return $this->hasOne(User::class, 'structure_id');
     }
+
+     public function typeStructure()
+    {
+        return $this->belongsTo(TypeStructure::class, 'type_structure_id');
+    }
+
+
+    
 }
