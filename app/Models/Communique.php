@@ -26,4 +26,19 @@ class Communique extends Model
     {
         return $this->belongsTo(Media::class,'media_id');
     }
+
+
+        /**
+     * Fonction boot pour générer un code unique avant la création
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        // Avant création, génération code unique et nom complet
+        self::creating(function ($model) {
+            $model->slug = Str::slug($model->title).' '.uniqId();
+        });
+    }
+
 }

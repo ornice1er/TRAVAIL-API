@@ -78,7 +78,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     'permissions' => 'PermissionController',
     'user-projects' => 'UserProjectController',
     'notifications' => 'NotificationController',
-    'galeries'
+    'galeries'=>'GaleriesController'
         ]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
