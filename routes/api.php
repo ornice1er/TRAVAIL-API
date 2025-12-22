@@ -159,12 +159,12 @@ Route::post('send-contact-form', 'PublicController@sendContactForm');
  Route::get('/communiques/restored/{id}','CommuniqueController@restore')->name('communiques.restored');
  
 
-  Route::get('/actualites/transmission/up/{id}','ActualitesController@up')->name('actualites.up');
- Route::post('/actualites/transmission/down/{id}','ActualitesController@down')->name('actualites.down');
- Route::get('/actualites/publication/up/{id}','ActualitesController@publish')->name('actualites.publish');
- Route::get('/actualites/publication/down/{id}','ActualitesController@unpublish')->name('actualites.unpublish');
- Route::get('/actualites/archivied/{id}','ActualitesController@archive')->name('actualites.archived');
- Route::get('/actualites/restored/{id}','ActualitesController@restore')->name('actualites.restored');
+  Route::get('/actualites/transmission/up/{id}','ActualiteController@up')->name('actualites.up');
+ Route::post('/actualites/transmission/down/{id}','ActualiteController@down')->name('actualites.down');
+ Route::get('/actualites/publication/up/{id}','ActualiteController@publish')->name('actualites.publish');
+ Route::get('/actualites/publication/down/{id}','ActualiteController@unpublish')->name('actualites.unpublish');
+ Route::get('/actualites/archivied/{id}','ActualiteController@archive')->name('actualites.archived');
+ Route::get('/actualites/restored/{id}','ActualiteController@restore')->name('actualites.restored');
 
   Route::get('/prestations/transmission/up/{id}','PrestationsController@up')->name('prestations.up');
  Route::post('/prestations/transmission/down/{id}','PrestationsController@down')->name('prestations.down');

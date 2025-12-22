@@ -20,6 +20,7 @@ class StoreCommuniqueRequest extends FormRequest
              'title'=>'string|required',
             'description'=>'string|nullable',
             'category'=>'string|in:Concours,Activité',
+            'has_principal_access' =>'required'
 
         ];
     }

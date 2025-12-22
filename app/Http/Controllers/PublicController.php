@@ -690,7 +690,7 @@ class PublicController extends Controller
 
         $title="COMMUNIQUES";
         $share_path="page/communique/".$slug;
-        $share_title=$communique->title;
+        $share_title=$communique?->title;
 
            $shareLinks = Share::page($share_path, $share_title)
         ->facebook()

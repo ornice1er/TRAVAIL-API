@@ -11,6 +11,7 @@ use App\Services\AwsService;
 use App\Utilities\Core;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Parcours;
  
 
 class CommuniqueRepository
@@ -67,26 +68,73 @@ class CommuniqueRepository
         return $this->findOrFail($id)->load('files');
     }
 
-    /**
-     * Crée une nouvelle fête.
-     */
-    public function makeStore($data): Communique
+ public function makeStore(array $data): Communique
     {
-        // Version simplifiée pour éviter les dépendances complexes
-        $model = new Communique($data);
-        $model->save();
-        return $model;
-    }
+        // Création du média
+        $media = new Media();
+        $media->code = Str::uuid();
+        $media->structure_id = Auth::user()->structure_id;
+        $media->has_principal_access = $data['has_principal_access'] ?? false;
+        $media->type = 'communique';
+        $media->save();
 
+        // Génération du slug unique
+        $slug = Str::slug($data['title']);
+        $count = Communique::where('slug', $slug)->count();
+
+        if ($count > 0) {
+            $slug .= '-' . now()->format('ymdis') . '-' . rand(0, 999);
+        }
+
+        // Création du communiqué
+        $communique = new Communique();
+        $communique->fill($data);
+        $communique->slug = $slug;
+        $communique->media_id = $media->id;
+        $communique->save();
+
+        // Parcours
+        Parcours::create([
+            'media_id' => $media->id,
+            'libelle'  => 'Création du communiqué ' . ($data['title'] ?? '')
+        ]);
+
+        // Transmission
+        Transmission::create([
+            'from'     => Auth::id(),
+            'to'       => Auth::id(),
+            'media_id' => $media->id,
+            'is_last'  => true,
+        ]);
+
+        return $communique;
+    }
     /**
      * Met à jour une fête.
      */
-    public function makeUpdate($id, $data): Communique
+   public function makeUpdate(int $mediaId, array $data): Communique
     {
-        // Version simplifiée
-        $model = Communique::findOrFail($id);
-        $model->update($data);
-        return $model;
+        // Récupération du média
+        $media = Media::findOrFail($mediaId);
+
+        // Récupération du communiqué lié
+        $communique = $media->communique;
+
+        // Mise à jour du média
+        if (array_key_exists('has_principal_access', $data)) {
+            $media->has_principal_access = $data['has_principal_access'];
+            $media->save();
+        }
+
+        // Mise à jour du communiqué
+        $communique->fill([
+            'title' => $data['title'] ?? $communique->title,
+            'description' => $data['description'] ?? $communique->description,
+        ]);
+
+        $communique->save();
+
+        return $communique;
     }
 
     /**
