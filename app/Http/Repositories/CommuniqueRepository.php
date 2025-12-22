@@ -47,12 +47,9 @@ class CommuniqueRepository
     {
         $per_page = 10;
 
-        $req = Communique::ignoreRequest(['per_page','pageSize','page'])
-            ->filter(array_filter($request->all(), function ($k) {
-                return $k != 'page';
-            }, ARRAY_FILTER_USE_KEY))
+        $req = Communique::ignoreRequest(['page'])
              ->with('media','files')
-            ->orderByDesc('created_at');
+            ->orderByDesc('id');
 
         if ($request->has('pageSize')) {
             $per_page = $request->get('pageSize');

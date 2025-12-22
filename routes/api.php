@@ -74,10 +74,11 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     'sts'=>'StructureSousTutuelleController',
     'posters'=>'PosterController',
     'teams'=>'TeamController',
-            'roles' => 'RoleController',
-            'permissions' => 'PermissionController',
-            'user-projects' => 'UserProjectController',
-            'notifications' => 'NotificationController',
+    'roles' => 'RoleController',
+    'permissions' => 'PermissionController',
+    'user-projects' => 'UserProjectController',
+    'notifications' => 'NotificationController',
+    'galeries'
         ]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -157,5 +158,79 @@ Route::post('send-contact-form', 'PublicController@sendContactForm');
  Route::get('/communiques/archivied/{id}','CommuniqueController@archive')->name('communiques.archived');
  Route::get('/communiques/restored/{id}','CommuniqueController@restore')->name('communiques.restored');
  
+
+  Route::get('/actualites/transmission/up/{id}','ActualitesController@up')->name('actualites.up');
+ Route::post('/actualites/transmission/down/{id}','ActualitesController@down')->name('actualites.down');
+ Route::get('/actualites/publication/up/{id}','ActualitesController@publish')->name('actualites.publish');
+ Route::get('/actualites/publication/down/{id}','ActualitesController@unpublish')->name('actualites.unpublish');
+ Route::get('/actualites/archivied/{id}','ActualitesController@archive')->name('actualites.archived');
+ Route::get('/actualites/restored/{id}','ActualitesController@restore')->name('actualites.restored');
+
+  Route::get('/prestations/transmission/up/{id}','PrestationsController@up')->name('prestations.up');
+ Route::post('/prestations/transmission/down/{id}','PrestationsController@down')->name('prestations.down');
+ Route::get('/prestations/publication/up/{id}','PrestationsController@publish')->name('prestations.publish');
+ Route::get('/prestations/publication/down/{id}','PrestationsController@unpublish')->name('prestations.unpublish');
+ Route::get('/prestations/archivied/{id}','PrestationsController@archive')->name('prestations.archived');
+ Route::get('/prestations/restored/{id}','PrestationsController@restore')->name('prestations.restored');
+
+
+ //docs actualité
+ Route::get('/documents/transmission/up/{id}','DocsController@up')->name('documents.up');
+ Route::post('/documents/transmission/down/{id}','DocsController@down')->name('documents.down');
+ Route::get('/documents/publication/up/{id}','DocsController@publish')->name('documents.publish');
+ Route::get('/documents/publication/down/{id}','DocsController@unpublish')->name('documents.unpublish');
+ Route::get('/documents/archivied/{id}','DocsController@archive')->name('documents.archived');
+ Route::get('/documents/restored/{id}','DocsController@restore')->name('documents.restored');
+ //Route::get('/documents/delete/{id}','DocsController@delete')->name('documents.delete');
+
+
+ //Organigramme actualité
+ Route::get('/organigrammes/transmission/up/{id}','OrganigrammesController@up')->name('organigrammes.up');
+ Route::post('/organigrammes/transmission/down/{id}','OrganigrammesController@down')->name('organigrammes.down');
+ Route::get('/organigrammes/publication/up/{id}','OrganigrammesController@publish')->name('organigrammes.publish');
+ Route::get('/organigrammes/publication/down/{id}','OrganigrammesController@unpublish')->name('organigrammes.unpublish');
+ Route::get('/organigrammes/archivied/{id}','OrganigrammesController@archive')->name('organigrammes.archived');
+ Route::get('/organigrammes/restored/{id}','OrganigrammesController@restore')->name('organigrammes.restored');
+ 
+ //Organigramme actualité
+ Route::get('/aofs/transmission/up/{id}','AofController@up')->name('aofs.up');
+ Route::post('/aofs/transmission/down/{id}','AofController@down')->name('aofs.down');
+ Route::get('/aofs/publication/up/{id}','AofController@publish')->name('aofs.publish');
+ Route::get('/aofs/publication/down/{id}','AofController@unpublish')->name('aofs.unpublish');
+ Route::get('/aofs/archivied/{id}','AofController@archive')->name('aofs.archived');
+ Route::get('/aofs/restored/{id}','AofController@restore')->name('aofs.restored');
+
+ //Stage 
+ Route::get('/stages/transmission/up/{id}','StageController@up')->name('stages.up');
+ Route::post('/stages/transmission/down/{id}','StageController@down')->name('stages.down');
+ Route::get('/stages/publication/up/{id}','StageController@publish')->name('stages.publish');
+ Route::get('/stages/publication/down/{id}','StageController@unpublish')->name('stages.unpublish');
+ Route::get('/stages/archivied/{id}','StageController@archive')->name('stages.archived');
+ Route::get('/stages/restored/{id}','StageController@restore')->name('stages.restored');
+
+ //Appel d'offre 
+ Route::get('/appels-offre/transmission/up/{id}','StageController@up')->name('appels_offre.up');
+ Route::post('/appels-offre/transmission/down/{id}','StageController@down')->name('appels_offre.down');
+ Route::get('/appels-offre/publication/up/{id}','StageController@publish')->name('appels_offre.publish');
+ Route::get('/appels-offre/publication/down/{id}','StageController@unpublish')->name('appels_offre.unpublish');
+ Route::get('/appels-offre/archivied/{id}','StageController@archive')->name('appels_offre.archived');
+ Route::get('/appels-offre/restored/{id}','StageController@restore')->name('appels_offre.restored');
+
+ //users actualité
+ Route::get('/users/account-state/up/{id}','UserController@up')->name('users.up');
+ Route::get('/users/account-state/down/{id}','UserController@down')->name('users.down');
+
+//poster 
+
+Route::get('/posters/publication/up/{id}','StageController@publish')->name('posters.publish');
+Route::get('/posters/publication/down/{id}','StageController@unpublish')->name('posters.unpublish');
+Route::get('/posters/archivied/{id}','StageController@archive')->name('posters.archived');
+Route::get('/posters/restored/{id}','StageController@restore')->name('posters.restored');
+
+// Types Structures
+Route::resource('/type-structures','TypesStructuresController');
+// Legendes
+Route::resource('/legendes','LegendesController');
+
 
 });

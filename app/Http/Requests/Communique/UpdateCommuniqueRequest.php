@@ -18,7 +18,9 @@ class UpdateCommuniqueRequest extends FormRequest
     {
         return [
            'title'=>'string|required',
-            'description'=>'string|nullable',      ];
+            'description'=>'string|nullable', 
+            'category'=>'string|in:Concours,Activité',
+        ];
     }
 
     protected function failedValidation(Validator $validator)
