@@ -20,7 +20,7 @@ class UpdateTeamRequest extends FormRequest
              'type' => 'sometimes|required|in:adjoint,assistant,autre,',
             'name' => 'sometimes|required|string|max:191',
             'office' => 'sometimes|required|string|max:191',
-            'photo' => 'sometimes|required|string|max:191',
+            'photo' => 'sometimes|required|file',
             'structure_id' => 'nullable|exists:structures,id',
                ];
     }

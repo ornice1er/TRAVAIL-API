@@ -11,12 +11,12 @@ use Str;
 
 class Team extends Model
 {
-    use Filterable, HasFactory, HasUuids;
+    use Filterable, HasFactory;
 
     protected $guarded = [];
 
     public function structure()
     {
-        return $this->belongsTo(Structures::class, 'structure_id');
+        return $this->belongsTo(Structure::class, 'structure_id');
     }
 }

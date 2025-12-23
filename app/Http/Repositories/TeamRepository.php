@@ -3,7 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Models\Team;
-use App\Models\Structures;
+use App\Models\Structure;
 use App\Utilities\FileStorage;
 
 class TeamRepository
@@ -16,23 +16,16 @@ class TeamRepository
      */
     public function getAll($request = null)
     {
-        $query = Team::with('structure');
-        
-        if ($request) {
-            if ($request->has('name') && $request->name) {
-                $query->where('name', 'like', '%' . $request->name . '%');
-            }
-            
-            if ($request->has('office') && $request->office) {
-                $query->where('office', 'like', '%' . $request->office . '%');
-            }
-            
-            if ($request->has('structure_id') && $request->structure_id) {
-                $query->where('structure_id', $request->structure_id);
-            }
+
+        $req = Team::ignoreRequest(['per_page','pageSize','page'])
+        ->with('structure');
+
+        if (array_key_exists('pageSize', $request->all())) {
+            $per_page = $request['pageSize'];
+            return $req->paginate($per_page);
+        } else {
+            return $req->get();
         }
-        
-        return $query->get();
     }
 
     /**
@@ -63,7 +56,7 @@ class TeamRepository
      * @param array $data
      * @return \App\Models\Team
      */
-    public function createWithPhoto($data)
+    public function makeStore($data)
     {
         if (isset($data['photo']) && $data['photo']) {
             $data['photo'] = FileStorage::setFile(
@@ -85,13 +78,15 @@ class TeamRepository
      * @param \Illuminate\Http\UploadedFile|null $photoFile
      * @return bool
      */
-    public function updateWithPhoto($id, $data, $photoFile = null)
+    public function makeUpdate($id, $data)
     {
         $team = Team::find($id);
         
         if (!$team) {
             return false;
         }
+
+        $photoFile= request()->file('photo');
 
         if ($photoFile) {
             // Supprimer l'ancienne photo s'il existe
@@ -140,7 +135,7 @@ class TeamRepository
      */
     public function getAllStructures()
     {
-        return Structures::all();
+        return Structure::all();
     }
 
     /**

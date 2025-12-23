@@ -153,6 +153,9 @@ class StructureController
         }
     }
 
+
+    
+
     /**
      * @OA\Post(
      *     path="/api/structures/with-files",

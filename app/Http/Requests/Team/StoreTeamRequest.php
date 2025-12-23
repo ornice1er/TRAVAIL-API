@@ -20,7 +20,7 @@ class StoreTeamRequest extends FormRequest
             'type' => 'required|in:adjoint,assistant,autre,',
             'name' => 'required|string|max:191',
             'office' => 'required|string|max:191',
-            'photo' => 'required|string|max:191',
+            'photo' => 'required|file',
             'structure_id' => 'nullable|exists:structures,id',
         ];
     }

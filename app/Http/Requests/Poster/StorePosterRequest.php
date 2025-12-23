@@ -18,10 +18,9 @@ class StorePosterRequest extends FormRequest
     {
         return [
              'title' => 'required|string|max:191',
-            'photo' => 'nullable|string|max:191',
+            'photo' => 'nullable|file',
             'type' => 'required|string|in:image,video',
-            'url' => 'nullable|string',
-            'status' => 'required|in:active,inactive',
+            'url' => 'nullable|string'
         ];
     }
 

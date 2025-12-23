@@ -141,18 +141,32 @@ class PosterRepository
     /**
      * Crée un poster.
      */
-    public function makeStore($data): Poster
+    public function makeStore($data)
     {
-        return $this->create($data);
+        $slug = Str::slug($data['title']);
+        
+        // Gestion du fichier image
+        if (isset($data['photo']) && $data['photo']) {
+            $data['photo'] = FileStorage::setFile('public', request()->file('photo'), 'posters', $slug);
+        }
+
+        return Poster::create($data);
     }
 
     /**
      * Met à jour un poster.
      */
-    public function makeUpdate($id, $data): Poster
+    public function makeUpdate($id, $data)
     {
-        $this->update($id, $data);
-        return $this->findById($id);
+  $poster = Poster::findOrFail($id);
+        
+        // Gestion du fichier image si présent
+        if (isset($data['photo']) && $data['photo']) {
+            $slug = Str::slug($data['title']);
+            $data['photo'] = FileStorage::setFile('public', request()->file('photo'), 'posters', $slug);
+        }
+
+        return $poster->fill($data)->save();
     }
 
     /**

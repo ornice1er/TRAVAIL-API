@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Requests\Poster\StorePosterRequest;
+use App\Http\Requests\Poster\UpdatePosterRequest;
 use App\Http\Repositories\PosterRepository;
 use App\Services\LogService;
 use App\Utilities\Common;
@@ -62,7 +63,7 @@ class PosterController
             $posters = $this->repository->getAll($request);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Posters récupérés avec succès']);
-            return Common::success($posters, 'Posters récupérés avec succès');
+            return Common::success('Posters récupérés avec succès',$posters);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des posters', []);
@@ -141,26 +142,19 @@ class PosterController
      *     @OA\Response(response=500, description="Erreur serveur")
      * )
      */
-    public function store(Request $request)
+    public function store(StorePosterRequest $request)
     {
-        $message = 'Création de poster';
-        
-        try {
-            $request->validate([
-                'title' => 'string|required|max:50',
-                'image' => 'file|required',
-            ]);
+          $message = 'Enregistrement d\'un Actualite';
 
-            $data = $request->all();
-            $data['image'] = $request->file('image');
-            
-            $poster = $this->repository->create($data);
-            
-            $this->ls->trace(['action_name' => $message, 'description' => 'Poster créé avec succès']);
-            return Common::success($poster, 'Poster créé avec succès');
-        } catch (\Exception $e) {
-            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
-            return Common::error('Erreur lors de la création du poster', []);
+        try {
+            $result = $this->repository->makeStore($request->validated());
+            $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->validated())]);
+
+            return Common::successCreate('Actualite créé avec succès', $result);
+        } catch (\Throwable $th) {
+            $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
+
+            return Common::error($th->getMessage(), []);
         }
     }
 
@@ -200,31 +194,19 @@ class PosterController
      *     @OA\Response(response=500, description="Erreur serveur")
      * )
      */
-    public function update(Request $request, $id)
+    public function update(UpdatePosterRequest $request, $id)
     {
-        $message = 'Mise à jour de poster';
-        
+           $message = 'Mise à jour d\'un Actualite';
+
         try {
-            $request->validate([
-                'title' => 'string|required|max:50',
-            ]);
+            $result = $this->repository->makeUpdate($id, $request->validated());
+            $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->validated())]);
 
-            if (!$this->repository->ifExist($id)) {
-                return Common::error('Poster non trouvé', []);
-            }
+            return Common::success('Mise à jour de Actualite effectuée avec succès', $result);
+        } catch (\Throwable $th) {
+            $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
-            $data = $request->all();
-            if ($request->file('image')) {
-                $data['image'] = $request->file('image');
-            }
-            
-            $result = $this->repository->update($id, $data);
-            
-            $this->ls->trace(['action_name' => $message, 'description' => 'Poster mis à jour avec succès']);
-            return Common::success($result, 'Poster mis à jour avec succès');
-        } catch (\Exception $e) {
-            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
-            return Common::error('Erreur lors de la mise à jour du poster', []);
+            return Common::error($th->getMessage(), []);
         }
     }
 
