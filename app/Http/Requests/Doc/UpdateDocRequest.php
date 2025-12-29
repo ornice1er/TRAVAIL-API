@@ -18,12 +18,12 @@ class UpdateDocRequest extends FormRequest
     {
         return [
              'name' => 'sometimes|required|string|max:191',
-            'slug' => 'sometimes|required|string|max:191|unique:docs,slug,' . $this->route('doc'),
             'description' => 'nullable|string',
             'status' => 'sometimes|required|in:active,inactive',
             'type' => 'sometimes|required|string|max:255',
-            'filename' => 'nullable|string|max:255',
-            'media_id' => 'sometimes|required|exists:media,id',
+            'filename' => 'nullable|file',
+                        'has_principal_access'   => ['required', 'in:0,1'],
+
                ];
     }
 

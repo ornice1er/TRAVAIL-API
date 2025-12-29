@@ -6,13 +6,15 @@ use App\Models\Doc;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\Transmission;
-use App\Models\Invite;
+use App\Models\Parcours;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
 use QrCode;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use App\Utilities\FileStorage;
+
  
 
 class DocRepository
@@ -49,15 +51,12 @@ class DocRepository
     {
          $per_page = 10;
 
-        $req = Doc::ignoreRequest(['per_page','pageSize','page'])
-            ->filter(array_filter($request->all(), function ($k) {
-                return $k != 'page';
-            }, ARRAY_FILTER_USE_KEY))
-            /*->with('invites')*/
+        $req = Doc::ignoreRequest(['pageSize','page'])
+              ->with('media')
             ->orderByDesc('created_at');
 
-        if (array_key_exists('per_page', $request->all())) {
-            $per_page = $request['per_page'];
+        if (array_key_exists('pageSize', $request->all())) {
+            $per_page = $request['pageSize'];
             return $req->paginate($per_page);
         } else {
             return $req->get();
@@ -69,30 +68,42 @@ class DocRepository
      */
     public function get($id)
     {
-        return $this->findOrFail($id);
+        return $this->findOrFail($id)->load('media');
     }
 
     /**
      * Crée une nouvelle fête.
      */
-    public function makeStore($data): Doc
+    public function makeStore($data)
     {
-       $model = new Doc($data);
 
-        /*$aws= new AwsService();
-        if(request()->file('file'))  $model->file = $aws->upload(request()->file('file'),"Docs")['full_url'];*/
+          $media=new Media();
+        $media->code=Str::uuid();
+        $media->structure_id=Auth::user()->structure_id;
+        $media->has_principal_access=$data['has_principal_access'];
+        $media->type="doc";
+        $media->save();
 
-        // Gestion du fichier doc si présent dans $data
-        if (request()->hasFile('doc')) {
-            // Génère un slug pour nommer le fichier
-            $slug = Str::slug($data['name'] ?? 'document') . '-' . date('ymdis') . '-' . rand(0, 999);
-            // TODO: Implémenter le service de stockage de fichiers
-            // $model->filename = FileStorage::setFile('public', request()->file('doc'), 'docs', $slug . ".pdf");
-        }
+        $data['slug']=Str::slug($data['name']).' '.uniqId();
+        $data['media_id']=$media->id;
 
-        $model->save();
+        if(request()->file('filename'))  $data['filename']=FileStorage::setFile('public',request()->file('filename'),'docs', $data['slug'].".pdf");
 
-        return $model;
+        $status=Doc::create($data);
+
+                Parcours::create([
+            'media_id'=>$media->id,
+            "libelle"=>"Création du document ".$data['name']
+                ]);
+                Transmission::create([
+                    'from'=>Auth::id(),
+                    'to'=>Auth::id(),
+                    'media_id'=>$media->id,
+                    'is_last'=>true,
+                    ]);
+    
+
+        return true;
     }
 
     /**

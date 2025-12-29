@@ -62,7 +62,6 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
         'communique-files'=>'CommuniqueFileController',
     'actualites'=>'ActualiteController',
     'prestations'=>'PrestationController',
-    'documents'=>'DocController',
     'organigrammes'=>'OrganigrammeController',
     'aofs'=>'AofController',
     'links'=>'LinkController',

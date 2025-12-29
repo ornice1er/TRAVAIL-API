@@ -10,7 +10,7 @@ use App\Utilities\Common;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
-class DocController
+class DocsController
 {
     /**
      * The Doc repository being queried.

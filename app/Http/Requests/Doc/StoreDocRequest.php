@@ -18,12 +18,12 @@ class StoreDocRequest extends FormRequest
     {
         return [
            'name' => 'required|string|max:191',
-            'slug' => 'required|string|max:191|unique:docs,slug',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
             'type' => 'required|string|max:255',
-            'filename' => 'nullable|string|max:255',
-            'media_id' => 'required|exists:media,id',
+            'filename' => 'nullable|file',
+            'has_principal_access'   => ['required', 'in:0,1'],
+
         ];
     }
 
