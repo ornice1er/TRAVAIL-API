@@ -79,9 +79,6 @@ class ActualiteRepository
                 // Requête sur Actualite liée aux medias filtrés
                 $req = Actualite::ignoreRequest(['per_page','pageSize','page'])
                     ->whereIn('media_id', $mediaIds)
-                    ->filter(array_filter($request->all(), function ($k) {
-                        return $k !== 'page';
-                    }, ARRAY_FILTER_USE_KEY))
                     ->with(['category','media'])
                     ->orderByDesc('created_at');
 
