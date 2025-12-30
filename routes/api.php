@@ -77,6 +77,7 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     'permissions' => 'PermissionController',
     'user-projects' => 'UserProjectController',
     'notifications' => 'NotificationController',
+    'media' => 'MediaController',
     'galeries'=>'GaleriesController'
         ]);
 

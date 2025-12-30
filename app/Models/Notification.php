@@ -11,7 +11,7 @@ use Str;
 
 class Notification extends Model
 {
-    use HasFactory, Filterable, SoftDeletes, HasUuids;
+use HasFactory, Filterable;
     protected $fillable = [
         'type',
         'notifiable_type',

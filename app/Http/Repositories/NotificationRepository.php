@@ -4,6 +4,7 @@ namespace App\Http\Repositories;
 
 use App\Models\Notification;
 use App\Traits\Repository;
+use Auth;
 
 class NotificationRepository
 {
@@ -29,8 +30,7 @@ class NotificationRepository
      */
     public function all()
     {
-        return Notification::with(['notifiable', 'destinataire'])
-            ->orderByDesc('created_at')
+        return Notification::where("sent_to",Auth::id())
             ->get();
     }
 

@@ -82,15 +82,15 @@ class NotificationController
     {
         $message = 'Récupération de toutes les notifications';
         
-        try {
+      //  try {
             $notifications = $this->repository->all();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Notifications récupérées avec succès']);
             return Common::success($notifications, 'Notifications récupérées avec succès');
-        } catch (\Exception $e) {
-            $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
-            return Common::error('Erreur lors de la récupération des notifications', []);
-        }
+        // } catch (\Exception $e) {
+        //     $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
+        //     return Common::error('Erreur lors de la récupération des notifications', []);
+        // }
     }
 
     /**

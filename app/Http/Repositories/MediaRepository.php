@@ -50,19 +50,18 @@ class MediaRepository
          $per_page = 10;
 
         $req = Media::ignoreRequest(['per_page','pageSize','page'])
-            ->filter(array_filter($request->all(), function ($k) {
-                return $k != 'page';
-            }, ARRAY_FILTER_USE_KEY))
-            ->orderByDesc('created_at');
+            ->orderByDesc('id');
 
         // Si un filtre "category" est passé dans la requête, on l’applique
         if ($request->has('category') && $request->category) {
-            $req = $req->where('type', $request->category);
+            $req = $req->where('type', $request->category)->with([$request->category]);
+        }else{
+          $req =  $req ->with(['communique','actualite','prestation','doc','org','aof']);
         }
 
-        if (array_key_exists('per_page', $request->all())) {
-            $per_page = $request['per_page'];
-            return $req->paginate($per_page);
+        if (array_key_exists('pageSize', $request->all())) {
+            $pageSize = $request['pageSize'];
+            return $req->paginate($pageSize);
         } else {
             return $req->get();
         }

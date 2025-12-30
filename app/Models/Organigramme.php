@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Organigramme extends Model
 {
-    use HasFactory, Filterable, SoftDeletes, HasUuids;
+    use HasFactory, Filterable;
     protected $fillable = [
         'name',
         'photo',
