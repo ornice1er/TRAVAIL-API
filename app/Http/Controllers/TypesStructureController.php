@@ -2,31 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\typesStructureRepository;
+use App\Http\Repositories\TypeStructureRepository;
 use App\Utilities\Common;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
-class TypesStructureController
+class TypeStructureController
 {
     /**
-     * The TypesStructure repository being queried.
+     * The TypeStructure repository being queried.
      *
-     * @var TypesStructureRepository
+     * @var TypeStructureRepository
      */
-    protected $typesStructureRepository;
+    protected $TypeStructureRepository;
 
-    public function __construct(typesStructureRepository $typesStructureRepository)
+    public function __construct(TypeStructureRepository $TypeStructureRepository)
     {
-        $this->typesStructureRepository = $typesStructureRepository;
+        $this->TypeStructureRepository = $TypeStructureRepository;
     }
 
     /** @OA\Get(
-     *      path="/typesStructures",
-     *      operationId="TypesStructure list",
-     *      tags={"TypesStructure"},
-     *      summary="Return TypesStructure data",
-     *      description="Get all typesStructure",
+     *      path="/TypeStructures",
+     *      operationId="TypeStructure list",
+     *      tags={"TypeStructure"},
+     *      summary="Return TypeStructure data",
+     *      description="Get all TypeStructure",
      *
      *      @OA\Parameter(
      *          name="name",
@@ -43,9 +43,9 @@ class TypesStructureController
      *          response=200,
      *          description="Successful operation",
      *
-     *          @OA\JsonContent(ref="#/components/schemas/TypesStructure"),
+     *          @OA\JsonContent(ref="#/components/schemas/TypeStructure"),
      *
-     *          @OA\XmlContent(ref="#/components/schemas/TypesStructure")
+     *          @OA\XmlContent(ref="#/components/schemas/TypeStructure")
      *      ),
      *
      *      @OA\Response(
@@ -69,9 +69,9 @@ class TypesStructureController
     public function index(Request $request)
     {
         try {
-            $result = $this->typesStructureRepository->getAll($request);
+            $result = $this->TypeStructureRepository->getAll($request);
 
-            return Common::success('Journal des typesStructures', $result);
+            return Common::success('Journal des TypeStructures', $result);
         } catch (\Throwable $th) {
             return Common::error($th->getMessage(), []);
         }

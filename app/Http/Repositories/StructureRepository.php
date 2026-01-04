@@ -3,7 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Models\Structure;
-use App\Models\TypesStructure;
+use App\Models\TypeStructure;
 use App\Traits\Repository;
 use App\Utilities\FileStorage;
 use Illuminate\Support\Str;
@@ -162,7 +162,7 @@ class StructureRepository
      */
     public function getMinistreBiographie()
     {
-        $type = TypesStructure::where('is_parent', true)->first();
+        $type = TypeStructure::where('is_parent', true)->first();
         $structure = Structure::where('type_structure_id', $type->id)->first();
         
         return $structure;
@@ -179,9 +179,9 @@ class StructureRepository
     /**
      * Récupère tous les types de structures.
      */
-    public function getAllTypesStructures()
+    public function getAllTypeStructures()
     {
-        return TypesStructure::all();
+        return TypeStructure::all();
     }
 
     /**

@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\TypesStructuresRepository;
+use App\Http\Repositories\TypeStructuresRepository;
 use App\Services\LogService;
 use App\Utilities\Common;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
-class TypesStructuresController
+class TypeStructuresController
 {
     /**
-     * The TypesStructures repository being queried.
+     * The TypeStructures repository being queried.
      *
-     * @var TypesStructuresRepository
+     * @var TypeStructuresRepository
      */
     protected $repository;
 
@@ -24,16 +24,16 @@ class TypesStructuresController
      */
     protected $ls;
 
-    public function __construct(TypesStructuresRepository $typesStructuresRepository, LogService $ls)
+    public function __construct(TypeStructuresRepository $TypeStructuresRepository, LogService $ls)
     {
-        $this->repository = $typesStructuresRepository;
+        $this->repository = $TypeStructuresRepository;
         $this->ls = $ls;
     }
 
     /**
      * @OA\Get(
      *     path="/api/types-structures",
-     *     tags={"TypesStructures"},
+     *     tags={"TypeStructures"},
      *     summary="Récupérer tous les types de structures",
      *     @OA\Parameter(
      *         name="title",
@@ -47,7 +47,7 @@ class TypesStructuresController
      *         description="Types de structures récupérés avec succès",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/TypesStructures")),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/TypeStructures")),
      *             @OA\Property(property="message", type="string", example="Types de structures récupérés avec succès")
      *         )
      *     ),
@@ -60,13 +60,13 @@ class TypesStructuresController
         
         try {
             if ($request->has('title') && $request->title) {
-                $typesStructures = $this->repository->searchByTitle($request->title);
+                $TypeStructures = $this->repository->searchByTitle($request->title);
             } else {
-                $typesStructures = $this->repository->getAll($request);
+                $TypeStructures = $this->repository->getAll($request);
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Types de structures récupérés avec succès']);
-            return Common::success($typesStructures, 'Types de structures récupérés avec succès');
+            return Common::success($TypeStructures, 'Types de structures récupérés avec succès');
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des types de structures', []);
@@ -76,14 +76,14 @@ class TypesStructuresController
     /**
      * @OA\Get(
      *     path="/api/types-structures/hierarchy",
-     *     tags={"TypesStructures"},
+     *     tags={"TypeStructures"},
      *     summary="Récupérer les types de structures avec hiérarchie",
      *     @OA\Response(
      *         response=200,
      *         description="Hiérarchie des types de structures récupérée avec succès",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/TypesStructures")),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/TypeStructures")),
      *             @OA\Property(property="message", type="string", example="Hiérarchie récupérée avec succès")
      *         )
      *     ),
@@ -108,14 +108,14 @@ class TypesStructuresController
     /**
      * @OA\Get(
      *     path="/api/types-structures/parents",
-     *     tags={"TypesStructures"},
+     *     tags={"TypeStructures"},
      *     summary="Récupérer les types de structures parents",
      *     @OA\Response(
      *         response=200,
      *         description="Types de structures parents récupérés avec succès",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/TypesStructures")),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/TypeStructures")),
      *             @OA\Property(property="message", type="string", example="Types parents récupérés avec succès")
      *         )
      *     ),
@@ -140,7 +140,7 @@ class TypesStructuresController
     /**
      * @OA\Get(
      *     path="/api/types-structures/{id}",
-     *     tags={"TypesStructures"},
+     *     tags={"TypeStructures"},
      *     summary="Récupérer un type de structure par ID",
      *     @OA\Parameter(
      *         name="id",
@@ -154,7 +154,7 @@ class TypesStructuresController
      *         description="Type de structure récupéré avec succès",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="data", ref="#/components/schemas/TypesStructures"),
+     *             @OA\Property(property="data", ref="#/components/schemas/TypeStructures"),
      *             @OA\Property(property="message", type="string", example="Type de structure récupéré avec succès")
      *         )
      *     ),
@@ -184,7 +184,7 @@ class TypesStructuresController
     /**
      * @OA\Post(
      *     path="/api/types-structures",
-     *     tags={"TypesStructures"},
+     *     tags={"TypeStructures"},
      *     summary="Créer un nouveau type de structure",
      *     @OA\RequestBody(
      *         required=true,
@@ -200,7 +200,7 @@ class TypesStructuresController
      *         description="Type de structure créé avec succès",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="data", ref="#/components/schemas/TypesStructures"),
+     *             @OA\Property(property="data", ref="#/components/schemas/TypeStructures"),
      *             @OA\Property(property="message", type="string", example="Type de structure créé avec succès")
      *         )
      *     ),
@@ -237,7 +237,7 @@ class TypesStructuresController
     /**
      * @OA\Put(
      *     path="/api/types-structures/{id}",
-     *     tags={"TypesStructures"},
+     *     tags={"TypeStructures"},
      *     summary="Mettre à jour un type de structure",
      *     @OA\Parameter(
      *         name="id",
@@ -302,7 +302,7 @@ class TypesStructuresController
     /**
      * @OA\Delete(
      *     path="/api/types-structures/{id}",
-     *     tags={"TypesStructures"},
+     *     tags={"TypeStructures"},
      *     summary="Supprimer un type de structure",
      *     @OA\Parameter(
      *         name="id",
@@ -351,7 +351,7 @@ class TypesStructuresController
     /**
      * @OA\Get(
      *     path="/api/types-structures/children/{parentId}",
-     *     tags={"TypesStructures"},
+     *     tags={"TypeStructures"},
      *     summary="Récupérer les types enfants d'un type parent",
      *     @OA\Parameter(
      *         name="parentId",
@@ -365,7 +365,7 @@ class TypesStructuresController
      *         description="Types enfants récupérés avec succès",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/TypesStructures")),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/TypeStructures")),
      *             @OA\Property(property="message", type="string", example="Types enfants récupérés avec succès")
      *         )
      *     ),
@@ -390,7 +390,7 @@ class TypesStructuresController
     /**
      * @OA\Get(
      *     path="/api/types-structures/dropdown",
-     *     tags={"TypesStructures"},
+     *     tags={"TypeStructures"},
      *     summary="Récupérer les types de structures pour dropdown",
      *     @OA\Response(
      *         response=200,

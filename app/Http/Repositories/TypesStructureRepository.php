@@ -2,7 +2,7 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\TypesStructure;
+use App\Models\TypeStructure;
 use App\Models\Invite;
 use App\Traits\Repository;
 use App\Services\AwsService;
@@ -11,14 +11,14 @@ use QrCode;
 use Illuminate\Support\Str;
  
 
-class TypesStructureRepository
+class TypeStructureRepository
 {
     use Repository;
 
     /**
      * Le modèle utilisé.
      *
-     * @var TypesStructure
+     * @var TypeStructure
      */
     protected $model;
 
@@ -27,7 +27,7 @@ class TypesStructureRepository
      */
     public function __construct()
     {
-        $this->model = app(TypesStructure::class);
+        $this->model = app(TypeStructure::class);
     }
 
     /**
@@ -45,7 +45,7 @@ class TypesStructureRepository
     {
         $per_page = 10;
 
-        $req = TypesStructure::ignoreRequest(['per_page','pageSize','page'])
+        $req = TypeStructure::ignoreRequest(['per_page','pageSize','page'])
             ->filter(array_filter($request->all(), function ($k) {
                 return $k != 'page';
             }, ARRAY_FILTER_USE_KEY))
@@ -71,11 +71,11 @@ class TypesStructureRepository
     /**
      * Crée une nouvelle fête.
      */
-    public function makeStore($data): TypesStructure
+    public function makeStore($data): TypeStructure
     {
-         $model = new TypesStructure($data);
+         $model = new TypeStructure($data);
         /*$aws= new AwsService();
-        if(request()->file('file'))  $model->file = $aws->upload(request()->file('file'),"TypesStructures")['full_url'];*/
+        if(request()->file('file'))  $model->file = $aws->upload(request()->file('file'),"TypeStructures")['full_url'];*/
         $model->save();
 
         return $model;
@@ -84,12 +84,12 @@ class TypesStructureRepository
     /**
      * Met à jour une fête.
      */
-    public function makeUpdate($id, $data): TypesStructure
+    public function makeUpdate($id, $data): TypeStructure
     {
-         $model = TypesStructure::findOrFail($id);
+         $model = TypeStructure::findOrFail($id);
         /*$aws = new AwsService();
         if(request()->file('file')) {
-            $data['file'] = $aws->upload(request()->file('file'), "TypesStructures")['full_url'];
+            $data['file'] = $aws->upload(request()->file('file'), "TypeStructures")['full_url'];
         }*/
         $model->update($data);
 
@@ -125,8 +125,8 @@ class TypesStructureRepository
      */
     public function search($term)
     {
-        $query = TypesStructure::query();
-        $attrs = ['nom', 'lieu', 'type_TypesStructure'];
+        $query = TypeStructure::query();
+        $attrs = ['nom', 'lieu', 'type_TypeStructure'];
         
         foreach ($attrs as $value) {
             $query->orWhere($value, 'like', '%'.$term.'%');
@@ -137,9 +137,9 @@ class TypesStructureRepository
 
 /*
     function generateLink($id,$data) {
-        $code = Core::generateUniqueCode(TypesStructure::class, 10, 'FET');
+        $code = Core::generateUniqueCode(TypeStructure::class, 10, 'FET');
         $link_token = Str::random(40); // Génère un token de 40 caractères
-        $url = env('APP_FRONT_URL').'/TypesStructure/'.$code.'/'.$link_token;
+        $url = env('APP_FRONT_URL').'/TypeStructure/'.$code.'/'.$link_token;
         $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
         $qrCode = QrCode::format('png')->size(300)->generate($url);
         $data['link_token']=$link_token;
@@ -147,16 +147,16 @@ class TypesStructureRepository
         $data['lien_unique']=$url ;
         $data['qr_code'] = base64_encode($qrCode);
         $data['status'] = 1;
-        $model = TypesStructure::findOrFail($id);
+        $model = TypeStructure::findOrFail($id);
         $model->update($data);
         return $model;
     }
 
     function generateMediaLink($id) {
-        $model = TypesStructure::findOrFail($id);
+        $model = TypeStructure::findOrFail($id);
         $code = $model->code;
         $media_token = Str::random(40); // Génère un token de 40 caractères
-        $url = env('APP_FRONT_URL').'/TypesStructure-gallery/'.$code.'/'.$media_token;
+        $url = env('APP_FRONT_URL').'/TypeStructure-gallery/'.$code.'/'.$media_token;
         $url = mb_convert_encoding($url, 'UTF-8', 'auto'); // Force l'encodage en UTF-8
         $qrCodeMedia = QrCode::format('png')->size(300)->generate($url);
         $data['media_token']=$media_token;
@@ -169,16 +169,16 @@ class TypesStructureRepository
 
     function verifyLink($data) {
         if (isset($data['link_token'])) {
-            return TypesStructure::where('link_token', )->first();
+            return TypeStructure::where('link_token', )->first();
         }else{
-            return TypesStructure::where('media_token', $data['media_token'])->first();
+            return TypeStructure::where('media_token', $data['media_token'])->first();
 
         }
 
     }
 
     function participate($data){
-        $check=Invite::where('TypesStructure_id', $data['TypesStructure_id'])
+        $check=Invite::where('TypeStructure_id', $data['TypeStructure_id'])
             ->where('phone', $data['phone'])
             ->first();
             if ($check) {

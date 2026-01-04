@@ -2,9 +2,9 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\TypesStructures;
+use App\Models\TypeStructures;
 
-class TypesStructuresRepository
+class TypeStructuresRepository
 {
     /**
      * Get all types structures with hierarchical structure
@@ -14,7 +14,7 @@ class TypesStructuresRepository
      */
     public function getAll($request = null)
     {
-        return TypesStructures::getAllTypes();
+        return TypeStructures::getAllTypes();
     }
 
     /**
@@ -22,20 +22,20 @@ class TypesStructuresRepository
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function getAllTypesStructures()
+    public function getAllTypeStructures()
     {
-        return TypesStructures::getAllTypes();
+        return TypeStructures::getAllTypes();
     }
 
     /**
      * Find a type structure by ID
      *
      * @param int $id
-     * @return \App\Models\TypesStructures|null
+     * @return \App\Models\TypeStructures|null
      */
     public function findById($id)
     {
-        return TypesStructures::find($id);
+        return TypeStructures::find($id);
     }
 
     /**
@@ -46,18 +46,18 @@ class TypesStructuresRepository
      */
     public function ifExist($id)
     {
-        return TypesStructures::where('id', $id)->exists();
+        return TypeStructures::where('id', $id)->exists();
     }
 
     /**
      * Create a new type structure
      *
      * @param array $data
-     * @return \App\Models\TypesStructures
+     * @return \App\Models\TypeStructures
      */
     public function create($data)
     {
-        return TypesStructures::create($data);
+        return TypeStructures::create($data);
     }
 
     /**
@@ -69,7 +69,7 @@ class TypesStructuresRepository
      */
     public function update($id, $data)
     {
-        $typeStructure = TypesStructures::find($id);
+        $typeStructure = TypeStructures::find($id);
         
         if (!$typeStructure) {
             return false;
@@ -86,7 +86,7 @@ class TypesStructuresRepository
      */
     public function delete($id)
     {
-        $typeStructure = TypesStructures::find($id);
+        $typeStructure = TypeStructures::find($id);
         
         if (!$typeStructure) {
             return false;
@@ -107,7 +107,7 @@ class TypesStructuresRepository
      */
     public function getParentTypes()
     {
-        return TypesStructures::where('is_parent', true)->get();
+        return TypeStructures::where('is_parent', true)->get();
     }
 
     /**
@@ -118,7 +118,7 @@ class TypesStructuresRepository
      */
     public function getChildrenByParent($parentId)
     {
-        return TypesStructures::where('parent_id', $parentId)->get();
+        return TypeStructures::where('parent_id', $parentId)->get();
     }
 
     /**
@@ -128,7 +128,7 @@ class TypesStructuresRepository
      */
     public function getWithChildren()
     {
-        return TypesStructures::with('children')->whereNull('parent_id')->get();
+        return TypeStructures::with('children')->whereNull('parent_id')->get();
     }
 
     /**
@@ -139,7 +139,7 @@ class TypesStructuresRepository
      */
     public function canBeDeleted($id)
     {
-        $typeStructure = TypesStructures::find($id);
+        $typeStructure = TypeStructures::find($id);
         
         if (!$typeStructure) {
             return false;
@@ -165,7 +165,7 @@ class TypesStructuresRepository
      */
     public function getForDropdown()
     {
-        return TypesStructures::select('id', 'title')->get();
+        return TypeStructures::select('id', 'title')->get();
     }
 
     /**
@@ -176,6 +176,6 @@ class TypesStructuresRepository
      */
     public function searchByTitle($title)
     {
-        return TypesStructures::where('title', 'like', '%' . $title . '%')->get();
+        return TypeStructures::where('title', 'like', '%' . $title . '%')->get();
     }
 }

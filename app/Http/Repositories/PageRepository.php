@@ -12,7 +12,7 @@ use App\Models\Mot;
 use App\Models\Mots;
 use App\Models\Structure;
 use App\Models\Structures;
-use App\Models\TypesStructure;
+use App\Models\TypeStructure;
 use App\Traits\Repository;
 
 class PageRepository
@@ -48,7 +48,7 @@ class PageRepository
      */
     public function getMinistreWord()
     {
-        $type = TypesStructure::where('is_parent', true)->first();
+        $type = TypeStructure::where('is_parent', true)->first();
         $structure = Structure::where('type_structure_id', $type->id)->first();
         $word = Mot::where('structure_id', $structure->id)->get()->last();
 

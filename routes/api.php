@@ -107,8 +107,10 @@ Route::post('users-search', 'UserController@search');
 
 
 Route::get('accueil', 'PublicController@index')->name('accueil');
-Route::get('public/actualites', 'PublicController@getActualites')->name('dgt');
+Route::get('public/actualites', 'PublicController@getActualites');
 Route::get('public/services', 'PublicController@getServices');
+Route::get('public/vision', 'PublicController@getVision');
+
 
 Route::get('accueil-dgrce', 'PublicController@index')->name('dgrce');
 Route::get('accueil-dgfp', 'PublicController@index')->name('dgfp');
@@ -121,7 +123,6 @@ Route::get('igsep', 'PublicController@index')->name('igsep');
 Route::get('structures-sous-tutelles', 'PublicController@index')->name('st');
 Route::get('directions', 'PublicController@index')->name('directions');
 Route::get('organigramme', 'PublicController@index')->name('organigramme');
-Route::get('vision', 'PublicController@index')->name('vision');
 Route::get('sgm', 'PublicController@index')->name('sgm');
 Route::get('dd', 'PublicController@index')->name('dd');
 Route::get('aof-igsep', 'PublicController@index')->name('aof.igsep');
@@ -228,7 +229,7 @@ Route::get('/posters/archivied/{id}','StageController@archive')->name('posters.a
 Route::get('/posters/restored/{id}','StageController@restore')->name('posters.restored');
 
 // Types Structures
-Route::resource('/type-structures','TypesStructuresController');
+Route::resource('/type-structures','TypeStructuresController');
 // Legendes
 Route::resource('/legendes','LegendesController');
 

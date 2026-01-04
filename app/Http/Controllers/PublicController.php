@@ -11,7 +11,7 @@ use App\Models\Prestation;
 use App\Models\LiensUtile;
 use App\Models\Galeries;
 use App\Models\StructureSousTutelles;
-use App\Models\TypesStructure;
+use App\Models\TypeStructure;
 use App\Models\Structure;
 use App\Models\Organigrammes;
 use App\Models\Mot;
@@ -133,7 +133,7 @@ class PublicController extends Controller
                          return Common::success("Données de site récupérées", compact(['aof','title','share_path','share_title']));
 
         }else {
-            $type=TypesStructure::where('is_parent',true)->first();
+            $type=TypeStructure::where('is_parent',true)->first();
             $structure=Structure::where('type_structure_id',$type->id)->first();
             $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->where('structure_id',$structure->id)->orderBy('id','desc')->get()->last();
      
@@ -161,7 +161,7 @@ class PublicController extends Controller
         $title="E-SERVICES";
         $share_path="prestations";
         $share_title="Nos prestations";
-        $type=TypesStructure::where('is_parent',true)->first();
+        $type=TypeStructure::where('is_parent',true)->first();
         $structures=Structure::with('mediaPrestations.prestation')->where('type_structure_id',"!=",$type->id)
                                 ->whereHas('mediaPrestations',function($query){
                                      $query->where('type','prestation')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true);
@@ -192,7 +192,7 @@ class PublicController extends Controller
         }else {
             # code...
         
-        $type=TypesStructure::where('is_parent',true)->first();
+        $type=TypeStructure::where('is_parent',true)->first();
 
         $structures=Structure::with('medias')->where('type_structure_id',"!=",$type->id)->get();
                                 $i=0;
@@ -234,7 +234,7 @@ class PublicController extends Controller
     {
        // $org=Organigrammes::all()->last();
        
-       $type=TypesStructure::where('is_parent',true)->first();
+       $type=TypeStructure::where('is_parent',true)->first();
        $structure=Structure::where('type_structure_id',$type->id)->first();
        $org=Media::with('org')->where('type','organigramme')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->where('structure_id',$structure->id)->orderBy('id','desc')->get()->last();
 
@@ -255,7 +255,7 @@ class PublicController extends Controller
     }
     public function getDirectionsPage()
     {
-        $directions=TypesStructure::with('structures')->whereNotIn('id',[1,5,6])->get();
+        $directions=TypeStructure::with('structures')->whereNotIn('id',[1,5,6])->get();
         $title="DIRECTIONS";
         $share_path="directions";
         $share_title="Découvrez ici nos directions ";
@@ -432,7 +432,7 @@ class PublicController extends Controller
 
     public function getVisionPage()
     {
-        $type=TypesStructure::where('is_parent',true)->first();
+        $type=TypeStructure::where('is_parent',true)->first();
 
         $structure=Structure::where('type_structure_id',$type->id)->first();
 
@@ -467,7 +467,7 @@ class PublicController extends Controller
     {
 
         if ($category=="dd") {
-            $direction=TypesStructure::where('title',"Directions Départementales")->first();
+            $direction=TypeStructure::where('title',"Directions Départementales")->first();
             // ->where('structure_id',$structure->id)
              // $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get()->last();
             // $aof=Media::with('aof')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
@@ -498,7 +498,7 @@ class PublicController extends Controller
     public function getDDPage()
     {
 
-        $type=TypesStructure::where('title','Directions Départementales')->first();
+        $type=TypeStructure::where('title','Directions Départementales')->first();
         $structures=Structure::where('type_structure_id',$type->id)->get();
        // ->where('structure_id',$structure->id)
         // $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get()->last();
@@ -532,7 +532,7 @@ class PublicController extends Controller
 
     public function getMinistrePage($id)
     {
-        $type=TypesStructure::where('is_parent',true)->first();
+        $type=TypeStructure::where('is_parent',true)->first();
         $structure=Structure::with('teams')->where('type_structure_id',$type->id)->first();
         $title="LE MINISTRE";
         $share_path="ministre";
@@ -721,6 +721,19 @@ class PublicController extends Controller
         ->telegram()
         ->getRawLinks();
         return Common::success("Données de site récupérées",compact(['actualite','title','shareLinks']));
+
+    }
+
+
+    function getVision(Request $request) {
+           $type=TypeStructure::where('is_parent',true)->first();
+
+        $structure=Structure::where('type_structure_id',$type->id)->first();
+
+       // ->where('structure_id',$structure->id)
+        // $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get()->last();
+        $aof=Media::with('aof')->where('structure_id',$structure->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
+        return Common::success("Données de site récupérées",compact(['structure','aof']));
 
     }
 

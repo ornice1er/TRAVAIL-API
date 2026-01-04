@@ -87,7 +87,7 @@ class StructureController
      *         description="Types de structures récupérés avec succès",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
-     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/TypesStructure")),
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/TypeStructure")),
      *             @OA\Property(property="message", type="string", example="Types de structures récupérés avec succès")
      *         )
      *     ),
@@ -99,7 +99,7 @@ class StructureController
         $message = 'Récupération des types de structures';
         
         try {
-            $types = $this->repository->getAllTypesStructures();
+            $types = $this->repository->getAllTypeStructures();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Types de structures récupérés avec succès']);
             return Common::success($types, 'Types de structures récupérés avec succès');

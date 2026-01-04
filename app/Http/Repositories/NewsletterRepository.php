@@ -5,7 +5,7 @@ namespace App\Http\Repositories;
 use App\Models\Newsletter;
 use App\Models\Structure;
 use App\Models\Structures;
-use App\Models\TypesStructure;
+use App\Models\TypeStructure;
 use App\Traits\Repository;
 use App\Services\AwsService;
 use App\Utilities\Core;
@@ -164,7 +164,7 @@ class NewsletterRepository
     {
         $email = request()->input('email');
 
-        $type = TypesStructure::where('is_parent', true)->first();
+        $type = TypeStructure::where('is_parent', true)->first();
         $structure = Structure::where('type_structure_id', $type->id)->first();
 
         if (!$this->isSubscribed($email)) {

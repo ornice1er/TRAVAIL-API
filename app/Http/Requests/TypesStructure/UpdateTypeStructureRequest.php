@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\TypesStructure;
+namespace App\Http\Requests\TypeStructure;
 
 use App\Utilities\Common;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UpdateTypesStructureRequest extends FormRequest
+class UpdateTypeStructureRequest extends FormRequest
 {
     public function authorize(): bool
     {
