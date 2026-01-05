@@ -10,7 +10,7 @@ use App\Models\Poster;
 use App\Models\Prestation;
 use App\Models\LiensUtile;
 use App\Models\Galeries;
-use App\Models\StructureSousTutelles;
+use App\Models\StructureSousTutelle;
 use App\Models\TypeStructure;
 use App\Models\Structure;
 use App\Models\Organigrammes;
@@ -40,15 +40,15 @@ class PublicController extends Controller
             case 'accueil':
             return $this->getHomePage();
             break;
-            case 'dgt':
-                return $this->getHomeDGTPage();
-                break;
-                case 'dgrce':
-                    return $this->getHomeDGRCEPage();
-                    break;
-                    case 'dgfp':
-                        return $this->getHomeDGFPPage();
-                        break;
+            // case 'dgt':
+            //     return $this->getHomeDGTPage();
+            //     break;
+            //     case 'dgrce':
+            //         return $this->getHomeDGRCEPage();
+            //         break;
+            //         case 'dgfp':
+            //             return $this->getHomeDGFPPage();
+            //             break;
             case 'anciens':
             return $this->getAnciensPage();
             break;
@@ -71,6 +71,23 @@ class PublicController extends Controller
             case 'sgm':
             return $this->getSGMPage();
             break;
+            case 'dpaf':
+            return $this->getDPAFPage();
+            break;
+             case 'dgfp':
+            return $this->getDGFPPage();
+            break;
+            case 'dsi':
+            return $this->getDSIPage();
+            break;
+            case 'dgrce':
+            return $this->getDGRCEPage();
+            break;
+
+             case 'csrai':
+            return $this->getCSRAIPage();
+            break;
+            
             case 'dd':
             return $this->getDDPage();
             break;
@@ -114,6 +131,11 @@ class PublicController extends Controller
                 case 'igsep':
                     return $this->getIgsepPage();
                     break;
+                 case 'dgt':
+                    return $this->getDGTPage();
+                    break;
+
+                    
                 case 'structure':
                     return $this->getPresentationPage($category);
                     break;
@@ -165,6 +187,9 @@ class PublicController extends Controller
         $structures=Structure::with('mediaPrestations.prestation')->where('type_structure_id',"!=",$type->id)
                                 ->whereHas('mediaPrestations',function($query){
                                      $query->where('type','prestation')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true);
+                                })
+                                ->whereHas('mediaPrestations.prestation',function($query){
+                                     $query->where('status','active');
                                 })
                                 ->get();   
                         //        dd($structures);
@@ -246,7 +271,7 @@ class PublicController extends Controller
     }
     public function getStPage()
     {
-        $sts=StructureSousTutelles::all();
+        $sts=StructureSousTutelle::all();
         $title="STRUCTURES SOUS TUTELLE";
         $share_path="directions";
         $share_title="Découvrez ici nos directions ";
@@ -450,7 +475,7 @@ class PublicController extends Controller
     public function getSGMPage()
     {
 
-        $structure=Structure::where('acronym',"SGM")->first();
+        $structure=Structure::with('teams1','teams2')->where('acronym',"SGM")->first();
 
        // ->where('structure_id',$structure->id)
         // $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get()->last();
@@ -460,7 +485,62 @@ class PublicController extends Controller
         $title= $structure?->name;
         $share_path="sgm";
         $share_title="Attribution, Organisation et Fonctionnement";
-                                                    return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
+        return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
+
+    }
+    public function getDPAFPage()
+    {
+
+        $structure=Structure::with('teams1','teams2')->where('acronym',"DPAF")->first();
+        $aof=Media::with('aof')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
+
+
+        $title= $structure?->name;
+        $share_path="dpaf";
+        $share_title="Attribution, Organisation et Fonctionnement";
+        return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
+
+    }
+
+     public function getDGFPPage()
+    {
+
+        $structure=Structure::with('teams1','teams2')->where('acronym',"DGFP")->first();
+        $aof=Media::with('aof')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
+
+
+        $title= $structure?->name;
+        $share_path="dgfp";
+        $share_title="Attribution, Organisation et Fonctionnement";
+        return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
+
+    }
+
+      public function getDGRCEPage()
+    {
+
+        $structure=Structure::with('teams1','teams2')->where('acronym',"DGRCE")->first();
+        $aof=Media::with('aof')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
+
+
+        $title= $structure?->name;
+        $share_path="dgrce";
+        $share_title="Attribution, Organisation et Fonctionnement";
+        return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
+
+    }
+
+      public function getCSRAIPage()
+    {
+
+        $structure=Structure::with('teams1','teams2')->where('acronym',"CSRAI")->first();
+        $aof=Media::with('aof')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
+
+
+        $title= $structure?->name;
+        $share_path="dgrce";
+        $share_title="Attribution, Organisation et Fonctionnement";
+        return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
 
     }
     public function getPresentationPage($category)
@@ -513,20 +593,41 @@ class PublicController extends Controller
 
         }       
     }
-    public function getAofIgsepPage()
+    public function getIgsepPage()
     {
 
-        $structure=Structure::where('acronym',"IGSEP")->first();
-
-       // ->where('structure_id',$structure->id)
-        // $aof=Media::with('aof')->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get()->last();
-        $aof=Media::with('aof')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
-
+        $structure=Structure::with('teams1','teams2')->where('acronym',"IGSEP")->first();
+        $aof=Media::with('aof','org')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
 
         $title=$structure?->name;
         $share_path="igsep";
         $share_title="Attribution, Organisation et Fonctionnement";
-                return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
+        return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
+
+    }
+    public function getDSIPage()
+    {
+
+        $structure=Structure::with('teams1','teams2')->where('acronym',"DSI")->first();
+        $aof=Media::with('aof','org')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
+
+        $title=$structure?->name;
+        $share_path="dsi";
+        $share_title="Attribution, Organisation et Fonctionnement";
+        return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
+
+    }
+
+    public function getDGTPage()
+    {
+
+        $structure=Structure::with('teams1','teams2')->where('acronym',"DGT")->first();
+        $aof=Media::with('aof','org')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
+
+        $title=$structure?->name;
+        $share_path="dgt";
+        $share_title="Attribution, Organisation et Fonctionnement";
+        return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
 
     }
 
@@ -575,18 +676,6 @@ class PublicController extends Controller
         }else {
             return back();
         }
-
-    }
-
-    public function getIgsepPage()
-    {
-        $igsep="";
-        $share_path="";
-        $share_title="";
-        $structure=Structure::where('acronym',"IGSEP")->first();
-        $org=Media::with('org')->where('type','organigramme')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->where('structure_id',$structure->id)->orderBy('id','desc')->get()->last();
-
-                    return Common::success("Données de site récupérées",compact(['igsep','share_path',"share_title",'structure','org']));
 
     }
 
@@ -802,7 +891,7 @@ class PublicController extends Controller
 
 
     function getServices(Request $request) {
-        $services=Prestation::orderBy('id','desc')->paginate($request->pageSize);
+        $services=Prestation::where("status","active")->orderBy('id','desc')->paginate($request->pageSize);
 
         return Common::success("Données de site récupérées",compact(['services']));
 

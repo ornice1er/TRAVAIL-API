@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Str;
 
-class StructuresSousTutelle extends Model
+class StructureSousTutelle extends Model
 {
      use Filterable,HasFactory;
     protected $fillable = [
