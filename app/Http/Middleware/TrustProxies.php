@@ -25,4 +25,18 @@ class TrustProxies extends Middleware
         Request::HEADER_X_FORWARDED_PORT |
         Request::HEADER_X_FORWARDED_PROTO |
         Request::HEADER_X_FORWARDED_AWS_ELB;
+
+
+        public function handle($request, Closure $next)
+{
+    $response = $next($request);
+
+    if ($request->is('backend/storage/*')) {
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+        $response->headers->set('Access-Control-Allow-Headers', '*');
+    }
+
+    return $response;
+}
 }
