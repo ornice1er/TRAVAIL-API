@@ -40,15 +40,6 @@ class PublicController extends Controller
             case 'accueil':
             return $this->getHomePage();
             break;
-            // case 'dgt':
-            //     return $this->getHomeDGTPage();
-            //     break;
-            //     case 'dgrce':
-            //         return $this->getHomeDGRCEPage();
-            //         break;
-            //         case 'dgfp':
-            //             return $this->getHomeDGFPPage();
-            //             break;
             case 'anciens':
             return $this->getAnciensPage();
             break;
