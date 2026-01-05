@@ -112,8 +112,6 @@ Route::get('public/services', 'PublicController@getServices');
 Route::get('public/vision', 'PublicController@getVision');
 
 
-Route::get('accueil-dgrce', 'PublicController@index')->name('dgrce');
-Route::get('accueil-dgfp', 'PublicController@index')->name('dgfp');
 Route::get('cookie-checker', 'PublicController@setCookie')->name('cookie');
 
 
@@ -123,13 +121,13 @@ Route::get('igsep', 'PublicController@index')->name('igsep');
 Route::get('structures-sous-tutelles', 'PublicController@index')->name('st');
 Route::get('directions', 'PublicController@index')->name('directions');
 Route::get('organigramme', 'PublicController@index')->name('organigramme');
-Route::get('sgm', 'PublicController@index');
-Route::get('dpaf', 'PublicController@index');
-Route::get('dsi', 'PublicController@index');
-Route::get('dgt', 'PublicController@index');
-Route::get('dgfp', 'PublicController@index');
-Route::get('dgrce', 'PublicController@index');
-Route::get('csrai', 'PublicController@index');
+Route::get('sgm', 'PublicController@index')->name('sgm');
+Route::get('dpaf', 'PublicController@index')->name('dpaf');
+Route::get('dsi', 'PublicController@index')->name('dsi');
+Route::get('dgt', 'PublicController@index')->name('dgt');
+Route::get('dgfp', 'PublicController@index')->name('dgfp');
+Route::get('dgrce', 'PublicController@index')->name('dgrce');
+Route::get('csrai', 'PublicController@index')->name('csrai');
 Route::get('dd', 'PublicController@index')->name('dd');
 Route::get('aof-igsep', 'PublicController@index')->name('aof.igsep');
 Route::get('aof/{id?}', 'PublicController@index')->name('aof');
