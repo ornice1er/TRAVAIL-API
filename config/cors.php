@@ -15,14 +15,7 @@ return [
     |
     */
 
-    'paths' => ['sanctum/csrf-cookie',
-
-    'api/*',
-        'backend/storage/*',
-        'storage/*',
-        'aofs/*',
-        '*',
-],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
@@ -32,10 +25,7 @@ return [
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [
-         'Content-Disposition',
-        'Content-Type',
-    ],
+    'exposed_headers' => [],
 
     'max_age' => 0,
 
