@@ -60,6 +60,9 @@ Route::group(['namespace' => 'App\Http\Controllers'], function () {
     'users'=>'UserController',
     'communiques'=>'CommuniqueController',
         'communique-files'=>'CommuniqueFileController',
+
+          'tests'=>'TestController',
+        'test-files'=>'TestFileController',
     'actualites'=>'ActualiteController',
     'prestations'=>'PrestationController',
     'organigrammes'=>'OrganigrammeController',
