@@ -80,7 +80,7 @@ class TestController
      */
     public function index(Request $request)
     {
-        $message = 'Récupération de la liste des communiqués';
+        $message = 'Récupération de la liste des concourss';
 
         try {
             $result = $this->repository->getAll($request);
@@ -142,7 +142,7 @@ class TestController
      */
     public function show($id)
     {
-        $message = 'Récupération du communiqué';
+        $message = 'Récupération du concours';
 
         try {
             $result = $this->repository->getById($id);
@@ -196,9 +196,12 @@ class TestController
      */
     public function store(StoreTestRequest $request)
     {
-        $message = 'Création du communiqué';
+        $message = 'Création du concours';
 
         try {
+
+                    info('uduud');
+
             $result = $this->repository->store($request->all());
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
@@ -265,7 +268,7 @@ class TestController
      */
     public function update(UpdateTestRequest $request, $id)
     {
-        $message = 'Mise à jour du communiqué';
+        $message = 'Mise à jour du concours';
 
         try {
             $result = $this->repository->update($request->all(), $id);
@@ -327,7 +330,7 @@ class TestController
      */
     public function destroy($id)
     {
-        $message = 'Suppression du communiqué';
+        $message = 'Suppression du concours';
 
         try {
             $result = $this->repository->destroy($id);
@@ -403,7 +406,7 @@ class TestController
      */
     public function changeState(Request $request, $id)
     {
-        $message = 'Changement de statut du communiqué';
+        $message = 'Changement de statut du concours';
 
         try {
             $result = $this->repository->changeState($request->state, $id);
@@ -465,7 +468,7 @@ class TestController
      */
     public function search(Request $request)
     {
-        $message = 'Recherche de communiqués';
+        $message = 'Recherche de concourss';
 
         try {
             $result = $this->repository->search($request);
@@ -527,7 +530,7 @@ class TestController
      */
     public function up($id)
     {
-        $message = 'Déplacement du communiqué vers le haut';
+        $message = 'Déplacement du concours vers le haut';
 
         try {
             $result = $this->repository->up($id);
@@ -589,7 +592,7 @@ class TestController
      */
     public function down($id)
     {
-        $message = 'Déplacement du communiqué vers le bas';
+        $message = 'Déplacement du concours vers le bas';
 
         try {
             $result = $this->repository->down([], $id);
@@ -651,7 +654,7 @@ class TestController
      */
     public function publish($id)
     {
-        $message = 'Publication du communiqué';
+        $message = 'Publication du concours';
 
         try {
             $result = $this->repository->publish($id);
@@ -713,7 +716,7 @@ class TestController
      */
     public function unpublish($id)
     {
-        $message = 'Dépublication du communiqué';
+        $message = 'Dépublication du concours';
 
         try {
             $result = $this->repository->unpublish($id);
@@ -775,7 +778,7 @@ class TestController
      */
     public function archive($id)
     {
-        $message = 'Archivage du communiqué';
+        $message = 'Archivage du concours';
 
         try {
             $result = $this->repository->archive($id);
@@ -837,7 +840,7 @@ class TestController
      */
     public function restore($id)
     {
-        $message = 'Restauration du communiqué';
+        $message = 'Restauration du concours';
 
         try {
             $result = $this->repository->restore($id);
@@ -895,7 +898,7 @@ class TestController
      */
     public function generateLink($id)
     {
-        $message = 'Génération du lien QR Code pour le communiqué';
+        $message = 'Génération du lien QR Code pour le concours';
 
         try {
             $result = $this->repository->generateLink($id, []);
@@ -953,7 +956,7 @@ class TestController
      */
     public function generateMediaLink($id)
     {
-        $message = 'Génération du lien média QR Code pour le communiqué';
+        $message = 'Génération du lien média QR Code pour le concours';
 
         try {
             $result = $this->repository->generateMediaLink($id);
@@ -1065,7 +1068,7 @@ class TestController
      */
     public function participate($id)
     {
-        $message = 'Participation au communiqué';
+        $message = 'Participation au concours';
 
         try {
             $result = $this->repository->participate($id);

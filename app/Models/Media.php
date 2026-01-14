@@ -68,6 +68,12 @@ class Media extends Model
         return $this->hasOne(Organigramme::class, 'media_id');
     }
 
+
+       public function test()
+    {
+        return $this->hasOne(Test::class, 'media_id');
+    }
+
     public function aof()
     {
         return $this->hasOne(AOF::class, 'media_id');

@@ -158,6 +158,13 @@ Route::post('send-contact-form', 'PublicController@sendContactForm');
 
 
 
+ Route::get('/tests/transmission/up/{id}','TestController@up')->name('tests.up');
+ Route::post('/tests/transmission/down/{id}','TestController@down')->name('tests.down');
+ Route::get('/tests/publication/up/{id}','TestController@publish')->name('tests.publish');
+ Route::get('/tests/publication/down/{id}','TestController@unpublish')->name('tests.unpublish');
+ Route::get('/tests/archivied/{id}','TestController@archive')->name('tests.archived');
+ Route::get('/tests/restored/{id}','TestController@restore')->name('tests.restored');
+
 
  Route::get('/communiques/transmission/up/{id}','CommuniqueController@up')->name('communiques.up');
  Route::post('/communiques/transmission/down/{id}','CommuniqueController@down')->name('communiques.down');

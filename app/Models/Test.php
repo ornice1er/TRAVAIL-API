@@ -16,6 +16,9 @@ class Test extends Model
 
     protected $fillable = ['title', 'description', 'media_id', 'communiques','has_principal_access'];
 
+    protected $appends = ['lists'];
+
+
       protected $casts=[
         'communiques'=>'array'
       ];
@@ -24,6 +27,17 @@ class Test extends Model
     {
         return $this->hasMany(TestFile::class, 'test_id');
     }
+
+        public function getListsAttribute()
+        {
+            if (empty($this->communiques)) {
+                return collect();
+            }
+
+            return Communique::with('media')
+                ->whereIn('id', $this->communiques)
+                ->get();
+        }
 
 
      public function media()

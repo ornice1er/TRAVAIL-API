@@ -76,6 +76,7 @@ class TestRepository
         $media->structure_id = Auth::user()->structure_id;
         $media->has_principal_access = $data['has_principal_access'] ?? false;
         $media->type = 'test';
+
         $media->save();
 
         // Génération du slug unique
@@ -86,17 +87,18 @@ class TestRepository
             $slug .= '-' . now()->format('ymdis') . '-' . rand(0, 999);
         }
 
-        // Création du communiqué
+        // Création du concours
         $test = new Test();
         $test->fill($data);
         $test->slug = $slug;
+        $test->communiques=$data['communiques'];
         $test->media_id = $media->id;
         $test->save();
 
         // Parcours
         Parcours::create([
             'media_id' => $media->id,
-            'libelle'  => 'Création du communiqué ' . ($data['title'] ?? '')
+            'libelle'  => 'Création du concours ' . ($data['title'] ?? '')
         ]);
 
         // Transmission
@@ -114,10 +116,11 @@ class TestRepository
      */
    public function makeUpdate(int $mediaId, array $data): Test
     {
+
         // Récupération du média
         $media = Media::findOrFail($mediaId);
 
-        // Récupération du communiqué lié
+        // Récupération du concours lié
         $test = $media->test;
 
         // Mise à jour du média
@@ -126,10 +129,11 @@ class TestRepository
             $media->save();
         }
 
-        // Mise à jour du communiqué
+        // Mise à jour du concours
         $test->fill([
             'title' => $data['title'] ?? $test->title,
             'description' => $data['description'] ?? $test->description,
+            'communiques' => $data['communiques'] ?? $test->communiques,
         ]);
 
         $test->save();
@@ -142,7 +146,9 @@ class TestRepository
      */
     public function makeDestroy($id)
     {
-        return $this->findOrFail($id)->delete();
+        $data=$this->findOrFail($id);
+        $data->media?->delete();
+        return $data->delete();
     }
 
     /**

@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('test_files', function (Blueprint $table) {
-            $table->text('title');
-            $table->string('type');
-            $table->text('filename');
-            $table->foreignId('test_id');
+        Schema::table('tests', function (Blueprint $table) {
+            $table->string('communiques');
         });
     }
 
@@ -24,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('test_files', function (Blueprint $table) {
+        Schema::table('tests', function (Blueprint $table) {
             //
         });
     }

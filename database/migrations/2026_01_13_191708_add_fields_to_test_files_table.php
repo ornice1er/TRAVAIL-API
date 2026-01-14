@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tests', function (Blueprint $table) {
+        Schema::create('test_files', function (Blueprint $table) {
+            $table->id();
             $table->text('title');
-            $table->longText('description');
-            $table->boolean('has_principal_access')->default(true);
-            $table->foreignId('media_id');
+            $table->string('type');
+            $table->text('filename');
+            $table->foreignId('test_id');
+            $table->timestamps();
         });
     }
 
@@ -24,7 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tests', function (Blueprint $table) {
+        Schema::table('test_files', function (Blueprint $table) {
             //
         });
     }

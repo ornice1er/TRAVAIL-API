@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Communique;
+namespace App\Http\Requests\Test;
 
 use App\Utilities\Common;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class StoreCommuniqueRequest extends FormRequest
+class StoreTestRequest extends FormRequest
 {
     public function authorize(): bool
     {

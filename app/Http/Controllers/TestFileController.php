@@ -139,7 +139,7 @@ class TestFileController
      */
     public function show($id)
     {
-        $message = 'Récupération du fichier de communiqué';
+        $message = 'Récupération du fichier de concours';
 
         try {
             $result = $this->repository->get($id);
@@ -193,7 +193,7 @@ class TestFileController
      */
     public function store(StoreTestFileRequest $request)
     {
-        $message = 'Création du fichier de communiqué';
+        $message = 'Création du fichier de concours';
 
         try {
             $result = $this->repository->makeStore($request->all());
@@ -262,7 +262,7 @@ class TestFileController
      */
     public function update(UpdateTestFileRequest $request, $id)
     {
-        $message = 'Mise à jour du fichier de communiqué';
+        $message = 'Mise à jour du fichier de concours';
 
         try {
             $result = $this->repository->makeUpdate($id, $request->all());
@@ -324,7 +324,7 @@ class TestFileController
      */
     public function destroy($id)
     {
-        $message = 'Suppression du fichier de communiqué';
+        $message = 'Suppression du fichier de concours';
 
         try {
             $result = $this->repository->makeDestroy($id);
@@ -400,7 +400,7 @@ class TestFileController
      */
     public function changeState(Request $request, $id)
     {
-        $message = 'Changement de statut du fichier de communiqué';
+        $message = 'Changement de statut du fichier de concours';
 
         try {
             $result = $this->repository->setStatus($id, $request->input('state'));
@@ -462,7 +462,7 @@ class TestFileController
      */
     public function search(Request $request)
     {
-        $message = 'Recherche de fichiers de communiqués';
+        $message = 'Recherche de fichiers de concourss';
 
         try {
             $result = $this->repository->search($request->input('keyword', ''));
@@ -524,7 +524,7 @@ class TestFileController
      */
     public function up($id)
     {
-        $message = 'Déplacement du fichier de communiqué vers le haut';
+        $message = 'Déplacement du fichier de concours vers le haut';
 
         try {
             $result = $this->repository->up($id);
@@ -586,7 +586,7 @@ class TestFileController
      */
     public function down($id)
     {
-        $message = 'Déplacement du fichier de communiqué vers le bas';
+        $message = 'Déplacement du fichier de concours vers le bas';
 
         try {
             $result = $this->repository->down(request(), $id);
@@ -648,7 +648,7 @@ class TestFileController
      */
     public function publish($id)
     {
-        $message = 'Publication du fichier de communiqué';
+        $message = 'Publication du fichier de concours';
 
         try {
             $result = $this->repository->publish($id);
@@ -710,7 +710,7 @@ class TestFileController
      */
     public function unpublish($id)
     {
-        $message = 'Dépublication du fichier de communiqué';
+        $message = 'Dépublication du fichier de concours';
 
         try {
             $result = $this->repository->unpublish($id);
@@ -772,7 +772,7 @@ class TestFileController
      */
     public function archive($id)
     {
-        $message = 'Archivage du fichier de communiqué';
+        $message = 'Archivage du fichier de concours';
 
         try {
             $result = $this->repository->archive($id);
@@ -834,7 +834,7 @@ class TestFileController
      */
     public function restore($id)
     {
-        $message = 'Restauration du fichier de communiqué';
+        $message = 'Restauration du fichier de concours';
 
         try {
             $result = $this->repository->restore($id);
