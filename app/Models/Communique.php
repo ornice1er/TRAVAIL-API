@@ -28,6 +28,15 @@ class Communique extends Model
     }
 
 
+   public function concours()
+    {
+           return Test::with('files')->where('communiques', 'LIKE', '%'.$this->id.'%')->first();
+
+    }
+
+
+    
+
         /**
      * Fonction boot pour générer un code unique avant la création
      */

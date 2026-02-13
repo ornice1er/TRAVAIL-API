@@ -22,6 +22,7 @@ use App\Models\Communique;
 use App\Models\Actualite;
 use Jorenvh\Share\ShareFacade as Share;
 use App\Mail\ContactFormMail;
+use App\Models\Test;
 
 use Redirect,Http;
 
@@ -91,6 +92,9 @@ class PublicController extends Controller
             break;
             case 'communiques':
             return $this->getCommuniquesPage();
+            break;
+              case 'concours':
+            return $this->getConcoursPage();
             break;
             case 'recrutements':
             return $this->getRecrutementPage();
@@ -324,7 +328,29 @@ class PublicController extends Controller
         $links=LiensUtile::all();
        
         $faqs=$this->getFaq();
-                            return Common::success("Données de site récupérées",compact(['actualites','communiques','posters','prestations','links','doc','faqs']));
+
+
+        //   $mediasConcours = Media::with('communique')
+        //             ->where('type', 'communique')
+        //             ->where('is_published', true)
+        //             ->where('is_archived', false)
+        //             ->where('has_principal_access', true)
+        //             ->whereHas('communique', function ($query) {
+        //                 $query->where('category', 'Concours');
+        //             })
+        //             ->orderBy('id', 'desc')
+        //             ->take(3)
+        //             ->get();
+
+        //     $mediasConcours = $mediasConcours->map(function ($media) {
+        //             if ($media->communique) {
+        //                $media->communique->concours = $media->communique->concours();
+        //             }
+        //             return $media;
+        //         });
+
+
+        return Common::success("Données de site récupérées",compact(['actualites','communiques','posters','prestations','links','doc','faqs']));
 
     }
     public function getHomeDGTPage()
@@ -767,6 +793,12 @@ class PublicController extends Controller
     {
 
         $communique=Communique::with('files')->whereSlug($slug)->first();
+        $concours = $communique->concours();
+        if ($concours) {
+            $concours->load('files');
+        }
+
+        $communique->concours = $concours;
 
         $title="COMMUNIQUES";
         $share_path="page/communique/".$slug;
@@ -781,6 +813,28 @@ class PublicController extends Controller
         ->getRawLinks();
 
         return Common::success("Données de site récupérées",compact(['communique','title','shareLinks']));
+
+    }
+
+
+      public function getConcoursPage($slug)
+    {
+
+        $concours=Test::with('files')->whereSlug($slug)->first();
+
+        $title="CONCOURS";
+        $share_path="page/concours/".$slug;
+        $share_title=$concours?->title;
+
+           $shareLinks = Share::page($share_path, $share_title)
+        ->facebook()
+        ->twitter()
+        ->linkedin()
+        ->whatsapp()
+        ->telegram()
+        ->getRawLinks();
+
+        return Common::success("Données de site récupérées",compact(['concours','title','shareLinks']));
 
     }
 
@@ -831,10 +885,18 @@ class PublicController extends Controller
 
                // $communiques=Media::with('communique')->where('type','communique')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->get();
 
-        $categories=["Concours","Activité"];
+        $categories=["Communiqués concours","Autres Communiqué"];
         $communiques=Communique::with('media')->orderBy('id','desc')->paginate($request->pageSize);
         $structures=Structure::all();
         return Common::success("Données de site récupérées",compact(['communiques','categories','structures']));
+
+    }
+
+
+    function getConcours(Request $request) {
+
+        $concours=Test::with('files')->orderBy('id','desc')->paginate($request->pageSize);
+        return Common::success("Données de site récupérées",compact(['concours']));
 
     }
 

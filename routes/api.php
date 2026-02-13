@@ -138,6 +138,7 @@ Route::get('eservices', 'PublicController@index')->name('eservices');
 Route::get('ministre/{category?}', 'PublicController@index')->name('ministre');
 Route::get('public/documents', 'PublicController@getDocuments')->name('document');
 Route::get('public/communiques', 'PublicController@getCommuniques')->name('communiques');
+Route::get('public/concours', 'PublicController@getConcours')->name('concours');
 Route::get('recrutements', 'PublicController@index')->name('recrutements');
 Route::get('opp-stages', 'PublicController@index')->name('stages');
 Route::get('formations', 'PublicController@index')->name('formations');
@@ -147,6 +148,7 @@ Route::get('sanctions', 'PublicController@index')->name('sanctions');
 
 
 Route::get('/page/communiques/{slug}', 'PublicController@getCommuniquePage')->name('page.communique');
+Route::get('/page/concours/{slug}', 'PublicController@getConcoursPage')->name('page.concours');
 Route::get('/page/actualites/{slug}', 'PublicController@getActualitePage')->name('page.actualite');
 Route::get('/page/galleries/{slug}', 'PublicController@index')->name('page.galleries');
 
