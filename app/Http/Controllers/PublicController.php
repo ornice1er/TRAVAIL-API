@@ -997,4 +997,100 @@ class PublicController extends Controller
 
     }
 
+
+    /**
+     * Recherche globale publique sur les actualités, communiqués, concours et documents.
+     * GET public/search?q=...&limit=...
+     */
+    function search(Request $request) {
+
+        $term  = trim((string) $request->q);
+        $limit = (int) ($request->limit ?? 8);
+
+        if (mb_strlen($term) < 2) {
+            return Common::success("Terme de recherche trop court", [
+                'query'   => $term,
+                'total'   => 0,
+                'results' => [],
+            ]);
+        }
+
+        $like = '%' . $term . '%';
+
+        $excerpt = function ($html, $length = 160) {
+            $text = trim(preg_replace('/\s+/', ' ', strip_tags((string) $html)));
+            return mb_strlen($text) > $length ? mb_substr($text, 0, $length) . '…' : $text;
+        };
+
+        $results = collect();
+
+        // Actualités
+        Actualite::where('title', 'like', $like)
+            ->orWhere('description', 'like', $like)
+            ->orWhere('sub_description', 'like', $like)
+            ->orderBy('id', 'desc')->limit($limit)->get()
+            ->each(function ($a) use (&$results, $excerpt) {
+                $results->push([
+                    'type'    => 'actualite',
+                    'label'   => 'Actualité',
+                    'title'   => $a->title,
+                    'excerpt' => $excerpt($a->sub_description ?: $a->description),
+                    'slug'    => $a->slug,
+                    'route'   => '/actualites/' . $a->slug,
+                ]);
+            });
+
+        // Communiqués
+        Communique::where('title', 'like', $like)
+            ->orWhere('description', 'like', $like)
+            ->orderBy('id', 'desc')->limit($limit)->get()
+            ->each(function ($c) use (&$results, $excerpt) {
+                $results->push([
+                    'type'    => 'communique',
+                    'label'   => 'Communiqué',
+                    'title'   => $c->title,
+                    'excerpt' => $excerpt($c->description),
+                    'slug'    => $c->slug,
+                    'route'   => '/communiques/' . $c->slug,
+                ]);
+            });
+
+        // Concours
+        Test::where('title', 'like', $like)
+            ->orWhere('description', 'like', $like)
+            ->orderBy('id', 'desc')->limit($limit)->get()
+            ->each(function ($t) use (&$results, $excerpt) {
+                $results->push([
+                    'type'    => 'concours',
+                    'label'   => 'Concours',
+                    'title'   => $t->title,
+                    'excerpt' => $excerpt($t->description),
+                    'slug'    => $t->slug,
+                    'route'   => '/concours/' . $t->slug,
+                ]);
+            });
+
+        // Documents (textes & lois)
+        Doc::where('name', 'like', $like)
+            ->orWhere('description', 'like', $like)
+            ->orderBy('id', 'desc')->limit($limit)->get()
+            ->each(function ($d) use (&$results, $excerpt) {
+                $results->push([
+                    'type'    => 'document',
+                    'label'   => 'Document',
+                    'title'   => $d->name,
+                    'excerpt' => $excerpt($d->description),
+                    'slug'    => $d->slug,
+                    'route'   => '/textes-lois',
+                    'file'    => $d->filename ? url("docs/{$d->filename}") : null,
+                ]);
+            });
+
+        return Common::success("Résultats de recherche", [
+            'query'   => $term,
+            'total'   => $results->count(),
+            'results' => $results->values(),
+        ]);
+    }
+
 }

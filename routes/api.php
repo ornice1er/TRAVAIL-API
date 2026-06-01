@@ -140,6 +140,7 @@ Route::get('ministre/{category?}', 'PublicController@index')->name('ministre');
 Route::get('public/documents', 'PublicController@getDocuments')->name('document');
 Route::get('public/communiques', 'PublicController@getCommuniques')->name('communiques');
 Route::get('public/concours', 'PublicController@getConcours')->name('concours');
+Route::get('public/search', 'PublicController@search')->name('public.search');
 Route::get('recrutements', 'PublicController@index')->name('recrutements');
 Route::get('opp-stages', 'PublicController@index')->name('stages');
 Route::get('formations', 'PublicController@index')->name('formations');
