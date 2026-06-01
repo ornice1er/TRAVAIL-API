@@ -69,6 +69,9 @@ class PublicController extends Controller
              case 'dgfp':
             return $this->getDGFPPage();
             break;
+            case 'dgb':
+            return $this->getDGBPage();
+            break;
             case 'dsi':
             return $this->getDSIPage();
             break;
@@ -528,6 +531,20 @@ class PublicController extends Controller
 
         $title= $structure?->name;
         $share_path="dgfp";
+        $share_title="Attribution, Organisation et Fonctionnement";
+        return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
+
+    }
+
+     public function getDGBPage()
+    {
+
+        $structure=Structure::with('teams1','teams2')->where('acronym',"DGB")->first();
+        $aof=Media::with('aof')->where('structure_id',$structure?->id)->where('type','aof')->where('is_published',true)->where('is_archived',false)->where('has_principal_access',true)->orderBy('id','desc')->first();
+
+
+        $title= $structure?->name;
+        $share_path="dgb";
         $share_title="Attribution, Organisation et Fonctionnement";
         return Common::success("Données de site récupérées",compact(['structure','title','share_path','share_title','aof']));
 

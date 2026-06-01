@@ -129,6 +129,7 @@ Route::get('dpaf', 'PublicController@index')->name('dpaf');
 Route::get('dsi', 'PublicController@index')->name('dsi');
 Route::get('dgt', 'PublicController@index')->name('dgt');
 Route::get('dgfp', 'PublicController@index')->name('dgfp');
+Route::get('dgb', 'PublicController@index')->name('dgb');
 Route::get('dgrce', 'PublicController@index')->name('dgrce');
 Route::get('csrai', 'PublicController@index')->name('csrai');
 Route::get('dd', 'PublicController@index')->name('dd');
