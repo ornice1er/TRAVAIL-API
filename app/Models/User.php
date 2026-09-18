@@ -109,7 +109,7 @@ class User extends Authenticatable implements JWTSubject
     // Relation avec la structure
     public function structure()
     {
-        return $this->belongsTo(Structures::class, 'structure_id');
+        return $this->belongsTo(Structure::class, 'structure_id');
     }
 
     // Relation avec media (ajouté par l'utilisateur)

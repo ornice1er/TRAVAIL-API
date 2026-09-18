@@ -58,8 +58,10 @@ return [
             'prefix_indexes' => true,
             'strict' => true,
             'engine' => 'innodb',
+            // PDO::MYSQL_ATTR_SSL_CA est dépréciée depuis PHP 8.5 au profit de
+            // Pdo\Mysql::ATTR_SSL_CA, absente avant : on prend celle qui existe.
             'options' => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                (defined('Pdo\Mysql::ATTR_SSL_CA') ? \Pdo\Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\TypeStructures;
+use App\Models\TypeStructure as TypeStructures;
 
 class TypeStructuresRepository
 {

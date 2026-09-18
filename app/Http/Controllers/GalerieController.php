@@ -87,6 +87,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Journal des galeries', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des galeries', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Journal des galeries', 'description' => $th->getMessage()]);
 
@@ -133,10 +135,12 @@ class GalerieController
     public function show($id)
     {
         try {
-            $result = $this->repository->show($id);
+            $result = $this->repository->get($id);
             $this->ls->trace(['action_name' => 'Détail galerie', 'description' => $id]);
 
             return Common::success('Détail galerie', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Détail galerie', 'description' => $th->getMessage()]);
 
@@ -185,6 +189,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Création galerie', 'description' => json_encode($data)]);
 
             return Common::success('Galerie créée avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Création galerie', 'description' => $th->getMessage()]);
 
@@ -245,6 +251,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Modification galerie', 'description' => json_encode($data)]);
 
             return Common::success('Galerie modifiée avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Modification galerie', 'description' => $th->getMessage()]);
 
@@ -295,6 +303,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Suppression galerie', 'description' => $id]);
 
             return Common::success('Galerie supprimée avec succès', []);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Suppression galerie', 'description' => $th->getMessage()]);
 
@@ -356,6 +366,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Changement état galerie', 'description' => json_encode(['id' => $id, 'state' => $request->state])]);
 
             return Common::success('État galerie modifié avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Changement état galerie', 'description' => $th->getMessage()]);
 
@@ -409,6 +421,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Recherche galeries', 'description' => json_encode($request->all())]);
 
             return Common::success('Recherche galeries', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Recherche galeries', 'description' => $th->getMessage()]);
 
@@ -463,6 +477,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Déplacer galerie vers le haut', 'description' => $id]);
 
             return Common::success('Galerie déplacée vers le haut avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Déplacer galerie vers le haut', 'description' => $th->getMessage()]);
 
@@ -517,6 +533,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Déplacer galerie vers le bas', 'description' => $id]);
 
             return Common::success('Galerie déplacée vers le bas avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Déplacer galerie vers le bas', 'description' => $th->getMessage()]);
 
@@ -571,6 +589,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Publication galerie', 'description' => $id]);
 
             return Common::success('Galerie publiée avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Publication galerie', 'description' => $th->getMessage()]);
 
@@ -625,6 +645,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Dépublication galerie', 'description' => $id]);
 
             return Common::success('Galerie dépubliée avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Dépublication galerie', 'description' => $th->getMessage()]);
 
@@ -679,6 +701,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Archivage galerie', 'description' => $id]);
 
             return Common::success('Galerie archivée avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Archivage galerie', 'description' => $th->getMessage()]);
 
@@ -733,6 +757,8 @@ class GalerieController
             $this->ls->trace(['action_name' => 'Restauration galerie', 'description' => $id]);
 
             return Common::success('Galerie restaurée avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Restauration galerie', 'description' => $th->getMessage()]);
 

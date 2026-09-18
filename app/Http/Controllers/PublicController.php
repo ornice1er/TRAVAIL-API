@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Route,Response,Storage,Mail;
-use App\Models\Maps;
+use App\Models\Map;
 use App\Models\Media;
 use App\Models\Poster;
 use App\Models\Prestation;
 use App\Models\LiensUtile;
-use App\Models\Galeries;
+use App\Models\Galerie;
 use App\Models\StructureSousTutelle;
 use App\Models\TypeStructure;
 use App\Models\Structure;
@@ -24,7 +24,7 @@ use Jorenvh\Share\ShareFacade as Share;
 use App\Mail\ContactFormMail;
 use App\Models\Test;
 
-use Redirect,Http;
+use Redirect,Http,Log;
 
 
 class PublicController extends Controller
@@ -86,10 +86,6 @@ class PublicController extends Controller
             case 'dd':
             return $this->getDDPage();
             break;
-            case 'aof.igsep':
-            return $this->getAofIgsepPage();
-            break;
-            
             case 'ministre':
             return $this->getMinistrePage($category);
             break;
@@ -116,9 +112,6 @@ class PublicController extends Controller
             break;
             case 'document':
             return $this->getDocumentPage($category);
-            break;
-            case 'sanctions':
-            return $this->getSanctionPage();
             break;
             case 'reformes':
             return $this->getReformesPage();
@@ -167,7 +160,7 @@ class PublicController extends Controller
 
     public function getContactPage()
     {
-        $maps=Maps::all();
+        $maps=Map::all();
         $title="CONTACTS";
         $share_path="contact";
         $share_title="Contactez nous";
@@ -246,7 +239,7 @@ class PublicController extends Controller
 
     public function getAnciensPage()
     {
-        $galeries=Galeries::all();
+        $galeries=Galerie::all();
         $title="ANCIENS MINISTRES";
         $share_path="anciens";
         $share_title="Découvrez ici nos anciens ministres ";
@@ -755,11 +748,19 @@ class PublicController extends Controller
         $share_title="";
         $title="Suivi des réformes";
 
-        $response = Http::get(env('URI').'/api/reformes/public/suivi-result');
-        if ($response->status()>="200" &&  $response->status()<"300") {
-            $reformes=json_decode($response->body())->data;
+        $baseUrl = config('services.reformes.url');
 
+        if ($baseUrl) {
+            try {
+                $response = Http::timeout(5)->get(rtrim($baseUrl, '/').'/api/reformes/public/suivi-result');
 
+                if ($response->successful()) {
+                    $reformes = json_decode($response->body())->data ?? [];
+                }
+            } catch (\Throwable $e) {
+                // La plateforme eReformes est injoignable : on sert la page sans les indicateurs.
+                Log::warning('Suivi des réformes indisponible : '.$e->getMessage());
+            }
         }
        // dd($response->status(), $response->body());
        

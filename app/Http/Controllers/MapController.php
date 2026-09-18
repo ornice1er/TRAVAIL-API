@@ -132,7 +132,7 @@ class MapController
     public function show($id)
     {
         try {
-            $result = $this->repository->show($id);
+            $result = $this->repository->get($id);
             $this->ls->trace(['action_name' => 'Détail map', 'description' => $id]);
 
             return Common::success('Détail map', $result);

@@ -86,6 +86,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Journal des medias', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des medias', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Journal des medias', 'description' => $th->getMessage()]);
 
@@ -102,6 +104,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Journal des medias', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des medias', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Journal des medias', 'description' => $th->getMessage()]);
 
@@ -148,10 +152,12 @@ class MediaController
     public function show($id)
     {
         try {
-            $result = $this->repository->show($id);
+            $result = $this->repository->get($id);
             $this->ls->trace(['action_name' => 'Détail media', 'description' => $id]);
 
             return Common::success('Détail media', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Détail media', 'description' => $th->getMessage()]);
 
@@ -200,6 +206,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Création media', 'description' => json_encode($data)]);
 
             return Common::success('Media créé avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Création media', 'description' => $th->getMessage()]);
 
@@ -260,6 +268,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Modification media', 'description' => json_encode($data)]);
 
             return Common::success('Media modifié avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Modification media', 'description' => $th->getMessage()]);
 
@@ -310,6 +320,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Suppression media', 'description' => $id]);
 
             return Common::success('Media supprimé avec succès', []);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Suppression media', 'description' => $th->getMessage()]);
 
@@ -371,6 +383,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Changement état media', 'description' => json_encode(['id' => $id, 'state' => $request->state])]);
 
             return Common::success('État media modifié avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Changement état media', 'description' => $th->getMessage()]);
 
@@ -424,6 +438,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Recherche medias', 'description' => json_encode($request->all())]);
 
             return Common::success('Recherche medias', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Recherche medias', 'description' => $th->getMessage()]);
 
@@ -478,6 +494,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Déplacer media vers le haut', 'description' => $id]);
 
             return Common::success('Media déplacé vers le haut avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Déplacer media vers le haut', 'description' => $th->getMessage()]);
 
@@ -532,6 +550,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Déplacer media vers le bas', 'description' => $id]);
 
             return Common::success('Media déplacé vers le bas avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Déplacer media vers le bas', 'description' => $th->getMessage()]);
 
@@ -586,6 +606,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Publication media', 'description' => $id]);
 
             return Common::success('Media publié avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Publication media', 'description' => $th->getMessage()]);
 
@@ -640,6 +662,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Dépublication media', 'description' => $id]);
 
             return Common::success('Media dépublié avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Dépublication media', 'description' => $th->getMessage()]);
 
@@ -694,6 +718,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Archivage media', 'description' => $id]);
 
             return Common::success('Media archivé avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Archivage media', 'description' => $th->getMessage()]);
 
@@ -748,6 +774,8 @@ class MediaController
             $this->ls->trace(['action_name' => 'Restauration media', 'description' => $id]);
 
             return Common::success('Media restauré avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Restauration media', 'description' => $th->getMessage()]);
 

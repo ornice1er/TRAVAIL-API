@@ -107,7 +107,7 @@ class PosterController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Poster récupéré avec succès']);
-            return Common::success($poster, 'Poster récupéré avec succès');
+            return Common::success('Poster récupéré avec succès', $poster);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération du poster', []);
@@ -247,7 +247,7 @@ class PosterController
             $result = $this->repository->delete($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Poster supprimé avec succès']);
-            return Common::success($result, 'Poster supprimé avec succès');
+            return Common::success('Poster supprimé avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la suppression du poster', []);

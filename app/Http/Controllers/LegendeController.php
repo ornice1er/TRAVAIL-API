@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\legendeRepository;
+use App\Http\Repositories\LegendeRepository;
 use App\Utilities\Common;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
@@ -16,7 +16,7 @@ class LegendeController
      */
     protected $legendeRepository;
 
-    public function __construct(legendeRepository $legendeRepository)
+    public function __construct(LegendeRepository $legendeRepository)
     {
         $this->legendeRepository = $legendeRepository;
     }

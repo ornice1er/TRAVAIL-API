@@ -14,6 +14,11 @@ return [
     |
     */
 
+    // Plateforme eReformes : alimente la page « Suivi des réformes ».
+    'reformes' => [
+        'url' => env('REFORMES_API_URL', env('URI')),
+    ],
+
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

@@ -2,6 +2,7 @@
 
 namespace App\Http\Repositories;
 
+use App\Models\LiensUtile as Link;
 use App\Models\LiensUtile;
 use App\Models\Invite;
 use App\Traits\Repository;

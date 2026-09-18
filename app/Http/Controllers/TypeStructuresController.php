@@ -66,7 +66,7 @@ class TypeStructuresController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Types de structures récupérés avec succès']);
-            return Common::success($TypeStructures, 'Types de structures récupérés avec succès');
+            return Common::success('Types de structures récupérés avec succès', $TypeStructures);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des types de structures', []);
@@ -98,7 +98,7 @@ class TypeStructuresController
             $hierarchy = $this->repository->getWithChildren();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Hiérarchie récupérée avec succès']);
-            return Common::success($hierarchy, 'Hiérarchie des types de structures récupérée avec succès');
+            return Common::success('Hiérarchie des types de structures récupérée avec succès', $hierarchy);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération de la hiérarchie', []);
@@ -130,7 +130,7 @@ class TypeStructuresController
             $parents = $this->repository->getParentTypes();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Types parents récupérés avec succès']);
-            return Common::success($parents, 'Types de structures parents récupérés avec succès');
+            return Common::success('Types de structures parents récupérés avec succès', $parents);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des types parents', []);
@@ -174,7 +174,7 @@ class TypeStructuresController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Type de structure récupéré avec succès']);
-            return Common::success($typeStructure, 'Type de structure récupéré avec succès');
+            return Common::success('Type de structure récupéré avec succès', $typeStructure);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération du type de structure', []);
@@ -227,7 +227,7 @@ class TypeStructuresController
             $typeStructure = $this->repository->create($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Type de structure créé avec succès']);
-            return Common::success($typeStructure, 'Type de structure créé avec succès');
+            return Common::success('Type de structure créé avec succès', $typeStructure);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la création du type de structure', []);
@@ -292,7 +292,7 @@ class TypeStructuresController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Type de structure mis à jour avec succès']);
-            return Common::success($result, 'Type de structure mis à jour avec succès');
+            return Common::success('Type de structure mis à jour avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la mise à jour du type de structure', []);
@@ -341,7 +341,7 @@ class TypeStructuresController
             $result = $this->repository->delete($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Type de structure supprimé avec succès']);
-            return Common::success($result, 'Type de structure supprimé avec succès');
+            return Common::success('Type de structure supprimé avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la suppression du type de structure', []);
@@ -380,7 +380,7 @@ class TypeStructuresController
             $children = $this->repository->getChildrenByParent($parentId);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Types enfants récupérés avec succès']);
-            return Common::success($children, 'Types enfants récupérés avec succès');
+            return Common::success('Types enfants récupérés avec succès', $children);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des types enfants', []);
@@ -415,7 +415,7 @@ class TypeStructuresController
             $types = $this->repository->getForDropdown();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Types pour dropdown récupérés avec succès']);
-            return Common::success($types, 'Types de structures récupérés avec succès');
+            return Common::success('Types de structures récupérés avec succès', $types);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des types', []);

@@ -102,7 +102,7 @@ class StructureController
             $types = $this->repository->getAllTypeStructures();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Types de structures récupérés avec succès']);
-            return Common::success($types, 'Types de structures récupérés avec succès');
+            return Common::success('Types de structures récupérés avec succès', $types);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des types de structures', []);
@@ -146,7 +146,7 @@ class StructureController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structure récupérée avec succès']);
-            return Common::success($structure, 'Structure récupérée avec succès');
+            return Common::success('Structure récupérée avec succès', $structure);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération de la structure', []);
@@ -229,7 +229,7 @@ class StructureController
             $structure = $this->repository->createWithFiles($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structure créée avec succès']);
-            return Common::success($structure, 'Structure créée avec succès');
+            return Common::success('Structure créée avec succès', $structure);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la création de la structure', []);
@@ -316,7 +316,7 @@ class StructureController
             $result = $this->repository->updateWithFiles($id, $data, $files);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structure mise à jour avec succès']);
-            return Common::success($result, 'Structure mise à jour avec succès');
+            return Common::success('Structure mise à jour avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la mise à jour de la structure', []);
@@ -365,7 +365,7 @@ class StructureController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structure supprimée avec succès']);
-            return Common::success($result, 'Structure supprimée avec succès');
+            return Common::success('Structure supprimée avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la suppression de la structure', []);
@@ -402,7 +402,7 @@ class StructureController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Biographie du ministre récupérée avec succès']);
-            return Common::success($structure, 'Biographie du ministre récupérée avec succès');
+            return Common::success('Biographie du ministre récupérée avec succès', $structure);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération de la biographie du ministre', []);
@@ -441,7 +441,7 @@ class StructureController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Informations de structure récupérées avec succès']);
-            return Common::success($structure, 'Informations de structure récupérées avec succès');
+            return Common::success('Informations de structure récupérées avec succès', $structure);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des informations de structure', []);
@@ -492,7 +492,7 @@ class StructureController
             $result = $this->repository->updateBiographie($id, $request->biographie_responsable);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Biographie mise à jour avec succès']);
-            return Common::success($result, 'Biographie mise à jour avec succès');
+            return Common::success('Biographie mise à jour avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la mise à jour de la biographie', []);

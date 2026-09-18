@@ -141,7 +141,7 @@ class CategoryController extends Controller
         $message = 'Récupération de la catégorie';
 
         try {
-            $result = $this->categoryRepository->getById($id);
+            $result = $this->categoryRepository->get($id);
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);

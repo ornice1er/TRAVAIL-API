@@ -86,6 +86,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Journal des mots', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des mots', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Journal des mots', 'description' => $th->getMessage()]);
 
@@ -132,10 +134,12 @@ class MotController
     public function show($id)
     {
         try {
-            $result = $this->repository->show($id);
+            $result = $this->repository->get($id);
             $this->ls->trace(['action_name' => 'Détail mot', 'description' => $id]);
 
             return Common::success('Détail mot', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Détail mot', 'description' => $th->getMessage()]);
 
@@ -184,6 +188,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Création mot', 'description' => json_encode($data)]);
 
             return Common::success('Mot créé avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Création mot', 'description' => $th->getMessage()]);
 
@@ -244,6 +250,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Modification mot', 'description' => json_encode($data)]);
 
             return Common::success('Mot modifié avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Modification mot', 'description' => $th->getMessage()]);
 
@@ -294,6 +302,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Suppression mot', 'description' => $id]);
 
             return Common::success('Mot supprimé avec succès', []);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Suppression mot', 'description' => $th->getMessage()]);
 
@@ -355,6 +365,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Changement état mot', 'description' => json_encode(['id' => $id, 'state' => $request->state])]);
 
             return Common::success('État mot modifié avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Changement état mot', 'description' => $th->getMessage()]);
 
@@ -408,6 +420,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Recherche mots', 'description' => json_encode($request->all())]);
 
             return Common::success('Recherche mots', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Recherche mots', 'description' => $th->getMessage()]);
 
@@ -462,6 +476,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Déplacer mot vers le haut', 'description' => $id]);
 
             return Common::success('Mot déplacé vers le haut avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Déplacer mot vers le haut', 'description' => $th->getMessage()]);
 
@@ -516,6 +532,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Déplacer mot vers le bas', 'description' => $id]);
 
             return Common::success('Mot déplacé vers le bas avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Déplacer mot vers le bas', 'description' => $th->getMessage()]);
 
@@ -570,6 +588,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Publication mot', 'description' => $id]);
 
             return Common::success('Mot publié avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Publication mot', 'description' => $th->getMessage()]);
 
@@ -624,6 +644,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Dépublication mot', 'description' => $id]);
 
             return Common::success('Mot dépublié avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Dépublication mot', 'description' => $th->getMessage()]);
 
@@ -678,6 +700,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Archivage mot', 'description' => $id]);
 
             return Common::success('Mot archivé avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Archivage mot', 'description' => $th->getMessage()]);
 
@@ -732,6 +756,8 @@ class MotController
             $this->ls->trace(['action_name' => 'Restauration mot', 'description' => $id]);
 
             return Common::success('Mot restauré avec succès', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Restauration mot', 'description' => $th->getMessage()]);
 

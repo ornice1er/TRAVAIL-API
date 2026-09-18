@@ -3,7 +3,7 @@
 namespace App\Http\Repositories;
 
 use QrCode;
-use App\Models\Aof;
+use App\Models\AOF as Aof;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\Invite;

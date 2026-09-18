@@ -86,7 +86,7 @@ class NotificationController
             $notifications = $this->repository->all();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Notifications récupérées avec succès']);
-            return Common::success($notifications, 'Notifications récupérées avec succès');
+            return Common::success('Notifications récupérées avec succès', $notifications);
         // } catch (\Exception $e) {
         //     $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
         //     return Common::error('Erreur lors de la récupération des notifications', []);
@@ -129,11 +129,11 @@ class NotificationController
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
-                return Common::error('Notification non trouvée', []);
+                return Common::notFound();
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => "Notification récupérée avec succès pour ID: $id"]);
-            return Common::success($notification, 'Notification récupérée avec succès');
+            return Common::success('Notification récupérée avec succès', $notification);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération de la notification', []);
@@ -180,7 +180,7 @@ class NotificationController
             $notification = $this->repository->create($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Notification créée avec succès avec ID: ' . $notification->id]);
-            return Common::success($notification, 'Notification créée avec succès');
+            return Common::success('Notification créée avec succès', $notification);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la création de la notification', []);
@@ -235,14 +235,14 @@ class NotificationController
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée pour mise à jour avec ID: $id"]);
-                return Common::error('Notification non trouvée', []);
+                return Common::notFound();
             }
             
             $data = $request->validated();
             $updatedNotification = $this->repository->update($id, $data);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Notification mise à jour avec succès pour ID: $id"]);
-            return Common::success($updatedNotification, 'Notification mise à jour avec succès');
+            return Common::success('Notification mise à jour avec succès', $updatedNotification);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la mise à jour de la notification', []);
@@ -284,7 +284,7 @@ class NotificationController
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée pour suppression avec ID: $id"]);
-                return Common::error('Notification non trouvée', []);
+                return Common::notFound();
             }
             
             $this->repository->delete($id);
@@ -333,13 +333,13 @@ class NotificationController
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
-                return Common::error('Notification non trouvée', []);
+                return Common::notFound();
             }
             
             $updatedNotification = $this->repository->update($id, ['lu_à' => now()]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Notification marquée comme lue pour ID: $id"]);
-            return Common::success($updatedNotification, 'Notification marquée comme lue avec succès');
+            return Common::success('Notification marquée comme lue avec succès', $updatedNotification);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors du marquage de la notification', []);
@@ -381,7 +381,7 @@ class NotificationController
             $results = $this->repository->search($query);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Recherche effectuée avec le terme: $query"]);
-            return Common::success($results, 'Résultats de recherche obtenus avec succès');
+            return Common::success('Résultats de recherche obtenus avec succès', $results);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la recherche', []);
@@ -424,12 +424,12 @@ class NotificationController
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
-                return Common::error('Notification non trouvée', []);
+                return Common::notFound();
             }
             
             // Logique de remontée de position ici si nécessaire
             $this->ls->trace(['action_name' => $message, 'description' => "Position remontée avec succès pour ID: $id"]);
-            return Common::success($notification, 'Position remontée avec succès');
+            return Common::success('Position remontée avec succès', $notification);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la remontée de position', []);
@@ -472,12 +472,12 @@ class NotificationController
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
-                return Common::error('Notification non trouvée', []);
+                return Common::notFound();
             }
             
             // Logique de descente de position ici si nécessaire
             $this->ls->trace(['action_name' => $message, 'description' => "Position descendue avec succès pour ID: $id"]);
-            return Common::success($notification, 'Position descendue avec succès');
+            return Common::success('Position descendue avec succès', $notification);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la descente de position', []);
@@ -520,13 +520,13 @@ class NotificationController
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
-                return Common::error('Notification non trouvée', []);
+                return Common::notFound();
             }
             
             $updatedNotification = $this->repository->update($id, ['is_active' => true]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Notification activée avec succès pour ID: $id"]);
-            return Common::success($updatedNotification, 'Notification activée avec succès');
+            return Common::success('Notification activée avec succès', $updatedNotification);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de l\'activation de la notification', []);
@@ -569,13 +569,13 @@ class NotificationController
             
             if (!$notification) {
                 $this->ls->trace(['action_name' => $message, 'description' => "Notification non trouvée avec ID: $id"]);
-                return Common::error('Notification non trouvée', []);
+                return Common::notFound();
             }
             
             $updatedNotification = $this->repository->update($id, ['is_active' => false]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Notification désactivée avec succès pour ID: $id"]);
-            return Common::success($updatedNotification, 'Notification désactivée avec succès');
+            return Common::success('Notification désactivée avec succès', $updatedNotification);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la désactivation de la notification', []);
@@ -609,7 +609,7 @@ class NotificationController
             $notifications = $this->repository->getUnread();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Notifications non lues récupérées avec succès']);
-            return Common::success($notifications, 'Notifications non lues récupérées avec succès');
+            return Common::success('Notifications non lues récupérées avec succès', $notifications);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des notifications non lues', []);
@@ -676,7 +676,7 @@ class NotificationController
             $notifications = \App\Models\Notification::where("sent_to", auth()->id())->get();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Notifications utilisateur récupérées avec succès']);
-            return Common::success($notifications, 'Notifications récupérées avec succès');
+            return Common::success('Notifications récupérées avec succès', $notifications);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des notifications', []);
@@ -726,7 +726,7 @@ class NotificationController
                 $this->ls->trace(['action_name' => $message, 'description' => 'Notification marquée comme lue avec succès']);
                 return Common::success(['actionURL' => $actionURL], 'Notification marquée comme lue');
             } else {
-                return Common::error('Notification non trouvée', []);
+                return Common::notFound();
             }
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
@@ -778,7 +778,7 @@ class NotificationController
                     return Common::error('Erreur lors de la suppression', []);
                 }
             } else {
-                return Common::error('Notification non trouvée', []);
+                return Common::notFound();
             }
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);

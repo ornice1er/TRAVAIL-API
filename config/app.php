@@ -57,6 +57,18 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | URL du site public
+    |--------------------------------------------------------------------------
+    |
+    | Adresse de l'application Angular. Sert notamment à construire le plan du
+    | site (sitemap.xml), dont les URL doivent pointer vers le site public.
+    |
+    */
+
+    'front_url' => env('APP_FRONT_URL', env('APP_URL', 'http://localhost')),
+
     'asset_url' => env('ASSET_URL'),
 
     /*

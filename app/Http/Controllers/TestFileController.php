@@ -84,6 +84,8 @@ class TestFileController
             $this->ls->trace(['action_name' => 'Journal des testFiles', 'description' => json_encode($request->all())]);
 
             return Common::success('Journal des testFiles', $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => 'Journal des testFiles', 'description' => $th->getMessage()]);
 
@@ -146,6 +148,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -200,6 +204,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all())]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -269,6 +275,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => json_encode($request->all()) . ' - ID: ' . $id]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -331,6 +339,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -407,6 +417,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id . ' - State: ' . $request->input('state')]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -469,6 +481,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => 'Keyword: ' . $request->input('keyword', '')]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -531,6 +545,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -593,6 +609,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -655,6 +673,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -717,6 +737,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -779,6 +801,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 
@@ -841,6 +865,8 @@ class TestFileController
             $this->ls->trace(['action_name' => $message, 'description' => 'ID: ' . $id]);
 
             return Common::success($message, $result);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return Common::notFound();
         } catch (\Throwable $th) {
             $this->ls->trace(['action_name' => $message, 'description' => $th->getMessage()]);
 

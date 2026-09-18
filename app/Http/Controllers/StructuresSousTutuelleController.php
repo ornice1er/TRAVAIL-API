@@ -69,7 +69,7 @@ class StructuresSousTutuelleController
             $structuresSousTutelle = $this->repository->getAll($request);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structures sous tutelle récupérées avec succès']);
-            return Common::success($structuresSousTutelle, 'Structures sous tutelle récupérées avec succès');
+            return Common::success('Structures sous tutelle récupérées avec succès', $structuresSousTutelle);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des structures sous tutelle', []);
@@ -101,7 +101,7 @@ class StructuresSousTutuelleController
             $structures = $this->repository->getAllStructures();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structures parentes récupérées avec succès']);
-            return Common::success($structures, 'Structures parentes récupérées avec succès');
+            return Common::success('Structures parentes récupérées avec succès', $structures);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des structures parentes', []);
@@ -145,7 +145,7 @@ class StructuresSousTutuelleController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structure sous tutelle récupérée avec succès']);
-            return Common::success($structureSousTutelle, 'Structure sous tutelle récupérée avec succès');
+            return Common::success('Structure sous tutelle récupérée avec succès', $structureSousTutelle);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération de la structure sous tutelle', []);
@@ -207,7 +207,7 @@ class StructuresSousTutuelleController
             $structureSousTutuelle = $this->repository->createWithLogo($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structure sous tutelle créée avec succès']);
-            return Common::success($structureSousTutuelle, 'Structure sous tutelle créée avec succès');
+            return Common::success('Structure sous tutelle créée avec succès', $structureSousTutuelle);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la création de la structure sous tutelle', []);
@@ -277,7 +277,7 @@ class StructuresSousTutuelleController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structure sous tutelle mise à jour avec succès']);
-            return Common::success($result, 'Structure sous tutelle mise à jour avec succès');
+            return Common::success('Structure sous tutelle mise à jour avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la mise à jour de la structure sous tutelle', []);
@@ -321,7 +321,7 @@ class StructuresSousTutuelleController
             $result = $this->repository->delete($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structure sous tutelle supprimée avec succès']);
-            return Common::success($result, 'Structure sous tutelle supprimée avec succès');
+            return Common::success('Structure sous tutelle supprimée avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la suppression de la structure sous tutelle', []);
@@ -360,7 +360,7 @@ class StructuresSousTutuelleController
             $structuresSousTutelle = $this->repository->getByStructure($structureId);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structures sous tutelle récupérées avec succès']);
-            return Common::success($structuresSousTutelle, 'Structures sous tutelle récupérées avec succès');
+            return Common::success('Structures sous tutelle récupérées avec succès', $structuresSousTutelle);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des structures sous tutelle', []);

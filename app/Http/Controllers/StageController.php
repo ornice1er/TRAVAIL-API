@@ -77,7 +77,7 @@ class StageController
             $stages = $this->repository->getAll($request);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stages récupérés avec succès']);
-            return Common::success($stages, 'Stages récupérés avec succès');
+            return Common::success('Stages récupérés avec succès', $stages);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des stages', []);
@@ -116,7 +116,7 @@ class StageController
             $medias = $this->repository->getByRoleAndStructure($structureId, $role, $userId);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stages récupérés par rôle avec succès']);
-            return Common::success($medias, 'Stages récupérés avec succès');
+            return Common::success('Stages récupérés avec succès', $medias);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des stages', []);
@@ -160,7 +160,7 @@ class StageController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stage récupéré avec succès']);
-            return Common::success($stage, 'Stage récupéré avec succès');
+            return Common::success('Stage récupéré avec succès', $stage);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération du stage', []);
@@ -213,7 +213,7 @@ class StageController
             $stage = $this->repository->createWithWorkflow($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stage créé avec workflow avec succès']);
-            return Common::success($stage, 'Stage créé avec succès');
+            return Common::success('Stage créé avec succès', $stage);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la création du stage', []);
@@ -279,7 +279,7 @@ class StageController
             $result = $this->repository->updateWithDates($id, $data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stage mis à jour avec succès']);
-            return Common::success($result, 'Stage mis à jour avec succès');
+            return Common::success('Stage mis à jour avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la mise à jour du stage', []);
@@ -323,7 +323,7 @@ class StageController
             $result = $this->repository->delete($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stage supprimé avec succès']);
-            return Common::success($result, 'Stage supprimé avec succès');
+            return Common::success('Stage supprimé avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la suppression du stage', []);
@@ -364,7 +364,7 @@ class StageController
             $result = $this->repository->moveUp($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stage remonté avec succès']);
-            return Common::success($result, 'Stage remonté avec succès');
+            return Common::success('Stage remonté avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la remontée du stage', []);
@@ -412,7 +412,7 @@ class StageController
             $result = $this->repository->moveDown($id, $motif);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stage redescendu avec succès']);
-            return Common::success($result, 'Stage redescendu avec succès');
+            return Common::success('Stage redescendu avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la redescente du stage', []);
@@ -453,7 +453,7 @@ class StageController
             $result = $this->repository->publish($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stage publié avec succès']);
-            return Common::success($result, 'Stage publié avec succès');
+            return Common::success('Stage publié avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la publication du stage', []);
@@ -494,7 +494,7 @@ class StageController
             $result = $this->repository->unpublish($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stage dépublié avec succès']);
-            return Common::success($result, 'Stage dépublié avec succès');
+            return Common::success('Stage dépublié avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la dépublication du stage', []);
@@ -535,7 +535,7 @@ class StageController
             $result = $this->repository->archive($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stage archivé avec succès']);
-            return Common::success($result, 'Stage archivé avec succès');
+            return Common::success('Stage archivé avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de l\'archivage du stage', []);
@@ -576,7 +576,7 @@ class StageController
             $result = $this->repository->restore($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Stage restauré avec succès']);
-            return Common::success($result, 'Stage restauré avec succès');
+            return Common::success('Stage restauré avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la restauration du stage', []);

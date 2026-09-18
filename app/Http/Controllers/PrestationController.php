@@ -63,7 +63,7 @@ class PrestationController
             $prestations = $this->repository->getAll($request);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestations récupérées avec succès']);
-            return Common::success($prestations, 'Prestations récupérées avec succès');
+            return Common::success('Prestations récupérées avec succès', $prestations);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des prestations', []);
@@ -102,7 +102,7 @@ class PrestationController
             $medias = $this->repository->getByRoleAndStructure($structureId, $role, $userId);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestations récupérées par rôle avec succès']);
-            return Common::success($medias, 'Prestations récupérées avec succès');
+            return Common::success('Prestations récupérées avec succès', $medias);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des prestations', []);
@@ -146,7 +146,7 @@ class PrestationController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestation récupérée avec succès']);
-            return Common::success($prestation, 'Prestation récupérée avec succès');
+            return Common::success('Prestation récupérée avec succès', $prestation);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération de la prestation', []);
@@ -205,7 +205,7 @@ class PrestationController
             $prestation = $this->repository->createWithWorkflow($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestation créée avec workflow avec succès']);
-            return Common::success($prestation, 'Prestation créée avec succès');
+            return Common::success('Prestation créée avec succès', $prestation);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la création de la prestation', []);
@@ -270,7 +270,7 @@ class PrestationController
             $result = $this->repository->updateWithFile($id, $data, $file);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestation mise à jour avec succès']);
-            return Common::success($result, 'Prestation mise à jour avec succès');
+            return Common::success('Prestation mise à jour avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la mise à jour de la prestation', []);
@@ -314,7 +314,7 @@ class PrestationController
             $result = $this->repository->delete($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestation supprimée avec succès']);
-            return Common::success($result, 'Prestation supprimée avec succès');
+            return Common::success('Prestation supprimée avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la suppression de la prestation', []);
@@ -355,7 +355,7 @@ class PrestationController
             $result = $this->repository->moveUp($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestation remontée avec succès']);
-            return Common::success($result, 'Prestation remontée avec succès');
+            return Common::success('Prestation remontée avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la remontée de la prestation', []);
@@ -403,7 +403,7 @@ class PrestationController
             $result = $this->repository->moveDown($id, $motif);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestation redescendue avec succès']);
-            return Common::success($result, 'Prestation redescendue avec succès');
+            return Common::success('Prestation redescendue avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la redescente de la prestation', []);
@@ -444,7 +444,7 @@ class PrestationController
             $result = $this->repository->publish($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestation publiée avec succès']);
-            return Common::success($result, 'Prestation publiée avec succès');
+            return Common::success('Prestation publiée avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la publication de la prestation', []);
@@ -485,7 +485,7 @@ class PrestationController
             $result = $this->repository->unpublish($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestation dépubliée avec succès']);
-            return Common::success($result, 'Prestation dépubliée avec succès');
+            return Common::success('Prestation dépubliée avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la dépublication de la prestation', []);
@@ -526,7 +526,7 @@ class PrestationController
             $result = $this->repository->archive($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestation archivée avec succès']);
-            return Common::success($result, 'Prestation archivée avec succès');
+            return Common::success('Prestation archivée avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de l\'archivage de la prestation', []);
@@ -567,7 +567,7 @@ class PrestationController
             $result = $this->repository->restore($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Prestation restaurée avec succès']);
-            return Common::success($result, 'Prestation restaurée avec succès');
+            return Common::success('Prestation restaurée avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la restauration de la prestation', []);

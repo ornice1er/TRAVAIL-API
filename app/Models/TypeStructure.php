@@ -24,4 +24,12 @@ class TypeStructure extends Model
     {
         return $this->hasMany(Structure::class, 'type_structure_id');
     }
+
+    /**
+     * Liste des types de structures, triés par libellé.
+     */
+    public static function getAllTypes()
+    {
+        return static::query()->orderBy('title')->get();
+    }
 }

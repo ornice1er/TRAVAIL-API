@@ -32,6 +32,6 @@ class Organigramme extends Model
      */
     public function legendes()
     {
-        return $this->hasMany(Legendes::class, 'organigramme_id');
+        return $this->hasMany(Legende::class, 'organigramme_id');
     }
 }

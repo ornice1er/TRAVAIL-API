@@ -63,7 +63,7 @@ class PageController
             $files = $this->repository->getGalleryFiles($type);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Fichiers de galerie récupérés avec succès']);
-            return Common::success($files, 'Fichiers de galerie récupérés avec succès');
+            return Common::success('Fichiers de galerie récupérés avec succès', $files);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des fichiers de galerie', []);
@@ -107,7 +107,7 @@ class PageController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Communiqué récupéré avec succès']);
-            return Common::success($communique, 'Communiqué récupéré avec succès');
+            return Common::success('Communiqué récupéré avec succès', $communique);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération du communiqué', []);
@@ -151,7 +151,7 @@ class PageController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Actualité récupérée avec succès']);
-            return Common::success($actualite, 'Actualité récupérée avec succès');
+            return Common::success('Actualité récupérée avec succès', $actualite);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération de l\'actualité', []);
@@ -184,7 +184,7 @@ class PageController
             $word = $this->repository->getMinistreWord();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Mot du ministre récupéré avec succès']);
-            return Common::success($word, 'Mot du ministre récupéré avec succès');
+            return Common::success('Mot du ministre récupéré avec succès', $word);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération du mot du ministre', []);
@@ -216,7 +216,7 @@ class PageController
             $communiques = $this->repository->getLastCommuniques();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Derniers communiqués récupérés avec succès']);
-            return Common::success($communiques, 'Derniers communiqués récupérés avec succès');
+            return Common::success('Derniers communiqués récupérés avec succès', $communiques);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des derniers communiqués', []);

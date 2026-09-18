@@ -109,7 +109,7 @@ class TeamController
             $structures = $this->repository->getAllStructures();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Structures récupérées avec succès']);
-            return Common::success($structures, 'Structures récupérées avec succès');
+            return Common::success('Structures récupérées avec succès', $structures);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des structures', []);
@@ -153,7 +153,7 @@ class TeamController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Membre de l\'équipe récupéré avec succès']);
-            return Common::success($team, 'Membre de l\'équipe récupéré avec succès');
+            return Common::success('Membre de l\'équipe récupéré avec succès', $team);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération du membre de l\'équipe', []);
@@ -324,7 +324,7 @@ class TeamController
             $result = $this->repository->delete($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Membre d\'équipe supprimé avec succès']);
-            return Common::success($result, 'Membre de l\'équipe supprimé avec succès');
+            return Common::success('Membre de l\'équipe supprimé avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la suppression du membre de l\'équipe', []);
@@ -363,7 +363,7 @@ class TeamController
             $teams = $this->repository->getByStructure($structureId);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Membres de l\'équipe récupérés avec succès']);
-            return Common::success($teams, 'Membres de l\'équipe récupérés avec succès');
+            return Common::success('Membres de l\'équipe récupérés avec succès', $teams);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des membres de l\'équipe', []);
@@ -402,7 +402,7 @@ class TeamController
             $teams = $this->repository->getByOffice($office);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Membres de l\'équipe récupérés avec succès']);
-            return Common::success($teams, 'Membres de l\'équipe récupérés avec succès');
+            return Common::success('Membres de l\'équipe récupérés avec succès', $teams);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des membres de l\'équipe', []);

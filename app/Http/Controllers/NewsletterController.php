@@ -87,7 +87,7 @@ class NewsletterController
             $newsletters = $this->repository->all();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Inscriptions newsletter récupérées avec succès']);
-            return Common::success($newsletters, 'Inscriptions newsletter récupérées avec succès');
+            return Common::success('Inscriptions newsletter récupérées avec succès', $newsletters);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des inscriptions newsletter', []);
@@ -134,7 +134,7 @@ class NewsletterController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => "Inscription newsletter récupérée avec succès pour ID: $id"]);
-            return Common::success($newsletter, 'Inscription newsletter récupérée avec succès');
+            return Common::success('Inscription newsletter récupérée avec succès', $newsletter);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération de l\'inscription newsletter', []);
@@ -181,7 +181,7 @@ class NewsletterController
             $newsletter = $this->repository->create($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Inscription newsletter créée avec succès avec ID: ' . $newsletter->id]);
-            return Common::success($newsletter, 'Inscription newsletter créée avec succès');
+            return Common::success('Inscription newsletter créée avec succès', $newsletter);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la création de l\'inscription newsletter', []);
@@ -240,7 +240,7 @@ class NewsletterController
             $updatedNewsletter = $this->repository->update($id, $data);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Inscription newsletter mise à jour avec succès pour ID: $id"]);
-            return Common::success($updatedNewsletter, 'Inscription newsletter mise à jour avec succès');
+            return Common::success('Inscription newsletter mise à jour avec succès', $updatedNewsletter);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la mise à jour de l\'inscription newsletter', []);
@@ -345,7 +345,7 @@ class NewsletterController
             $updatedNewsletter = $this->repository->update($id, ['status' => $status]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "État changé vers '$status' pour ID: $id"]);
-            return Common::success($updatedNewsletter, 'État de l\'inscription newsletter modifié avec succès');
+            return Common::success('État de l\'inscription newsletter modifié avec succès', $updatedNewsletter);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors du changement d\'état', []);
@@ -387,7 +387,7 @@ class NewsletterController
             $results = $this->repository->search($query);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Recherche effectuée avec le terme: $query"]);
-            return Common::success($results, 'Résultats de recherche obtenus avec succès');
+            return Common::success('Résultats de recherche obtenus avec succès', $results);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la recherche', []);
@@ -563,7 +563,7 @@ class NewsletterController
             
             // Logique de remontée de position ici si nécessaire
             $this->ls->trace(['action_name' => $message, 'description' => "Position remontée avec succès pour ID: $id"]);
-            return Common::success($newsletter, 'Position remontée avec succès');
+            return Common::success('Position remontée avec succès', $newsletter);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la remontée de position', []);
@@ -611,7 +611,7 @@ class NewsletterController
             
             // Logique de descente de position ici si nécessaire
             $this->ls->trace(['action_name' => $message, 'description' => "Position descendue avec succès pour ID: $id"]);
-            return Common::success($newsletter, 'Position descendue avec succès');
+            return Common::success('Position descendue avec succès', $newsletter);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la descente de position', []);

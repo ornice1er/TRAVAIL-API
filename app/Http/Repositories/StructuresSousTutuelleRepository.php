@@ -2,7 +2,7 @@
 
 namespace App\Http\Repositories;
 
-use App\Models\StructuresSousTutelles;
+use App\Models\StructureSousTutelle as StructuresSousTutelles;
 use App\Models\Structures;
 use App\Utilities\FileStorage;
 use Illuminate\Support\Str;

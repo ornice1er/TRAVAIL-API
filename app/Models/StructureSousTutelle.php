@@ -24,6 +24,6 @@ class StructureSousTutelle extends Model
     // Relation vers la structure parente
     public function structure()
     {
-        return $this->belongsTo(Structures::class, 'structure_id');
+        return $this->belongsTo(Structure::class, 'structure_id');
     }
 }

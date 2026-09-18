@@ -86,7 +86,7 @@ class OrganigrammeController
             $organigrammes = $this->repository->all();
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Organigrammes récupérés avec succès']);
-            return Common::success($organigrammes, 'Organigrammes récupérés avec succès');
+            return Common::success('Organigrammes récupérés avec succès', $organigrammes);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des organigrammes', []);
@@ -133,7 +133,7 @@ class OrganigrammeController
             }
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme récupéré avec succès pour ID: $id"]);
-            return Common::success($organigramme, 'Organigramme récupéré avec succès');
+            return Common::success('Organigramme récupéré avec succès', $organigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération de l\'organigramme', []);
@@ -182,7 +182,7 @@ class OrganigrammeController
             $organigramme = $this->repository->create($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Organigramme créé avec succès avec ID: ' . $organigramme->id]);
-            return Common::success($organigramme, 'Organigramme créé avec succès');
+            return Common::success('Organigramme créé avec succès', $organigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la création de l\'organigramme', []);
@@ -245,7 +245,7 @@ class OrganigrammeController
             $updatedOrganigramme = $this->repository->update($id, $data);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme mis à jour avec succès pour ID: $id"]);
-            return Common::success($updatedOrganigramme, 'Organigramme mis à jour avec succès');
+            return Common::success('Organigramme mis à jour avec succès', $updatedOrganigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la mise à jour de l\'organigramme', []);
@@ -350,7 +350,7 @@ class OrganigrammeController
             $updatedOrganigramme = $this->repository->update($id, ['status' => $status]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "État changé vers '$status' pour ID: $id"]);
-            return Common::success($updatedOrganigramme, 'État de l\'organigramme modifié avec succès');
+            return Common::success('État de l\'organigramme modifié avec succès', $updatedOrganigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors du changement d\'état', []);
@@ -392,7 +392,7 @@ class OrganigrammeController
             $results = $this->repository->search($query);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Recherche effectuée avec le terme: $query"]);
-            return Common::success($results, 'Résultats de recherche obtenus avec succès');
+            return Common::success('Résultats de recherche obtenus avec succès', $results);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la recherche', []);
@@ -440,7 +440,7 @@ class OrganigrammeController
             
             // Logique de remontée de position ici si nécessaire
             $this->ls->trace(['action_name' => $message, 'description' => "Position remontée avec succès pour ID: $id"]);
-            return Common::success($organigramme, 'Position remontée avec succès');
+            return Common::success('Position remontée avec succès', $organigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la remontée de position', []);
@@ -488,7 +488,7 @@ class OrganigrammeController
             
             // Logique de descente de position ici si nécessaire
             $this->ls->trace(['action_name' => $message, 'description' => "Position descendue avec succès pour ID: $id"]);
-            return Common::success($organigramme, 'Position descendue avec succès');
+            return Common::success('Position descendue avec succès', $organigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la descente de position', []);
@@ -537,7 +537,7 @@ class OrganigrammeController
             $updatedOrganigramme = $this->repository->update($id, ['is_published' => true]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme publié avec succès pour ID: $id"]);
-            return Common::success($updatedOrganigramme, 'Organigramme publié avec succès');
+            return Common::success('Organigramme publié avec succès', $updatedOrganigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la publication de l\'organigramme', []);
@@ -586,7 +586,7 @@ class OrganigrammeController
             $updatedOrganigramme = $this->repository->update($id, ['is_published' => false]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme dépublié avec succès pour ID: $id"]);
-            return Common::success($updatedOrganigramme, 'Organigramme dépublié avec succès');
+            return Common::success('Organigramme dépublié avec succès', $updatedOrganigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la dépublication de l\'organigramme', []);
@@ -635,7 +635,7 @@ class OrganigrammeController
             $updatedOrganigramme = $this->repository->update($id, ['is_archived' => true]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme archivé avec succès pour ID: $id"]);
-            return Common::success($updatedOrganigramme, 'Organigramme archivé avec succès');
+            return Common::success('Organigramme archivé avec succès', $updatedOrganigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de l\'archivage de l\'organigramme', []);
@@ -684,7 +684,7 @@ class OrganigrammeController
             $updatedOrganigramme = $this->repository->update($id, ['is_archived' => false]);
             
             $this->ls->trace(['action_name' => $message, 'description' => "Organigramme restauré avec succès pour ID: $id"]);
-            return Common::success($updatedOrganigramme, 'Organigramme restauré avec succès');
+            return Common::success('Organigramme restauré avec succès', $updatedOrganigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la restauration de l\'organigramme', []);
@@ -723,7 +723,7 @@ class OrganigrammeController
             $medias = $this->repository->getByRoleAndStructure($structureId, $role, $userId);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Organigrammes récupérés par rôle avec succès']);
-            return Common::success($medias, 'Organigrammes récupérés avec succès');
+            return Common::success('Organigrammes récupérés avec succès', $medias);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la récupération des organigrammes', []);
@@ -778,7 +778,7 @@ class OrganigrammeController
             $organigramme = $this->repository->createWithWorkflow($data);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Organigramme créé avec workflow avec succès']);
-            return Common::success($organigramme, 'Organigramme créé avec succès');
+            return Common::success('Organigramme créé avec succès', $organigramme);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la création de l\'organigramme', []);
@@ -840,7 +840,7 @@ class OrganigrammeController
             $result = $this->repository->updateWithFile($id, $data, $file);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Organigramme mis à jour avec succès']);
-            return Common::success($result, 'Organigramme mis à jour avec succès');
+            return Common::success('Organigramme mis à jour avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la mise à jour de l\'organigramme', []);
@@ -881,7 +881,7 @@ class OrganigrammeController
             $result = $this->repository->moveUp($id);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Organigramme remonté avec succès']);
-            return Common::success($result, 'Organigramme remonté avec succès');
+            return Common::success('Organigramme remonté avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la remontée de l\'organigramme', []);
@@ -929,7 +929,7 @@ class OrganigrammeController
             $result = $this->repository->moveDown($id, $motif);
             
             $this->ls->trace(['action_name' => $message, 'description' => 'Organigramme redescendu avec succès']);
-            return Common::success($result, 'Organigramme redescendu avec succès');
+            return Common::success('Organigramme redescendu avec succès', $result);
         } catch (\Exception $e) {
             $this->ls->trace(['action_name' => $message, 'description' => $e->getMessage()]);
             return Common::error('Erreur lors de la redescente de l\'organigramme', []);

@@ -70,7 +70,9 @@ class ActualiteRepository
                     $mediaQuery->where('is_archived', false)
                             ->with('structure');
                 } else {
-                    return response()->json(['message' => 'Rôle non autorisé.'], 403);
+                    // Rôles hors circuit de validation (admin, decisionnel) : supervision de toutes
+                    // les actualités, comme pour les appels d'offres.
+                    $mediaQuery = Media::where('type', 'actualite');
                 }
 
                 // Récupération des IDs des medias filtrés

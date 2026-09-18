@@ -18,4 +18,9 @@ class Prestation extends Model
         'status',
         'media_id',
     ];
+
+    public function media()
+    {
+        return $this->belongsTo(Media::class, 'media_id');
+    }
 }
