@@ -140,6 +140,13 @@ Route::get('appel-d-offres', 'PublicController@index')->name('offres');
 Route::get('actualites/{category?}', 'PublicController@index')->name('actualites');
 
 
+// Sert un fichier du dossier storage à travers l'application : le lecteur PDF du
+// site et le téléchargement passent par cette route, qui porte les en-têtes CORS
+// (un fichier statique, lui, est servi directement par le serveur web).
+Route::get('/public/file/{dir}/{name}', 'PublicController@openPDF')
+    ->where(['dir' => '[A-Za-z0-9_-]+', 'name' => '.*'])
+    ->name('public.file');
+
 Route::get('/page/communiques/{slug}', 'PublicController@getCommuniquePage')->name('page.communique');
 Route::get('/page/concours/{slug}', 'PublicController@getConcoursPage')->name('page.concours');
 Route::get('/page/actualites/{slug}', 'PublicController@getActualitePage')->name('page.actualite');
