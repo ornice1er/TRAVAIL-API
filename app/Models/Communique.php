@@ -46,7 +46,7 @@ class Communique extends Model
 
         // Avant création, génération code unique et nom complet
         self::creating(function ($model) {
-            $model->slug = Str::slug($model->title).' '.uniqId();
+            $model->slug = Str::slug($model->title).'-'.uniqId();
         });
     }
 

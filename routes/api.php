@@ -147,9 +147,9 @@ Route::get('/public/file/{dir}/{name}', 'PublicController@openPDF')
     ->where(['dir' => '[A-Za-z0-9_-]+', 'name' => '.*'])
     ->name('public.file');
 
-Route::get('/page/communiques/{slug}', 'PublicController@getCommuniquePage')->name('page.communique');
-Route::get('/page/concours/{slug}', 'PublicController@getConcoursPage')->name('page.concours');
-Route::get('/page/actualites/{slug}', 'PublicController@getActualitePage')->name('page.actualite');
+Route::get('/page/communiques/{slug}', 'PublicController@getCommuniquePage')->where('slug', '[A-Za-z0-9_-]+')->name('page.communique');
+Route::get('/page/concours/{slug}', 'PublicController@getConcoursPage')->where('slug', '[A-Za-z0-9_-]+')->name('page.concours');
+Route::get('/page/actualites/{slug}', 'PublicController@getActualitePage')->where('slug', '[A-Za-z0-9_-]+')->name('page.actualite');
 Route::get('/page/galleries/{slug}', 'PublicController@index')->name('page.galleries');
 
 

@@ -810,7 +810,7 @@ class PublicController extends Controller
       public function getCommuniquePage($slug)
     {
 
-        $communique=Communique::with('files')->whereSlug($slug)->first();
+        $communique=Communique::with('files')->whereSlug($slug)->firstOrFail();
         $concours = $communique->concours();
         if ($concours) {
             $concours->load('files');
@@ -819,7 +819,7 @@ class PublicController extends Controller
         $communique->concours = $concours;
 
         $title="COMMUNIQUES";
-        $share_path="page/communique/".$slug;
+        $share_path=urlencode("page/communique/".$communique->slug);
         $share_title=$communique?->title;
 
            $shareLinks = Share::page($share_path, $share_title)
@@ -838,10 +838,10 @@ class PublicController extends Controller
       public function getConcoursPage($slug)
     {
 
-        $concours=Test::with('files')->whereSlug($slug)->first();
+        $concours=Test::with('files')->whereSlug($slug)->firstOrFail();
 
         $title="CONCOURS";
-        $share_path="page/concours/".$slug;
+        $share_path=urlencode("page/concours/".$concours->slug);
         $share_title=$concours?->title;
 
            $shareLinks = Share::page($share_path, $share_title)
@@ -859,10 +859,10 @@ class PublicController extends Controller
     public function getActualitePage($slug)
     {
 
-        $actualite=Actualite::whereSlug($slug)->first();
+        $actualite=Actualite::whereSlug($slug)->firstOrFail();
 
         $title=$actualite->title;
-        $share_path="page/actualites/".$slug;
+        $share_path=urlencode("page/actualites/".$actualite->slug);
         $share_title=$actualite->title;
 
          $shareLinks = Share::page($share_path, $share_title)
@@ -921,6 +921,9 @@ class PublicController extends Controller
     function getDocuments(Request $request){
 
         $categorie = $request->categorie; // ex: lois, decrets, etc.
+    // Valeur affichée dans le titre de partage : restreinte à un jeu sûr,
+    // la valeur brute restant utilisée pour le filtrage.
+    $categorieLibelle = preg_replace('/[^\p{L}\p{N} _-]/u', '', (string) $categorie);
     $pageSize = $request->pageSize ?? 10;
 
     // === 1. Construction de la requête de base ===
@@ -935,9 +938,9 @@ class PublicController extends Controller
     $documents = $query->paginate($pageSize);
 
     // === 4. Ajout des liens de partage à chaque document ===
-    $documents->getCollection()->transform(function ($doc) use ($categorie) {
-        $share_path = url("docs/{$doc->filename}");
-        $share_title = "Découvrez ici notre document de type {$categorie} : {$doc->name}";
+    $documents->getCollection()->transform(function ($doc) use ($categorieLibelle) {
+        $share_path = urlencode(url("docs/" . rawurlencode($doc->filename)));
+        $share_title = "Découvrez ici notre document de type {$categorieLibelle} : {$doc->name}";
 
         $doc->share_links = Share::page($share_path, $share_title)
             ->facebook()
