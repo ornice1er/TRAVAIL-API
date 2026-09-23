@@ -35,7 +35,8 @@ class StoreCommuniquesFileRequest extends FormRequest
             'nom.required' => 'Le titre est requis.',
             'file.required' => 'Le fichier est requis.',
             'file.mimes' => 'Le fichier doit être de type : pdf, doc, docx, jpg, jpeg, png.',
-            'file.max' => 'Le fichier ne doit pas dépasser 10MB.',
+            'file.max' => 'Le fichier ne doit pas dépasser 10 Mo.',
+            'file.uploaded' => "L'envoi du fichier a échoué : fichier trop volumineux ou transfert interrompu.",
         ];
     }
 

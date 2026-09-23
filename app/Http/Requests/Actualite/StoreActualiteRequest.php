@@ -24,8 +24,8 @@ class StoreActualiteRequest extends FormRequest
             'description'            => ['required', 'string'],
             'link'                   => ['nullable', 'url'],
             'author'                 => ['nullable', 'string', 'max:255'],
-            'photo'                  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5048'],
-            'big_photo'              => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:5048'],
+            'photo'                  => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
+            'big_photo'              => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:10240'],
             'has_principal_access'   => ['required', 'in:0,1'],
         ];
     }
@@ -53,11 +53,13 @@ class StoreActualiteRequest extends FormRequest
 
             'photo.image'                => "La photo doit être une image valide.",
             'photo.mimes'                => "Formats autorisés : JPG, JPEG, PNG, WEBP.",
-            'photo.max'                  => "La photo ne doit pas dépasser 5 Mo.",
+            'photo.max'                  => "La photo ne doit pas dépasser 10 Mo.",
+            'photo.uploaded'             => "L'envoi de la photo a échoué : fichier trop volumineux ou transfert interrompu.",
 
             'big_photo.image'            => "La photo miniature doit être une image valide.",
             'big_photo.mimes'            => "Formats autorisés : JPG, JPEG, PNG, WEBP.",
-            'big_photo.max'              => "La photo miniature ne doit pas dépasser 5 Mo.",
+            'big_photo.max'              => "La photo miniature ne doit pas dépasser 10 Mo.",
+            'big_photo.uploaded'         => "L'envoi de la photo miniature a échoué : fichier trop volumineux ou transfert interrompu.",
 
             'has_principal_access.required' => 'Veuillez indiquer si l’actualité est publiée sur l’espace principal.',
             'has_principal_access.in'       => 'La valeur choisie est invalide.',
