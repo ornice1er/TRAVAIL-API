@@ -75,7 +75,7 @@ class CommuniqueFileRepository
     public function makeStore($data): CommuniqueFile
     {
            if (request()->hasFile('file')) {
-                $data['filename'] = FileStorage::setFile('public', request()->file('file'), 'communiques', Str::slug($data['nom']).time());
+                $data['filename'] = FileStorage::setFile('public', request()->file('file'), 'communiques', Str::limit(Str::slug($data['nom']), 150, '').time());
             }
 
        $model = new CommuniqueFile($data);
