@@ -65,7 +65,7 @@ class CommuniqueRepository
      */
     public function get($id)
     {
-        return $this->findOrFail($id)->load('files');
+        return $this->findOrFail($id)->load('files', 'media');
     }
 
  public function makeStore(array $data): Communique
@@ -112,13 +112,13 @@ class CommuniqueRepository
     /**
      * Met à jour une fête.
      */
-   public function makeUpdate(int $mediaId, array $data): Communique
+   public function makeUpdate(int $id, array $data): Communique
     {
-        // Récupération du média
-        $media = Media::findOrFail($mediaId);
+        // Récupération du communiqué (même identifiant que show/getById)
+        $communique = Communique::findOrFail($id);
 
-        // Récupération du communiqué lié
-        $communique = $media->communique;
+        // Récupération du média lié
+        $media = $communique->media;
 
         // Mise à jour du média
         if (array_key_exists('has_principal_access', $data)) {
@@ -130,6 +130,7 @@ class CommuniqueRepository
         $communique->fill([
             'title' => $data['title'] ?? $communique->title,
             'description' => $data['description'] ?? $communique->description,
+            'category' => $data['category'] ?? $communique->category,
         ]);
 
         $communique->save();
@@ -179,7 +180,7 @@ class CommuniqueRepository
     // Fonctions standardisées pour le controller
     public function getById($id)
     {
-        return $this->findOrFail($id)->load('files');
+        return $this->findOrFail($id)->load('files', 'media');
     }
 
     public function store($data)
