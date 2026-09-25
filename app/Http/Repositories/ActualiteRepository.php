@@ -186,7 +186,18 @@ class ActualiteRepository
      */
     public function makeDestroy($id)
     {
-        return $this->findOrFail($id)->delete();
+        // Supprime aussi le média lié (et son circuit) : sinon les listes publiques basées sur Media
+        // remontent un média orphelin dont la relation vaut null.
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id) {
+            $model = $this->findOrFail($id);
+            if ($model->media) {
+                $model->media->transmissions()->delete();
+                $model->media->parcours()->delete();
+                $model->media->delete();
+            }
+
+            return $model->delete();
+        });
     }
 
     /**
