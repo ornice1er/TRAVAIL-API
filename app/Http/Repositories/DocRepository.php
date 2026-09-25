@@ -85,7 +85,7 @@ class DocRepository
         $media->save();
 
         $uid=uniqId();
-        $data['slug']=Str::substr(Str::slug($data['name']), 0, 480).' '.$uid;
+        $data['slug']=Str::substr(Str::slug($data['name']), 0, 150).' '.$uid;
         $data['media_id']=$media->id;
 
         // Nom de fichier plus court que le slug : limite de 255 octets (système de fichiers et colonne filename)
@@ -117,7 +117,7 @@ class DocRepository
 
         // Générer le slug à partir du nom (ou titre) dans $data
         if (isset($data['name'])) {
-            $slug = Str::substr(Str::slug($data['name']), 0, 480);
+            $slug = Str::substr(Str::slug($data['name']), 0, 150);
             $count = Doc::where('slug', $slug)->where('id', '!=', $id)->count();
             if ($count > 0) {
                 $slug = $slug . '-' . date('ymdis') . '-' . rand(0, 999);
