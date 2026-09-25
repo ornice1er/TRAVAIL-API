@@ -84,10 +84,12 @@ class DocRepository
         $media->type="doc";
         $media->save();
 
-        $data['slug']=Str::slug($data['name']).' '.uniqId();
+        $uid=uniqId();
+        $data['slug']=Str::substr(Str::slug($data['name']), 0, 480).' '.$uid;
         $data['media_id']=$media->id;
 
-        if(request()->file('filename'))  $data['filename']=FileStorage::setFile('public',request()->file('filename'),'docs', $data['slug'].".pdf");
+        // Nom de fichier plus court que le slug : limite de 255 octets (système de fichiers et colonne filename)
+        if(request()->file('filename'))  $data['filename']=FileStorage::setFile('public',request()->file('filename'),'docs', Str::substr(Str::slug($data['name']), 0, 150).' '.$uid.".pdf");
 
         $status=Doc::create($data);
 
@@ -115,7 +117,7 @@ class DocRepository
 
         // Générer le slug à partir du nom (ou titre) dans $data
         if (isset($data['name'])) {
-            $slug = Str::slug($data['name']);
+            $slug = Str::substr(Str::slug($data['name']), 0, 480);
             $count = Doc::where('slug', $slug)->where('id', '!=', $id)->count();
             if ($count > 0) {
                 $slug = $slug . '-' . date('ymdis') . '-' . rand(0, 999);
@@ -123,8 +125,13 @@ class DocRepository
             $data['slug'] = $slug;
         }
 
-        /*$aws= new AwsService();
-        if(request()->file('file'))  $data['file'] = $aws->upload(request()->file('file'),"Docs")['full_url'];*/
+        // Remplacement du fichier : même convention de nommage qu'à la création
+        unset($data['filename']);
+        if(request()->file('filename'))  $data['filename']=FileStorage::setFile('public',request()->file('filename'),'docs', Str::substr(Str::slug($data['name'] ?? $model->name), 0, 150).' '.uniqId().".pdf");
+
+        if (array_key_exists('has_principal_access', $data) && $model->media) {
+            $model->media->update(['has_principal_access' => $data['has_principal_access']]);
+        }
 
         $model->update($data);
 
@@ -136,7 +143,18 @@ class DocRepository
      */
     public function makeDestroy($id)
     {
-        return $this->findOrFail($id)->delete();
+        // Supprime aussi le média lié (et son circuit) : sinon les listes publiques basées sur Media
+        // remontent un média orphelin dont la relation vaut null.
+        return \Illuminate\Support\Facades\DB::transaction(function () use ($id) {
+            $model = $this->findOrFail($id);
+            if ($model->media) {
+                $model->media->transmissions()->delete();
+                $model->media->parcours()->delete();
+                $model->media->delete();
+            }
+
+            return $model->delete();
+        });
     }
 
     /**

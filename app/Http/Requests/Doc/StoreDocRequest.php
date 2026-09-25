@@ -17,7 +17,7 @@ class StoreDocRequest extends FormRequest
     public function rules(): array
     {
         return [
-           'name' => 'required|string|max:191',
+           'name' => 'required|string',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive',
             'type' => 'required|string|max:255',

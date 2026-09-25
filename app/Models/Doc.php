@@ -27,7 +27,7 @@ class Doc extends Model
 
         // Avant création, génération code unique et nom complet
         self::creating(function ($model) {
-            $model->slug = Str::slug($model->name).' '.uniqId();
+            $model->slug = Str::substr(Str::slug($model->name), 0, 480).' '.uniqId();
         });
     }
 

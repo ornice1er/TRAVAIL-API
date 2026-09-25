@@ -17,7 +17,7 @@ class UpdateDocRequest extends FormRequest
     public function rules(): array
     {
         return [
-             'name' => 'sometimes|required|string|max:191',
+             'name' => 'sometimes|required|string',
             'description' => 'nullable|string',
             'status' => 'sometimes|required|in:active,inactive',
             'type' => 'sometimes|required|string|max:255',
