@@ -22,12 +22,10 @@ class FileStorage
 
         $pre_filename = $name == '' || $name == null ? $file->getFilename() : Str::slug($name);
 
-        $filename = $pre_filename.'.'.$file->getClientOriginalExtension();
+        $extension = $file->getClientOriginalExtension();
+        $filename = self::availableName($disk, $directory_name, $pre_filename, $extension);
 
-        if (! Storage::disk($disk)->exists($directory_name != '' || $directory_name != null ? $directory_name.'/'.$filename : $filename)) {
-
-            Storage::disk($disk)->put($directory_name != '' || $directory_name != null ? $directory_name.'/'.$filename : $filename, File::get($file));
-        }
+        Storage::disk($disk)->put($directory_name != '' || $directory_name != null ? $directory_name.'/'.$filename : $filename, File::get($file));
 
         return $filename;
     }
@@ -46,7 +44,7 @@ class FileStorage
         $extension = explode('/', mime_content_type($image))[1];
         $image = explode(',', $image);
         $image = str_replace(' ', '+', $image[1]);
-        $filename = $name.'.'.$extension;
+        $filename = self::availableName($disk, $directory_name, $name, $extension);
         //  $image = str_replace('data:image/png;base64,', '', $image);
         //  info($image);
         // $image = str_replace(' ', '+', $image);
@@ -55,9 +53,24 @@ class FileStorage
 
         // $filename=$pre_filename.'.'.$file->getClientOriginalExtension();
 
-        if (! Storage::disk($disk)->exists($directory_name != '' || $directory_name != null ? $directory_name.'/'.$filename : $filename)) {
-            File::put(Storage::disk($disk)->path($directory_name != '' || $directory_name != null ? $directory_name.'/'.$filename : $filename), base64_decode($image));
-        }
+        File::put(Storage::disk($disk)->path($directory_name != '' || $directory_name != null ? $directory_name.'/'.$filename : $filename), base64_decode($image));
+
+        return $filename;
+    }
+
+    /**
+     * Nom de fichier toujours unique (suffixe date + aléatoire). Avant, un nom dérivé du titre
+     * était réutilisé à chaque modification : soit le nouveau fichier était ignoré car le nom
+     * existait déjà, soit il remplaçait l'ancien sous la même URL, que navigateurs et caches
+     * continuaient de servir. Une nouvelle URL garantit l'affichage de la nouvelle image.
+     */
+    private static function availableName($disk, $directory, $base, $extension)
+    {
+        $path = fn ($name) => $directory != '' && $directory != null ? $directory.'/'.$name : $name;
+
+        do {
+            $filename = $base.'-'.date('ymdHis').'-'.Str::lower(Str::random(4)).'.'.$extension;
+        } while (Storage::disk($disk)->exists($path($filename)));
 
         return $filename;
     }
